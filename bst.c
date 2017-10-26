@@ -62,3 +62,29 @@ void setBSTNODEparent(BSTNODE *n, BSTNODE *replacement) {
   n->parent->left = replacement->left;
   n->parent->right = replacement->right;
 }
+
+struct BST {
+  BSTNODE *node;
+  void (*display)(FILE *, void *);
+  int (*comparator)(void *, void *);
+  void (*swapper)(void *, void *);
+};
+
+BST *newBST(
+  void (*d)(FILE *, void *),
+  int (*c)(void *, void *),
+  void (*s)(void *, void *))
+{
+
+    BST *tree = malloc(sizeof(struct BST));
+    tree->display = d;
+    tree->comparator = c;
+    tree->swapper = s;
+    tree->node = malloc(sizeof(struct BSTNODE));
+
+    return tree;
+}
+
+void setBSTroot(BST *t, BSTNODE *replacement) {
+  
+}
