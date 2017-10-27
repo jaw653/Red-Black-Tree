@@ -11,9 +11,12 @@
  *            -setBSTNODE, should it just set n->value = value?
  *            -setBSTNODEleft, copies all replacement stuff to n->left, is this ok?
  *            -when should swap leaf swap with pred and when successor
+ *            -do we need to account for equal values in the bst
+ *            -when deleting nodes, can I just set them = NULL or do I need to free?
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "bst.h"
 
@@ -25,7 +28,7 @@ struct bstnode {
   struct bstnode *right;
 
 };
-
+/****************************** Private functions *****************************/
 static BSTNODE *newBSTNODE(void *value) {
   BSTNODE *node = malloc(sizeof(struct bstnode));
   node->value = value;
@@ -33,6 +36,7 @@ static BSTNODE *newBSTNODE(void *value) {
 
   return node;
 }
+/******************************************************************************/
 
 void *getBSTNODE(BSTNODE *n) {
   return n->value;
@@ -76,6 +80,7 @@ void setBSTNODEparent(BSTNODE *n, BSTNODE *replacement) {
 }
 
 struct bst {
+  int size;
   struct bstnode *root;
   void (*display)(FILE *, void *);
   int (*comparator)(void *, void *);
@@ -83,24 +88,26 @@ struct bst {
 };
 
 /***************************** Helper function(s) *****************************/
-static BSTNODE *insertHelper(BSTNODE *root, int (*comparator)(void *, void *), void *value) {
-  if (root == NULL) {
+static BSTNODE *insertHelper(BST *t, BSTNODE *parent, void *value) {
+  if (t->root == NULL) {
     //assert?
 
-    root = (struct bstnode *)malloc(sizeof(struct bstnode));
-    root->value = value;
-    //root->parent = ??
-    root->left = NULL;
-    root->right = NULL;
+    t->root = (struct bstnode *)malloc(sizeof(struct bstnode));
+    t->root->value = value;
+    t->root->parent = parent;
+    t->root->left = NULL;
+    t->root->right = NULL;
+    t->size += 1;
+
   }
-  else if (comparator(value, root->value) < 0) {
-    root->left = insertHelper(root->left, comparator, value);
+  else if (t->comparator(value, t->root->value) < 0) {
+    t->root->left = insertHelper(t, t->root, value);
   }
   else {
-    root->right = insertHelper(root->right, comparator, value);
+    t->root->right = insertHelper(t, t->root, value);
   }
 
-  return root;
+  return t->root;
 }
 
 static BSTNODE *findHelper(BSTNODE *root, int (*comparator)(void *, void *), void *value) {
@@ -113,6 +120,55 @@ static BSTNODE *findHelper(BSTNODE *root, int (*comparator)(void *, void *), voi
   }
   else {
     return findHelper(root->right, comparator, value);
+  }
+}
+
+static BSTNODE *traverseRight(BSTNODE *node) {
+  while (node->right) {
+    void *tmp = node->value;
+    node->value = node->right->value;
+    node->right->value = tmp;
+
+    node = node->right;
+  }
+
+  return node;
+}
+
+static BSTNODE *traverseLeft(BSTNODE *node) {
+  while (node->left) {
+    void *tmp = node->value;
+    node->value = node->left->value;
+    node->left->value = tmp;
+
+    node = node->left;
+  }
+
+  return node;
+}
+
+static bool isLeaf(BSTNODE *node) {
+  if (!node->left && !node->right) return true;
+  else return false;
+}
+
+
+static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
+  if (t->size == 0) {
+    printf("[]");
+    return;
+  }
+
+  else {
+    printf("[");
+    if (root->left) displayHelper(fp, root->left, t);
+
+    if (root->left) printf(" ");
+    t->display(fp, root->value);
+    if (root->right) printf(" ");
+
+    if (root->right) displayHelper(fp, root->right, t);
+    printf("]");
   }
 }
 /******************************************************************************/
@@ -128,6 +184,7 @@ BST *newBST(
     tree->comparator = c;
     tree->swapper = s;
     tree->root = newBSTNODE(NULL);          //FIXME: what to pass through here?
+    tree->size = 0;
 
     return tree;
 }
@@ -141,7 +198,7 @@ BSTNODE *getBSTroot(BST *t) {
 }
 
 BSTNODE *insertBST(BST *t, void *value) {
-  return insertHelper(t->root, t->comparator, value);
+  return insertHelper(t, NULL, value);
 }
 
 BSTNODE *findBST(BST *t, void *value) {
@@ -153,21 +210,69 @@ BSTNODE *deleteBST(BST *t, void *value) {
 }
 
 BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
+  BSTNODE *ptr = node;
+  /* If swapper is not null */
+  if (t->swapper) {
+    if (isLeaf(ptr)) return NULL;
+    if (ptr->left) {
+      t->swapper(ptr->left, node);
+      ptr = ptr->left;
+      ptr = traverseRight(ptr);         //FIXME: currently doesn't use the swapper function
+      ptr = swapToLeafBST(t, ptr);
+    }
+    else if (ptr->right) {
+      t->swapper(ptr->right, node);
+      ptr = ptr->right;
+      ptr = traverseLeft(ptr);         //FIXME: currently doesn't use swapper function
+      ptr = swapToLeafBST(t, ptr);
+    }
+  }
+  else {
+    if (isLeaf(ptr)) return NULL;
+    if (ptr->left) {
+      void *tmp = ptr->value;
+      ptr->value = ptr->left->value;
+      ptr->left->value = tmp;
+      ptr = ptr->left;
+      ptr = traverseRight(ptr);
+      return swapToLeafBST(t, ptr);
+    }
+    else if (ptr->right) {
+      void *tmp = ptr->value;
+      ptr->value = ptr->right->value;
+      ptr->right->value = tmp;
+      ptr = ptr->right;
+      ptr = traverseLeft(ptr);
+      return swapToLeafBST(t, ptr);
+    }
+  }
 
+  return NULL;                        //FIXME: may need to get rid of this...
 }
 
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
-  //pass
+  if (t->comparator(leaf->parent->value, leaf->value) < 0) {
+    /* If right child */
+    leaf->parent->right = NULL;
+    leaf = NULL;
+  }
+  else {
+    leaf->parent->left = NULL;
+    leaf = NULL;
+  }
 }
 
 int sizeBST(BST *t) {
-  //pass
+  return t->size;
 }
 
 void statisticsBST(FILE *fp, BST *t) {
-  //pass
+  fprintf(fp, "Words/Phrases: %d\n", 5);      //FIXME: should be the actual number of words/Phrases
+  fprintf(fp, "Nodes: %d\n", t->size);
+  fprintf(fp, "Maximum depth: %d\n", 5);      //FIXME: need correct stat here
+  fprintf(fp, "Minimum depth: %d\n", 5);      //FIXME: need correct stat here
 }
 
 void displayBST(FILE *fp, BST *t) {
-  //pass
+  displayHelper(fp, t->root, t);
 }
