@@ -206,29 +206,34 @@ BSTNODE *findBST(BST *t, void *value) {
 }
 
 BSTNODE *deleteBST(BST *t, void *value) {
-  //pass
+  BSTNODE *returnNode;
+  BSTNODE *node = findBST(t, value);
+  node = swapToLeafBST(t, node);
+  returnNode = node;
+  pruneLeafBST(t, node);
+  return returnNode;
 }
 
 BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
   BSTNODE *ptr = node;
   /* If swapper is not null */
   if (t->swapper) {
-    if (isLeaf(ptr)) return NULL;
+    if (isLeaf(ptr)) return ptr;        //FIXME: might need to return NULL
     if (ptr->left) {
       t->swapper(ptr->left, node);
       ptr = ptr->left;
       ptr = traverseRight(ptr);         //FIXME: currently doesn't use the swapper function
-      ptr = swapToLeafBST(t, ptr);
+      return swapToLeafBST(t, ptr);
     }
     else if (ptr->right) {
       t->swapper(ptr->right, node);
       ptr = ptr->right;
       ptr = traverseLeft(ptr);         //FIXME: currently doesn't use swapper function
-      ptr = swapToLeafBST(t, ptr);
+      return swapToLeafBST(t, ptr);
     }
   }
   else {
-    if (isLeaf(ptr)) return NULL;
+    if (isLeaf(ptr)) return ptr;
     if (ptr->left) {
       void *tmp = ptr->value;
       ptr->value = ptr->left->value;
