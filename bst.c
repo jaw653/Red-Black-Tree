@@ -18,21 +18,25 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "string.h"
 #include "bst.h"
 
 struct bstnode {
-
   void *value;
   struct bstnode *parent;
   struct bstnode *left;
   struct bstnode *right;
-
 };
 /****************************** Private functions *****************************/
-static BSTNODE *newBSTNODE(void *value) {
-  BSTNODE *node = malloc(sizeof(struct bstnode));
-  node->value = value;
-  node->parent = node->left = node->right = NULL;
+static BSTNODE *newBSTNODE(void *value, BSTNODE *parent) {
+  BSTNODE *node;
+  if (value == NULL) node = NULL;
+  else {
+    node = (struct bstnode *)malloc(sizeof(struct bstnode));
+    node->value = value;
+    node->parent = parent;
+    node->left = node->right = NULL;
+  }
 
   return node;
 }
@@ -80,40 +84,37 @@ void setBSTNODEparent(BSTNODE *n, BSTNODE *replacement) {
 }
 
 struct bst {
-  int size;
   struct bstnode *root;
+  int size;
   void (*display)(FILE *, void *);
   int (*comparator)(void *, void *);
   void (*swapper)(void *, void *);
 };
 
 /***************************** Helper function(s) *****************************/
-static BSTNODE *insertHelper(BST *t, BSTNODE *parent, void *value) {
-  if (t->root == NULL) {
+static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value) {
+  if (root == NULL) {
     //assert?
 
-    t->root = (struct bstnode *)malloc(sizeof(struct bstnode));
-    t->root->value = value;
-    t->root->parent = parent;
-    t->root->left = NULL;
-    t->root->right = NULL;
+    root = newBSTNODE(value, parent);
     t->size += 1;
 
+    return root;
   }
-  else if (t->comparator(value, t->root->value) < 0) {
-    t->root->left = insertHelper(t, t->root, value);
+  else if (t->comparator(value, root->value) < 0) {
+    root->left = insertHelper(t, root->left, root, value);
   }
   else {
-    t->root->right = insertHelper(t, t->root, value);
+    root->right = insertHelper(t, root->right, root, value);
   }
 
-  return t->root;
+  return root;
 }
 
 static BSTNODE *findHelper(BSTNODE *root, int (*comparator)(void *, void *), void *value) {
   if (root == NULL || comparator(value, root->value) == 0) {
     if (root == NULL) return NULL;
-    return root->value;
+    return root;
   }
   else if (comparator(value, root->value) < 0) {
     return findHelper(root->left, comparator, value);
@@ -123,28 +124,34 @@ static BSTNODE *findHelper(BSTNODE *root, int (*comparator)(void *, void *), voi
   }
 }
 
-static BSTNODE *traverseRight(BSTNODE *node) {
+static void traverseRight(BST *t, BSTNODE *node, bool useSwapper) {
   while (node->right) {
-    void *tmp = node->value;
-    node->value = node->right->value;
-    node->right->value = tmp;
+    if (useSwapper == true) {
+      t->swapper(node, node->right);
+    }
+    else {
+      void *tmp = node->value;
+      node->value = node->right->value;
+      node->right->value = tmp;
+    }
 
     node = node->right;
   }
-
-  return node;
 }
 
-static BSTNODE *traverseLeft(BSTNODE *node) {
+static void traverseLeft(BST *t, BSTNODE *node, bool useSwapper) {
   while (node->left) {
-    void *tmp = node->value;
-    node->value = node->left->value;
-    node->left->value = tmp;
+    if (useSwapper == true) {
+      t->swapper(node, node->left);
+    }
+    else {
+      void *tmp = node->value;
+      node->value = node->left->value;
+      node->left->value = tmp;
+    }
 
     node = node->left;
   }
-
-  return node;
 }
 
 static bool isLeaf(BSTNODE *node) {
@@ -155,20 +162,20 @@ static bool isLeaf(BSTNODE *node) {
 
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   if (t->size == 0) {
-    printf("[]");
+    fprintf(fp, "[]");
     return;
   }
 
   else {
-    printf("[");
+    fprintf(fp, "[");
     if (root->left) displayHelper(fp, root->left, t);
 
-    if (root->left) printf(" ");
+    if (root->left) fprintf(fp, " ");
     t->display(fp, root->value);
-    if (root->right) printf(" ");
+    if (root->right) fprintf(fp, " ");
 
     if (root->right) displayHelper(fp, root->right, t);
-    printf("]");
+    fprintf(fp, "]");
   }
 }
 /******************************************************************************/
@@ -183,7 +190,8 @@ BST *newBST(
     tree->display = d;
     tree->comparator = c;
     tree->swapper = s;
-    tree->root = newBSTNODE(NULL);          //FIXME: what to pass through here?
+
+    tree->root = newBSTNODE(NULL, NULL);
     tree->size = 0;
 
     return tree;
@@ -198,7 +206,8 @@ BSTNODE *getBSTroot(BST *t) {
 }
 
 BSTNODE *insertBST(BST *t, void *value) {
-  return insertHelper(t, NULL, value);
+  t->root = insertHelper(t, t->root, NULL, value);
+  return t->root;
 }
 
 BSTNODE *findBST(BST *t, void *value) {
@@ -207,48 +216,55 @@ BSTNODE *findBST(BST *t, void *value) {
 
 BSTNODE *deleteBST(BST *t, void *value) {
   BSTNODE *returnNode;
+
   BSTNODE *node = findBST(t, value);
-  node = swapToLeafBST(t, node);
-  returnNode = node;
+  BSTNODE *leaf = swapToLeafBST(t, node);
+  returnNode = leaf;
+
   pruneLeafBST(t, node);
+
   return returnNode;
 }
 
 BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
-  BSTNODE *ptr = node;
+
   /* If swapper is not null */
   if (t->swapper) {
-    if (isLeaf(ptr)) return ptr;        //FIXME: might need to return NULL
-    if (ptr->left) {
-      t->swapper(ptr->left, node);
-      ptr = ptr->left;
-      ptr = traverseRight(ptr);         //FIXME: currently doesn't use the swapper function
-      return swapToLeafBST(t, ptr);
+    if (isLeaf(node)) return node;        //FIXME: might need to return NULL
+    if (node->left) {
+      t->swapper(node->left, node);
+      node = node->left;
+      traverseRight(t, node, true);         //FIXME: currently doesn't use the swapper function
+
+      return swapToLeafBST(t, node);
     }
-    else if (ptr->right) {
-      t->swapper(ptr->right, node);
-      ptr = ptr->right;
-      ptr = traverseLeft(ptr);         //FIXME: currently doesn't use swapper function
-      return swapToLeafBST(t, ptr);
+    else if (node->right) {
+      t->swapper(node->right, node);
+      node = node->right;
+      traverseLeft(t, node, true);         //FIXME: currently doesn't use swapper function
+
+      return swapToLeafBST(t, node);
     }
   }
   else {
-    if (isLeaf(ptr)) return ptr;
-    if (ptr->left) {
-      void *tmp = ptr->value;
-      ptr->value = ptr->left->value;
-      ptr->left->value = tmp;
-      ptr = ptr->left;
-      ptr = traverseRight(ptr);
-      return swapToLeafBST(t, ptr);
+    if (isLeaf(node)) return node;
+    if (node->left) {
+      void *tmp = node->value;
+      node->value = node->left->value;
+      node->left->value = tmp;
+      node = node->left;
+      traverseRight(t, node, false);
+
+      return swapToLeafBST(t, node);
     }
-    else if (ptr->right) {
-      void *tmp = ptr->value;
-      ptr->value = ptr->right->value;
-      ptr->right->value = tmp;
-      ptr = ptr->right;
-      ptr = traverseLeft(ptr);
-      return swapToLeafBST(t, ptr);
+    else if (node->right) {
+      void *tmp = node->value;
+      node->value = node->right->value;
+      node->right->value = tmp;
+      node = node->right;
+      traverseLeft(t, node, false);
+
+      return swapToLeafBST(t, node);
     }
   }
 
@@ -259,11 +275,11 @@ void pruneLeafBST(BST *t, BSTNODE *leaf) {
   if (t->comparator(leaf->parent->value, leaf->value) < 0) {
     /* If right child */
     leaf->parent->right = NULL;
-    leaf = NULL;
+    free(leaf);
   }
   else {
     leaf->parent->left = NULL;
-    leaf = NULL;
+    free(leaf);
   }
 }
 
