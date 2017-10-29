@@ -14,5 +14,6 @@ extern double getREAL(REAL *);
 extern double setREAL(REAL *, double);
 extern void displayREAL(FILE *, void *);
 extern void freeREAL(REAL *);
+extern int compareREAL(void *, void *);
 
 #endif

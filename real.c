@@ -37,7 +37,7 @@ void freeREAL(REAL *r) {
   free(r);
 }
 
-int compareREAL(REAL *r1, REAL *r2) {
+int compareREAL(void *r1, void *r2) {
   double val1 = getREAL(r1);
   double val2 = getREAL(r2);
 
