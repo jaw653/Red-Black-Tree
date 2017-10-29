@@ -167,15 +167,18 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   }
 
   else {
-    fprintf(fp, "[");
+//    printf("flag\n");
+    if (root->value) fprintf(fp, "[");
     if (root->left) displayHelper(fp, root->left, t);
-
-    if (root->left) fprintf(fp, " ");
-    t->display(fp, root->value);
-    if (root->right) fprintf(fp, " ");
-
+//printf("flag2\n");
+    if (root->left && root->value) fprintf(fp, " ");
+//printf("flag2.1\n");
+    if (root->value) t->display(fp, root->value);
+//printf("flag2.2\n");
+    if (root->right && root->value) fprintf(fp, " ");
+//printf("flag3\n");
     if (root->right) displayHelper(fp, root->right, t);
-    fprintf(fp, "]");
+    if (root->value) fprintf(fp, "]");
   }
 }
 /******************************************************************************/
@@ -218,8 +221,8 @@ BSTNODE *deleteBST(BST *t, void *value) {
   BSTNODE *returnNode;
 
   BSTNODE *node = findBST(t, value);
-  BSTNODE *leaf = swapToLeafBST(t, node);
-  returnNode = leaf;
+  node = swapToLeafBST(t, node);
+  returnNode = node;
 
   pruneLeafBST(t, node);
 
@@ -275,12 +278,14 @@ void pruneLeafBST(BST *t, BSTNODE *leaf) {
   if (t->comparator(leaf->parent->value, leaf->value) < 0) {
     /* If right child */
     leaf->parent->right = NULL;
-    free(leaf);
   }
   else {
     leaf->parent->left = NULL;
-    free(leaf);
   }
+
+  free(leaf);
+  leaf->value = NULL;
+  leaf = NULL;
 }
 
 int sizeBST(BST *t) {
