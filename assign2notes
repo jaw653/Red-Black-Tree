@@ -1,0 +1,7 @@
+To Do:
+------
+-must figure out statisticsBST()
+-does insertBST() need to account for duplicate values?
+-does findBST() need to account for the value not being in the tree?
+-is swapToLeaf() currently swapping to the correct leaf (pred vs succes)
+
