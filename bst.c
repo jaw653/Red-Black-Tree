@@ -167,6 +167,20 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   }
 
   else {
+    if (root->value) {
+      fprintf(fp, "[");
+      if (root->left) displayHelper(fp, root->left, t);
+
+      if (root->left) fprintf(fp, " ");
+      t->display(fp, root->value);
+      if (root->right) fprintf(fp, " ");
+
+      if (root->right) displayHelper(fp, root->right, t);
+      fprintf(fp, "]");
+    }
+
+
+/*
 //    printf("flag\n");
     if (root->value) fprintf(fp, "[");
     if (root->left) displayHelper(fp, root->left, t);
@@ -179,7 +193,22 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
 //printf("flag3\n");
     if (root->right) displayHelper(fp, root->right, t);
     if (root->value) fprintf(fp, "]");
+*/
   }
+}
+
+static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
+  if (s1 && s2) {
+    if (s1->value && s2->value) {
+      if (s1->value == s2->value && s1->left == s2->left) {
+        if (s1->right == s2->right && s1->parent == s2->parent) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
 }
 /******************************************************************************/
 
@@ -275,17 +304,18 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
 }
 
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
-  if (t->comparator(leaf->parent->value, leaf->value) < 0) {
-    /* If right child */
-    leaf->parent->right = NULL;
-  }
-  else {
+  /* If left child */
+  if (structsAreEqual(leaf->parent->left, leaf)) {
     leaf->parent->left = NULL;
+  }
+  /* If right child */
+  else if (structsAreEqual(leaf->parent->right, leaf)) {
+    leaf->parent->right = NULL;
   }
 
   free(leaf);
-  leaf->value = NULL;
-  leaf = NULL;
+
+  t->size -= 1;
 }
 
 int sizeBST(BST *t) {
