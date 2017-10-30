@@ -1,5 +1,6 @@
 To Do:
 ------
+-change displayBST() to have format for this new project
 -must figure out statisticsBST()
 -does insertBST() need to account for duplicate values?
 	-->nope, "all key values are unique"
@@ -16,4 +17,9 @@ To Do:
 rbt To Do:
 ----------
 -constructor/struct, might need some more blocks of mem in there for freq
+-so if I'm correct, the value inserted into the rbt will be a struct that
+	holds the color/frequency/any other pertinent information?
 
+General Miscellaneous:
+----------------------
+-what's the difference when you print to stderr?
