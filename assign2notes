@@ -1,6 +1,6 @@
 To Do:
 ------
--change displayBST() to have format for this new project
+-change displayBST() to have format for this new project, must use a queue
 -must figure out statisticsBST()
 -does insertBST() need to account for duplicate values?
 	-->nope, "all key values are unique"
@@ -21,6 +21,13 @@ rbt To Do:
 	holds the color/frequency/any other pertinent information?
 -do we need to account for trying to rotate when one of the needed nodes is
 	null?
+-still need to update frequency in phrase object, rn it just stays 0
+-how to handle the user requesting to delete a value that is not in the tree
+-seg faults that may occur may be due to not checking if a given node
+	exists, for example calling getnodeR() when there is no nodeR...
+-BE CAREFUL, NULL POINTERS SHOULD COUNT AS RED WHEN LOOKING AT:
+	if (parent[or others] are red) then...
 General Miscellaneous:
 ----------------------
 -what's the difference when you print to stderr?
+-MUST USE THE TEST2 DROPBOX PRIOR TO SUBMISSION
