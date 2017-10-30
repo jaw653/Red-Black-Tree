@@ -62,6 +62,21 @@ static BSTNODE *getGrandParent(BSTNODE *node) {
     return NULL;
 }
 
+static BSTNODE *getSibling(BSTNODE *node) {
+  if (getBSTNODEparent(node) && getBSTNODEleft(getBSTNODEparent(x))) {
+    if (nodesAreEqual(node, getBSTNODEleft(getBSTNODEparent(x)))) {
+      if (getBSTNODEright(getBSTNODEparent(x))) return getBSTNODEright(getBSTNODEparent(x));
+    }
+  }
+  else if (getBSTNODEparent(node) && getBSTNODEright(getBSTNODEparent(x))) {
+    if (nodesAreEqual(node, getBSTNODEright(getBSTNODEparent(x)))) {
+      if (getBSTNODEleft(getBSTNODEparent(x))) return getBSTNODEleft(getBSTNODEparent(x));
+    }
+  }
+
+  return NULL;
+}
+
 static bool nodesAreLinear(BSTNODE *x, BSTNODE *parent) {
   BSTNODE *grandParent = getBSTNODEparent(parent);
 
@@ -123,7 +138,7 @@ static void rightRotate(BST *tree, BSTNODE *x) {
 }
 
 static void insertionFixUp(BST *tree, BSTNODE *x) {
-  BSTNODE *node = getBSTNODE(x);
+  //BSTNODE *node = getBSTNODE(x);
   BSTNODE *parent = getBSTNODEparent(x);
   BSTNODE *grandParent = getGrandParent(x);
   BSTNODE *uncle = getBSTNODEUncle(x);
@@ -133,7 +148,7 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
 
     if (nodesAreEqual(x, getBSTroot(tree))) break;
     if (getPHRASEcolor(getBSTNODE(parent)) == 'b') break;
-    if (getPHRASEcolor(getBSTNODE(uncle)) == 'r') {
+    if (getPHRASEcolor(getBSTNODE(uncle)) == 'r' || uncle == NULL) {
       setPHRASEcolor(getBSTNODE(parent), 'b');
       setPHRASEcolor(getBSTNODE(uncle), 'b');
       setPHRASEcolor(getBSTNODE(grandParent), 'r');
@@ -141,7 +156,7 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
     }
     else {
       if (nodesAreLinear(x, getBSTNODEparent(x)) == false) {
-        BSTNODE *oldPar = parent;
+        BSTNODE *oldPar = parent;   //These 2 assigns preserve the needed values
         BSTNODE *oldx = x;
         /* Rotate x to parent */
         if (nodesAreEqual(x, getBSTNODEleft(oldPar))) {
@@ -158,6 +173,7 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
       setPHRASEcolor(getBSTNODE(parent), 'b');
       setPHRASEcolor(getBSTNODE(grandParent), 'r');
 
+      /* Rotate parent to grandparent */
       if (nodesAreEqual(parent, getBSTNODEleft(grandParent))) {
         rightRotate(tree, parent);
       }
@@ -170,9 +186,28 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
   }
 
   setPHRASEcolor(getBSTNODE(getBSTroot(tree)), 'b');
+}
 
+static void deletionFixUp(BST *tree, BSTNODE *x) {
+  BSTNODE *parent = getBSTNODEparent(x);
+  BSTNODE *grandParent = getGrandParent(x);
+  BSTNODE *uncle = getBSTNODEUncle(x);
+  BSTNODE *sibling = getSibling(x);
+
+  bool loop = true;
+  while (loop) {
+    if (nodesAreEqual(getBSTroot(tree), x)) break;
+    if (getPHRASEcolor(getBSTNODE(x)) == 'r') break;
+    if (getPHRASEcolor(getBSTNODE(sibling)) == 'r' || sibling == NULL) {
+      //color parent red
+      //color sibling black
+      //rotate sibing to parent
+    }
+    else if (nephew is red)
+  }
 }
 /******************************************************************************/
+
 RBT *newRBT(
   void (*d)(FILE *, void *),
   int (*c)(void *, void *)
@@ -189,4 +224,26 @@ RBT *newRBT(
 void insertRBT(RBT *t, void *value) {
   BSTNODE *x = insertBST(t->tree, value);
   insertionFixUp(t->tree, x);
+}
+
+int findRBT(RBT *t, void *value) {
+  PHRASE *p = getBSTNODE(findBST(t->tree, value));
+
+  /* Value is not in the tree */
+  if (p == NULL) {
+    return 0;
+  }
+  else {
+    return getPHRASEfrequency(p);
+  }
+}
+
+void deleteRBT(RBT *t, void *value) {
+  BSTNODE *valToDelete = findBST(t->tree, value);
+  if (valToDelete == NULL) {
+    //what to do? the value to be deleted is not here?
+  }
+  swapToLeafBST(t->tree, valToDelete);
+  deletionFixUp(t->tree, valToDelete);
+
 }
