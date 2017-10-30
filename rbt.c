@@ -123,35 +123,49 @@ static void rightRotate(BST *tree, BSTNODE *x) {
 }
 
 static void insertionFixUp(BST *tree, BSTNODE *x) {
+  BSTNODE *node = getBSTNODE(x);
+  BSTNODE *parent = getBSTNODEparent(x);
+  BSTNODE *grandParent = getGrandParent(x);
+  BSTNODE *uncle = getBSTNODEUncle(x);
+
   bool loop = true;
   while (loop) {
-    PHRASE *node = getBSTNODE(x);
-    PHRASE *parent = getBSTNODE(getBSTNODEparent(x));
-    PHRASE *grandParent = getBSTNODE(getGrandParent(x));
-    PHRASE *uncle = getBSTNODE(getBSTNODEUncle(x));
 
     if (nodesAreEqual(x, getBSTroot(tree))) break;
-    if (getPHRASEcolor(parent) == 'b') break;
-    if (getPHRASEcolor(uncle) == 'r') {
-      setPHRASEcolor(parent, 'b');
-      setPHRASEcolor(uncle, 'b');
-      setPHRASEcolor(grandParent, 'r');
+    if (getPHRASEcolor(getBSTNODE(parent)) == 'b') break;
+    if (getPHRASEcolor(getBSTNODE(uncle)) == 'r') {
+      setPHRASEcolor(getBSTNODE(parent), 'b');
+      setPHRASEcolor(getBSTNODE(uncle), 'b');
+      setPHRASEcolor(getBSTNODE(grandParent), 'r');
       x = getGrandParent(x);                //FIXME: might need to set() this
     }
     else {
-      //If x and parent are not linear
-      /* If x is the left child of its parent */
       if (nodesAreLinear(x, getBSTNODEparent(x)) == false) {
-        //rotate x to parent
-        //x = old parent
-        //parent = old x
+        BSTNODE *oldPar = parent;
+        BSTNODE *oldx = x;
+        /* Rotate x to parent */
+        if (nodesAreEqual(x, getBSTNODEleft(oldPar))) {
+          rightRotate(tree, x);
+        }
+        else {
+          leftRotate(tree, x);
+        }
+        x = oldPar;
+        parent = oldx;
+
       }
 
-      setPHRASEcolor(parent, 'b');
-      setPHRASEcolor(grandParent, 'r');
+      setPHRASEcolor(getBSTNODE(parent), 'b');
+      setPHRASEcolor(getBSTNODE(grandParent), 'r');
 
-      //rotate parent to grandParent
-      //exit the loop
+      if (nodesAreEqual(parent, getBSTNODEleft(grandParent))) {
+        rightRotate(tree, parent);
+      }
+      else {
+        leftRotate(tree, parent);
+      }
+
+      break;
     }
   }
 
