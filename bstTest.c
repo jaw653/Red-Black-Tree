@@ -26,7 +26,7 @@ int main(void) {
     printf("Attempting to find node w/ value 6\n");
     BSTNODE *node = findBST(tree, newREAL(6));
     if (node) printf("node found\n");
-    else printf("node not found :(\n");
+    else printf("node NOT found\n");
 
     printf("Attempting to remove node with value 6...\n");
     deleteBST(tree, newREAL(6));

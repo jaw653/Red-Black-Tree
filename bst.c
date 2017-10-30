@@ -163,7 +163,7 @@ static bool isLeaf(BSTNODE *node) {
 
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   if (t->size == 0) {
-    fprintf(fp, "[]");
+    fprintf(fp, "EMPTY");
     return;
   }
   else {
@@ -242,6 +242,11 @@ BSTNODE *deleteBST(BST *t, void *value) {
   BSTNODE *returnNode;
 
   BSTNODE *node = findBST(t, value);
+  if (node == NULL) {
+    printf("Value ");
+    t->display(stdout, value);
+    printf(" not found.\n");
+  }
   node = swapToLeafBST(t, node);
   returnNode = node;
 
@@ -251,7 +256,6 @@ BSTNODE *deleteBST(BST *t, void *value) {
 }
 
 BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
-
   /* If swapper is not null */
   if (t->swapper) {
     if (isLeaf(node)) return node;
