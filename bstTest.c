@@ -33,12 +33,13 @@ int main(void) {
     printf("value successfully deleted\n");
 
     displayBST(stdout, tree);
+    printf("\n");
+
+    printf("tree size is: %d\n", sizeBST(tree));
     //printf("node value is: %s\n", getSTRING(node->value));
     //printf("node->left is: %p\n", node->left);
     //printf("node->right is: %p\n", node->right);
     //printf("node->parent->value is: %s\n", getSTRING(node->parent->value));
-    printf("\n");
-
 
     return 0;
 }
