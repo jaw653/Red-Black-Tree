@@ -4,4 +4,7 @@ To Do:
 -does insertBST() need to account for duplicate values?
 -does findBST() need to account for the value not being in the tree?
 -is swapToLeaf() currently swapping to the correct leaf (pred vs succes)
-
+-does removeBST() need to account for empty tree/value not in tree?
+-currently findBST() and deleteBST() will print error messages and exit, is
+	this OK?
+-test trying to deleteBST() a NULL value and see what happens
