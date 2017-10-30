@@ -16,6 +16,8 @@ extern void displayPHRASE(FILE *, void *);
 extern void freePHRASE(PHRASE *);
 extern char getPHRASEcolor(PHRASE *);
 extern void setPHRASEcolor(PHRASE *, char);
+extern int getPHRASEfrequency(PHRASE *);
+extern void setPHRASEfrequency(PHRASE *, int);
 extern int comparePHRASE(void *, void *);
 //swapPHRASE
 

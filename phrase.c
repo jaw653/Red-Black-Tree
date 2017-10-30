@@ -41,6 +41,14 @@ void setPHRASEcolor(PHRASE *p, char c) {
   p->color = c;
 }
 
+int getPHRASEfrequency(PHRASE *p) {
+  return p->frequency;
+}
+
+void setPHRASEfrequency(PHRASE *p, int f) {
+  p->frequency = f;
+}
+
 void freePHRASE(PHRASE *p) {
   free(p);
 }
