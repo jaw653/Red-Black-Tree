@@ -24,6 +24,7 @@
 
 struct bstnode {
   void *value;
+  int color;            //0 == Red 1 == Black
   struct bstnode *parent;
   struct bstnode *left;
   struct bstnode *right;
@@ -35,6 +36,7 @@ static BSTNODE *newBSTNODE(void *value, BSTNODE *parent) {
   else {
     node = (struct bstnode *)malloc(sizeof(struct bstnode));
     node->value = value;
+    node->color = 0;
     node->parent = parent;
     node->left = node->right = NULL;
   }
