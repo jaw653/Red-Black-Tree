@@ -12,7 +12,6 @@
  *            -setBSTNODEleft, copies all replacement stuff to n->left, is this ok?
  *            -when should swapleaf swap with pred and when successor
  *            -do we need to account for equal values in the bst
- *            -when deleting nodes, can I just set them = NULL or do I need to free?
  *            -right now, findbst does not account for if the value is not in the tree, should it?
  *            -insertBST does not account for duplicate values, should it?
  */
@@ -309,7 +308,7 @@ int sizeBST(BST *t) {
 
 void statisticsBST(FILE *fp, BST *t) {
   fprintf(fp, "Words/Phrases: %d\n", 5);      //FIXME: should be the actual number of words/Phrases
-  fprintf(fp, "Nodes: %d\n", t->size);
+  fprintf(fp, "Nodes: %d\n", t->size);        //FIXME: should be some other number idk what...
   fprintf(fp, "Maximum depth: %d\n", 5);      //FIXME: need correct stat here
   fprintf(fp, "Minimum depth: %d\n", 5);      //FIXME: need correct stat here
 }
