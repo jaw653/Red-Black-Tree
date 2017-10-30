@@ -79,6 +79,49 @@ static bool nodesAreLinear(BSTNODE *x, BSTNODE *parent) {
   return false;
 }
 
+static void leftRotate(BST *tree, BSTNODE *x) {
+  BSTNODE *y = getBSTNODEright(x);
+
+  setBSTNODEright(x, getBSTNODEleft(y));
+  setBSTNODEparent(getBSTNODEleft(y), x);
+  setBSTNODEparent(y, getBSTNODEparent(x));
+
+  if (getBSTNODEparent(x) == NULL) {
+    setBSTroot(tree, y);
+  }
+  /* x = x->parent->left */
+  else if (nodesAreEqual(x, getBSTNODEleft(getBSTNODEparent(x)))) {
+    setBSTNODEleft(getBSTNODEparent(x), y);
+  }
+  else {
+    setBSTNODEright(getBSTNODEparent(x), y);
+  }
+
+  setBSTNODEleft(y, x);
+  setBSTNODEparent(x, y);
+}
+
+static void rightRotate(BST *tree, BSTNODE *x) {
+  BSTNODE *y = getBSTNODEleft(x);
+
+  setBSTNODEleft(x, getBSTNODEright(y));
+  setBSTNODEparent(getBSTNODEparent(y), x);
+  setBSTNODEparent(y, getBSTNODEparent(x));
+
+  if (getBSTNODEparent(x) == NULL) {
+    setBSTroot(tree, y);
+  }
+  else if (nodesAreEqual(x, getBSTNODEright(getBSTNODEparent(x)))) {
+    setBSTNODEright(getBSTNODEparent(x), y);
+  }
+  else {
+    setBSTNODEleft(getBSTNODEparent(x), y);
+  }
+
+  setBSTNODEright(y, x);
+  setBSTNODEparent(x, y);
+}
+
 static void insertionFixUp(BST *tree, BSTNODE *x) {
   bool loop = true;
   while (loop) {
@@ -93,7 +136,7 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
       setPHRASEcolor(parent, 'b');
       setPHRASEcolor(uncle, 'b');
       setPHRASEcolor(grandParent, 'r');
-      x = getGrandParent(x);
+      x = getGrandParent(x);                //FIXME: might need to set() this
     }
     else {
       //If x and parent are not linear
