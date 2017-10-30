@@ -10,9 +10,11 @@
  * Questions:
  *            -setBSTNODE, should it just set n->value = value?
  *            -setBSTNODEleft, copies all replacement stuff to n->left, is this ok?
- *            -when should swap leaf swap with pred and when successor
+ *            -when should swapleaf swap with pred and when successor
  *            -do we need to account for equal values in the bst
  *            -when deleting nodes, can I just set them = NULL or do I need to free?
+ *            -right now, findbst does not account for if the value is not in the tree, should it?
+ *            -insertBST does not account for duplicate values, should it?
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -165,7 +167,6 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
     fprintf(fp, "[]");
     return;
   }
-
   else {
     if (root->value) {
       fprintf(fp, "[");
@@ -178,22 +179,6 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
       if (root->right) displayHelper(fp, root->right, t);
       fprintf(fp, "]");
     }
-
-
-/*
-//    printf("flag\n");
-    if (root->value) fprintf(fp, "[");
-    if (root->left) displayHelper(fp, root->left, t);
-//printf("flag2\n");
-    if (root->left && root->value) fprintf(fp, " ");
-//printf("flag2.1\n");
-    if (root->value) t->display(fp, root->value);
-//printf("flag2.2\n");
-    if (root->right && root->value) fprintf(fp, " ");
-//printf("flag3\n");
-    if (root->right) displayHelper(fp, root->right, t);
-    if (root->value) fprintf(fp, "]");
-*/
   }
 }
 
