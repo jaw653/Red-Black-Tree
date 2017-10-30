@@ -11,6 +11,7 @@
 
 #include "rbt.h"
 #include "bst.h"
+#include "phrase.h"
 
 struct rbt {
     struct bst *tree;
@@ -81,12 +82,17 @@ static bool nodesAreLinear(BSTNODE *x, BSTNODE *parent) {
 static void insertionFixUp(BST *tree, BSTNODE *x) {
   bool loop = true;
   while (loop) {
+    PHRASE *node = getBSTNODE(x);
+    PHRASE *parent = getBSTNODE(getBSTNODEparent(x));
+    PHRASE *grandParent = getBSTNODE(getGrandParent(x));
+    PHRASE *uncle = getBSTNODE(getBSTNODEUncle(x));
+
     if (nodesAreEqual(x, getBSTroot(tree))) break;
-    if (getBSTNODE(getBSTNODEparent(x))->color == "black") break;
-    if (getBSTNODE(getBSTNODEUncle(x))->color == "red") {
-      getBSTNODE(getBSTNODEparent(x))->color = "black";
-      getBSTNODE(getBSTNODEUncle(x))->color = "black";
-      getBSTNODE(getGrandParent(x))->color = "red";
+    if (getPHRASEcolor(parent) == 'b') break;
+    if (getPHRASEcolor(uncle) == 'r') {
+      setPHRASEcolor(parent, 'b');
+      setPHRASEcolor(uncle, 'b');
+      setPHRASEcolor(grandParent, 'r');
       x = getGrandParent(x);
     }
     else {
@@ -98,14 +104,16 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
         //parent = old x
       }
 
-      //color parent black
-      //color grandParent red
+      setPHRASEcolor(parent, 'b');
+      setPHRASEcolor(grandParent, 'r');
+
       //rotate parent to grandParent
       //exit the loop
     }
   }
 
-  getBSTNODE(getBSTroot(tree))->color = black;
+  setPHRASEcolor(getBSTNODE(getBSTroot(tree)), 'b');
+
 }
 /******************************************************************************/
 RBT *newRBT(
