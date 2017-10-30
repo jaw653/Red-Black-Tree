@@ -3,7 +3,7 @@
 # The University of Alabama
 
 OPTS = -Wall -Wextra -std=c99
-OBJS = bst.o integer.o string.o real.o
+OBJS = bst.o rbt.o integer.o string.o real.o
 TYPE_OBJS = integer.o real.o string.o
 # other objs Below
 # TESTOBJS = tests...
@@ -15,6 +15,9 @@ all: $(OBJS)
 
 bst.o: bst.c bst.h
 	gcc $(OPTS) -c bst.c
+
+rbt.o: rbt.c rbt.h
+	gcc $(OPTS) rbt.c -c
 
 integer.o: integer.c integer.h
 	gcc $(OPTS) -c integer.c
