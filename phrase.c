@@ -8,14 +8,14 @@
 
 struct PHRASE {
   int frequency;
-  char *color;
+  char color;
   char *value;
 };
 
 PHRASE *newPHRASE(char *value) {
   PHRASE *p = malloc(sizeof(struct PHRASE));
   p->frequency = 0;
-  p->color = "red";
+  p->color = 'r';
   p->value = NULL;
 }
 
@@ -33,8 +33,12 @@ void displayPHRASE(FILE *fp, PHRASE *p) {
   fprintf(fp, "%s\n", p->value);
 }
 
-char *getPHRASEcolor(PHRASE *p) {
+char getPHRASEcolor(PHRASE *p) {
   return p->color;
+}
+
+void setPHRASEcolor(PHRASE *p, char c) {
+  p->color = c;
 }
 
 void freePHRASE(PHRASE *p) {
