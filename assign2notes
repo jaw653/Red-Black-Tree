@@ -12,3 +12,8 @@ To Do:
 	this OK?
 -test trying to deleteBST() a NULL value and see what happens
 -do I need to add any specific assertions?
+
+rbt To Do:
+----------
+-constructor/struct, might need some more blocks of mem in there for freq
+
