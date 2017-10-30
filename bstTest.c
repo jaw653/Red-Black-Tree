@@ -6,7 +6,7 @@
 int main(void) {
     BST *tree = newBST(displayREAL, compareREAL, NULL);
     printf("tree successfully initiailized\n");
-
+/*
     insertBST(tree, newREAL(7));
     printf("1 insert successful\n");
 
@@ -18,7 +18,7 @@ int main(void) {
 
     insertBST(tree, newREAL(8));
     printf("4 inserts successful\n");
-
+*/
     printf("Attempting to display tree...\n");
     displayBST(stdout, tree);
     printf("\n");

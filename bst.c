@@ -227,10 +227,18 @@ BSTNODE *insertBST(BST *t, void *value) {
 }
 
 BSTNODE *findBST(BST *t, void *value) {
+  if (t->size == 0) {
+    printf("ERROR: t->size is 0\n");
+    return NULL;
+  }
   return findHelper(t->root, t->comparator, value);
 }
 
 BSTNODE *deleteBST(BST *t, void *value) {
+  if (t->size == 0) {
+    printf("ERROR: t->size is 0\n");
+    return NULL;
+  }
   BSTNODE *returnNode;
 
   BSTNODE *node = findBST(t, value);
@@ -246,18 +254,18 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
 
   /* If swapper is not null */
   if (t->swapper) {
-    if (isLeaf(node)) return node;        //FIXME: might need to return NULL
+    if (isLeaf(node)) return node;
     if (node->left) {
       t->swapper(node->left, node);
       node = node->left;
-      traverseRight(t, node, true);         //FIXME: currently doesn't use the swapper function
+      traverseRight(t, node, true);
 
       return swapToLeafBST(t, node);
     }
     else if (node->right) {
       t->swapper(node->right, node);
       node = node->right;
-      traverseLeft(t, node, true);         //FIXME: currently doesn't use swapper function
+      traverseLeft(t, node, true);
 
       return swapToLeafBST(t, node);
     }
@@ -284,7 +292,7 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
     }
   }
 
-  return NULL;                        //FIXME: may need to get rid of this...
+  return NULL;
 }
 
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
