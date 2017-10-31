@@ -19,6 +19,8 @@ extern char getRBTNODEcolor(RBTNODE *);
 extern void setRBTNODEcolor(RBTNODE *, char);
 extern int getRBTNODEfrequency(RBTNODE *);
 extern void setRBTNODEfrequency(RBTNODE *, int);
+extern int incrementRBTNODEfrequency(RBTNODE *);
+extern int decrementRBTNODEfrequency(RBTNODE *);
 extern int compareRBTNODE(void *, void *);
 extern void swapRBTNODE(BSTNODE *, BSTNODE *);
 //swapRBTNODE

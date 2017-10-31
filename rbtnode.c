@@ -55,6 +55,19 @@ void setRBTNODEfrequency(RBTNODE *p, int f) {
   p->frequency = f;
 }
 
+int incrementRBTNODEfrequency(RBTNODE *n) {
+  /* Returns the new frequency */
+  n->frequency += 1;
+  return n->frequency;
+}
+
+int decrementRBTNODEfrequency(RBTNODE *n) {
+  /* Returns the new frequency */
+  if (n->frequency == 0) return 0;
+  n->frequency -= 1;
+  return n->frequency;
+}
+
 void freeRBTNODE(RBTNODE *p) {
   free(p);
 }
