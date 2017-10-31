@@ -63,18 +63,29 @@ static BSTNODE *getGrandParent(BSTNODE *node) {
 }
 
 static BSTNODE *getSibling(BSTNODE *node) {
-  if (getBSTNODEparent(node) && getBSTNODEleft(getBSTNODEparent(x))) {
-    if (nodesAreEqual(node, getBSTNODEleft(getBSTNODEparent(x)))) {
-      if (getBSTNODEright(getBSTNODEparent(x))) return getBSTNODEright(getBSTNODEparent(x));
+  if (getBSTNODEparent(node) && getBSTNODEleft(getBSTNODEparent(node))) {
+    if (nodesAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) {
+      if (getBSTNODEright(getBSTNODEparent(node))) return getBSTNODEright(getBSTNODEparent(node));
     }
   }
-  else if (getBSTNODEparent(node) && getBSTNODEright(getBSTNODEparent(x))) {
-    if (nodesAreEqual(node, getBSTNODEright(getBSTNODEparent(x)))) {
-      if (getBSTNODEleft(getBSTNODEparent(x))) return getBSTNODEleft(getBSTNODEparent(x));
+  else if (getBSTNODEparent(node) && getBSTNODEright(getBSTNODEparent(node))) {
+    if (nodesAreEqual(node, getBSTNODEright(getBSTNODEparent(node)))) {
+      if (getBSTNODEleft(getBSTNODEparent(node))) return getBSTNODEleft(getBSTNODEparent(node));
     }
   }
 
   return NULL;
+}
+
+static BSTNODE *getNephew(BSTNODE *node) {
+  BSTNODE *uncle = getBSTNODEUncle(node);
+  if (nodesAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) {
+    return getBSTNODEright(uncle);
+  }
+  else {
+    return getBSTNODEleft(uncle);
+  }
+
 }
 
 static bool nodesAreLinear(BSTNODE *x, BSTNODE *parent) {
@@ -193,17 +204,25 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
   BSTNODE *grandParent = getGrandParent(x);
   BSTNODE *uncle = getBSTNODEUncle(x);
   BSTNODE *sibling = getSibling(x);
+  BSTNODE *nephew = getNephew(x);
 
   bool loop = true;
   while (loop) {
     if (nodesAreEqual(getBSTroot(tree), x)) break;
     if (getPHRASEcolor(getBSTNODE(x)) == 'r') break;
     if (getPHRASEcolor(getBSTNODE(sibling)) == 'r' || sibling == NULL) {
-      //color parent red
-      //color sibling black
-      //rotate sibing to parent
+      setPHRASEcolor(getBSTNODE(parent), 'r');
+      setPHRASEcolor(getBSTNODE(sibling), 'b');
+      if (nodesAreEqual(sibling, getBSTNODEleft(parent))) {
+        rightRotate(tree, sibling);
+      }
+      else {
+        leftRotate(tree, sibling);
+      }
     }
-    else if (nephew is red)
+    else if (getPHRASEcolor(getBSTNODE(nephew)) == 'r') {
+
+    }
   }
 }
 /******************************************************************************/
