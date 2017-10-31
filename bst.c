@@ -239,6 +239,7 @@ BSTNODE *deleteBST(BST *t, void *value) {
     printf("ERROR: t->size is 0\n");
     return NULL;
   }
+  
   BSTNODE *returnNode;
 
   BSTNODE *node = findBST(t, value);
