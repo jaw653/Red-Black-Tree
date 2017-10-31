@@ -16,6 +16,7 @@ To Do:
 
 rbt To Do:
 ----------
+-HOW DO I GO ABOUT HANDLING INSERTING THE SAME VALUE???
 -constructor/struct, might need some more blocks of mem in there for freq
 -so if I'm correct, the value inserted into the rbt will be a struct that
 	holds the color/frequency/any other pertinent information?
