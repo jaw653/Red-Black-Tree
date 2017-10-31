@@ -30,6 +30,7 @@ rbt To Do:
 -after deletionfixup, what value should i be pruning()?
 -right now, swapping entire structs, need to maintain colorings...
 -deleting should decrement the freq, then when freq==0, remove node
+-haven't tested the findRBT() fc yet b/c frequency is not yet accounted for
 
 General Miscellaneous:
 ----------------------
