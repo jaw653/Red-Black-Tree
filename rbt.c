@@ -85,7 +85,16 @@ static BSTNODE *getNephew(BSTNODE *node) {
   else {
     return getBSTNODEleft(uncle);
   }
+}
 
+static BSTNODE *getNiece(BSTNODE *node) {
+  BSTNODE *uncle = getBSTNODEUncle(node);
+  if (nodesAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) {
+    return getBSTNODEleft(uncle);
+  }
+  else {
+    return getBSTNODEright(uncle);
+  }
 }
 
 static bool nodesAreLinear(BSTNODE *x, BSTNODE *parent) {
@@ -205,6 +214,7 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
   BSTNODE *uncle = getBSTNODEUncle(x);
   BSTNODE *sibling = getSibling(x);
   BSTNODE *nephew = getNephew(x);
+  BSTNODE *niece = getNiece(x);
 
   bool loop = true;
   while (loop) {
@@ -221,9 +231,41 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
       }
     }
     else if (getPHRASEcolor(getBSTNODE(nephew)) == 'r') {
+      setPHRASEcolor(getBSTNODE(sibling), getPHRASEcolor(getBSTNODE(parent)));
+      //color parent black
+      setPHRASEcolor(getBSTNODE(parent), 'b');
+      //color nephew black
+      setPHRASEcolor(getBSTNODE(nephew), 'b');
+      //rotate sibling to parent
+      if (nodesAreEqual(sibling, getBSTNODEleft(parent))) {
+        rightRotate(tree, sibling);
+      }
+      else {
+        leftRotate(tree, sibling);
+      }
 
+      break;
+    }
+    else if (getPHRASEcolor(getBSTNODE(niece)) == 'r') {
+      //color niece black
+      setPHRASEcolor(getBSTNODE(niece), 'b');
+      //color sibling red
+      setPHRASEcolor(getBSTNODE(sibling), 'r');
+      //rotate niece to sibling
+      if (nodesAreEqual(niece, getBSTNODEleft(sibling))) {
+        rightRotate(tree, niece);
+      }
+      else {
+        leftRotate(tree, niece);
+      }
+    }
+    else {
+      //color sibling red
+      setPHRASEcolor(getBSTNODE(sibling), 'r');
+      x = parent;
     }
   }
+  setPHRASEcolor(getBSTNODE(x), 'b');   //FIXME: this should be outside the loop, there might be a screwed up bracket
 }
 /******************************************************************************/
 
