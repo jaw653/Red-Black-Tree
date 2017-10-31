@@ -27,6 +27,10 @@ rbt To Do:
 	exists, for example calling getnodeR() when there is no nodeR...
 -BE CAREFUL, NULL POINTERS SHOULD COUNT AS RED WHEN LOOKING AT:
 	if (parent[or others] are red) then...
+-after deletionfixup, what value should i be pruning()?
+-right now, swapping entire structs, need to maintain colorings...
+-deleting should decrement the freq, then when freq==0, remove node
+
 General Miscellaneous:
 ----------------------
 -what's the difference when you print to stderr?
