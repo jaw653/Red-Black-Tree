@@ -44,6 +44,7 @@ static BSTNODE *newBSTNODE(void *value, BSTNODE *parent) {
 /******************************************************************************/
 
 void *getBSTNODE(BSTNODE *n) {
+  if (!n) return NULL;
   return n->value;
 }
 
@@ -52,6 +53,7 @@ void setBSTNODE(BSTNODE *n, void *value) {
 }
 
 BSTNODE *getBSTNODEleft(BSTNODE *n) {
+  if (!n->left) return NULL;
   return n->left;
 }
 
@@ -63,6 +65,7 @@ void setBSTNODEleft(BSTNODE *n, BSTNODE *replacement) {
 }
 
 BSTNODE *getBSTNODEright(BSTNODE *n) {
+  if (!n->right) return NULL;
   return n->right;
 }
 
@@ -74,6 +77,7 @@ void setBSTNODEright(BSTNODE *n, BSTNODE *replacement) {
 }
 
 BSTNODE *getBSTNODEparent(BSTNODE *n) {
+  if (!n->parent) return NULL;
   return n->parent;
 }
 
@@ -218,6 +222,10 @@ void setBSTroot(BST *t, BSTNODE *replacement) {
 }
 
 BSTNODE *getBSTroot(BST *t) {
+  if (!t || !t->root) {
+    printf("returning null...\n");
+    return NULL;
+  }
   return t->root;
 }
 
@@ -239,7 +247,7 @@ BSTNODE *deleteBST(BST *t, void *value) {
     printf("ERROR: t->size is 0\n");
     return NULL;
   }
-  
+
   BSTNODE *returnNode;
 
   BSTNODE *node = findBST(t, value);
