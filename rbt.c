@@ -180,11 +180,11 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
   while (loop) {
 
     if (nodesAreEqual(x, getBSTroot(tree))) break;
-    if (getRBTNODEcolor(getBSTNODE(parent)) == 'b') break;
-    if (getRBTNODEcolor(getBSTNODE(uncle)) == 'r' || uncle == NULL) {
-      setRBTNODEcolor(getBSTNODE(parent), 'b');
-      setRBTNODEcolor(getBSTNODE(uncle), 'b');
-      setRBTNODEcolor(getBSTNODE(grandParent), 'r');
+    if (getRBTNODEcolor(getBSTNODE(parent)) == 'B') break;
+    if (getRBTNODEcolor(getBSTNODE(uncle)) == 'R' || uncle == NULL) {
+      setRBTNODEcolor(getBSTNODE(parent), 'B');
+      setRBTNODEcolor(getBSTNODE(uncle), 'B');
+      setRBTNODEcolor(getBSTNODE(grandParent), 'R');
       x = getGrandParent(x);                //FIXME: might need to set() this
     }
     else {
@@ -200,8 +200,8 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
 
       }
 
-      setRBTNODEcolor(getBSTNODE(parent), 'b');
-      setRBTNODEcolor(getBSTNODE(grandParent), 'r');
+      setRBTNODEcolor(getBSTNODE(parent), 'B');
+      setRBTNODEcolor(getBSTNODE(grandParent), 'R');
 
       /* Rotate parent to grandparent */
       rotate(tree, parent, grandParent);
@@ -210,7 +210,7 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
     }
   }
 
-  setRBTNODEcolor(getBSTNODE(getBSTroot(tree)), 'b');
+  setRBTNODEcolor(getBSTNODE(getBSTroot(tree)), 'B');
 }
 
 static void deletionFixUp(BST *tree, BSTNODE *x) {
@@ -237,34 +237,34 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
   bool loop = true;
   while (loop) {
     if (nodesAreEqual(getBSTroot(tree), x)) break;
-    if (getRBTNODEcolor(getBSTNODE(x)) == 'r') break;
-    if (getRBTNODEcolor(getBSTNODE(sibling)) == 'r' || sibling == NULL) {
-      setRBTNODEcolor(getBSTNODE(parent), 'r');
-      setRBTNODEcolor(getBSTNODE(sibling), 'b');
+    if (getRBTNODEcolor(getBSTNODE(x)) == 'R') break;
+    if (getRBTNODEcolor(getBSTNODE(sibling)) == 'R' || sibling == NULL) {
+      setRBTNODEcolor(getBSTNODE(parent), 'R');
+      setRBTNODEcolor(getBSTNODE(sibling), 'B');
 
       rotate(tree, sibling, getBSTNODEparent(sibling));
     }
-    else if (getRBTNODEcolor(getBSTNODE(nephew)) == 'r') {
+    else if (getRBTNODEcolor(getBSTNODE(nephew)) == 'R') {
       setRBTNODEcolor(getBSTNODE(sibling), getRBTNODEcolor(getBSTNODE(parent)));
-      setRBTNODEcolor(getBSTNODE(parent), 'b');
-      setRBTNODEcolor(getBSTNODE(nephew), 'b');
+      setRBTNODEcolor(getBSTNODE(parent), 'B');
+      setRBTNODEcolor(getBSTNODE(nephew), 'B');
 
       rotate(tree, sibling, getBSTNODEparent(sibling));
 
       break;
     }
-    else if (getRBTNODEcolor(getBSTNODE(niece)) == 'r') {
-      setRBTNODEcolor(getBSTNODE(niece), 'b');
-      setRBTNODEcolor(getBSTNODE(sibling), 'r');
+    else if (getRBTNODEcolor(getBSTNODE(niece)) == 'R') {
+      setRBTNODEcolor(getBSTNODE(niece), 'B');
+      setRBTNODEcolor(getBSTNODE(sibling), 'R');
 
       rotate(tree, niece, getBSTNODEparent(niece));
     }
     else {
-      setRBTNODEcolor(getBSTNODE(sibling), 'r');
+      setRBTNODEcolor(getBSTNODE(sibling), 'R');
       x = parent;
     }
   }
-  setRBTNODEcolor(getBSTNODE(x), 'b');   //FIXME: this should be outside the loop, there might be a screwed up bracket
+  setRBTNODEcolor(getBSTNODE(x), 'B');   //FIXME: this should be outside the loop, there might be a screwed up bracket
 }
 /******************************************************************************/
 

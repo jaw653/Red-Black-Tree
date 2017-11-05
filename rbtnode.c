@@ -17,8 +17,8 @@ struct RBTNODE {
 
 RBTNODE *newRBTNODE(char *value) {
   RBTNODE *p = malloc(sizeof(struct RBTNODE));
-  p->frequency = 0;
-  p->color = 'r';
+  p->frequency = 1;
+  p->color = 'R';
   p->value = value;
 
   return p;
@@ -35,8 +35,7 @@ char *setRBTNODE(RBTNODE *p, char *str) {
 }
 
 void displayRBTNODE(FILE *fp, void *p) {
-
-  fprintf(fp, "%s\n", getRBTNODE(p));
+  fprintf(fp, "%s-%c\n", getRBTNODE(p), getRBTNODEcolor(p));
 }
 
 char getRBTNODEcolor(RBTNODE *p) {

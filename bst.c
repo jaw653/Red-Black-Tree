@@ -21,6 +21,7 @@
 
 #include "string.h"
 #include "bst.h"
+#include "queue.h"
 
 struct bstnode {
   void *value;
@@ -97,6 +98,20 @@ struct bst {
 };
 
 /***************************** Helper function(s) *****************************/
+static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
+  if (s1 && s2) {
+    if (s1->value && s2->value) {
+      if (s1->value == s2->value && s1->left == s2->left) {
+        if (s1->right == s2->right && s1->parent == s2->parent) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value) {
   if (root == NULL) {
     //assert?
@@ -164,40 +179,74 @@ static bool isLeaf(BSTNODE *node) {
   else return false;
 }
 
+static bool isLeftChild(BSTNODE *node) {
+  if (structsAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) {
+    return true;
+  }
 
+  return false;
+}
+
+static bool isRightChild(BSTNODE *node) {
+  if (structsAreEqual(node, getBSTNODEright(getBSTNODEparent(node)))) {
+    return true;
+  }
+
+  return false;
+}
+
+static void printLevel(FILE *fp, BSTNODE *root, BST *t, int level) {
+  if (root == NULL) return;
+  if (level == 1) {
+    fprintf(fp, "%d: \n", level-1);
+    if (isLeaf(root)) fprintf(fp, "=");
+    t->display(fp, root->value);
+    if (getBSTNODEparent(root) == NULL) {
+      fprintf(fp, "(");
+      t->display(fp, getBSTNODEparent(root)->value);
+      fprintf(fp, ")-");
+    }
+    if (isLeftChild(root)) fprintf(fp, "l");
+    if (isRightChild(root)) fprintf(fp, "r");
+    fprintf(fp, " ");                                   //FIXME: need to figure out how to not print final whitespace
+  }
+  else if (level > 1) {
+    printLevel(fp, root->left, t, level-1);
+    printLevel(fp, root->right, t, level-1);
+  }
+}
+
+static int getHeight(BSTNODE *root) {
+  if (root == NULL) return 0;
+  else {
+    int Lheight, Rheight;
+    if (root->left) Lheight = getHeight(root->left);
+    if (root->right) Rheight = getHeight(root->right);
+
+    if (Lheight > Rheight) {
+      return (Lheight + 1);
+    }
+    else {
+      return (Rheight + 1);
+    }
+  }
+}
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   if (t->size == 0) {
     fprintf(fp, "EMPTY");
     return;
   }
   else {
-    if (root->value) {
-      fprintf(fp, "[");
-      if (root->left) displayHelper(fp, root->left, t);
-
-      if (root->left) fprintf(fp, " ");
-      t->display(fp, root->value);
-      if (root->right) fprintf(fp, " ");
-
-      if (root->right) displayHelper(fp, root->right, t);
-      fprintf(fp, "]");
+    int height = getHeight(root);
+    int i;
+    for (i = 1; i <= height; i++) {
+      //print levels;
+      printLevel(fp, root, t, i);
+      printf("\n");
     }
   }
 }
 
-static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
-  if (s1 && s2) {
-    if (s1->value && s2->value) {
-      if (s1->value == s2->value && s1->left == s2->left) {
-        if (s1->right == s2->right && s1->parent == s2->parent) {
-          return true;
-        }
-      }
-    }
-  }
-
-  return false;
-}
 /******************************************************************************/
 
 BST *newBST(
