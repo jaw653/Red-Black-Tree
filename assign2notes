@@ -33,6 +33,12 @@ rbt To Do:
 -deleting should decrement the freq, then when freq==0, remove node
 -haven't tested the findRBT() fc yet b/c frequency is not yet accounted for
 
+trees.c to do:
+--------------
+-check to see if empty files?
+-should I print an error message if there are no command line arguments, should I do something else w/ 
+	the program?
+
 General Miscellaneous:
 ----------------------
 -what's the difference when you print to stderr?
