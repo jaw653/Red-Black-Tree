@@ -232,6 +232,7 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
 
       prevLevel = level - 2;
 
+      if (isLeaf(temp)) fprintf(fp, "=");
       t->display(fp, temp->value);
       fprintf(fp, "(");
       t->display(fp, getBSTNODEparent(temp)->value);
@@ -257,6 +258,7 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
 
       if (sizeQUEUE(q) == 0) {
         fprintf(fp, "\n%d: ", level);
+        if (isLeaf(temp)) fprintf(fp, "=");
         t->display(fp, temp->value);
         fprintf(fp, "(");
         t->display(fp, getBSTNODEparent(temp)->value);
