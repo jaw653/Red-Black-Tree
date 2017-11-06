@@ -17,6 +17,8 @@
 
 struct rbt {
     struct bst *tree;
+    int totalWords;
+    int numNodes;
     void (*display)(FILE *, void *);
     int (*comparator)(void *, void *);
 };
@@ -29,6 +31,10 @@ struct RBTNODE {
 };
 
 static void swapRBTNODE(void *, void *);
+static int findMinDepthRBT(BSTNODE *);
+static int findMaxDepthRBT(BSTNODE *);
+static int min(int, int);
+
 /***************************** Private Functions ******************************/
 /* Compare two bst structs, returns true if the same */
 static bool nodesAreEqual(BSTNODE *s1, BSTNODE *s2) {
@@ -310,17 +316,21 @@ RBT *newRBT(
     t->tree = newBST(d, c, swapRBTNODE);           //FIXME: init with swapper function, change other fc's to use swapper function
     t->display = d;
     t->comparator = c;
+    t->totalWords = 0;
+    t->numNodes = 0;
 
     return t;
 }
 
 void insertRBT(RBT *t, void *value) {
+  t->totalWords += 1;
   BSTNODE *x = insertBST(t->tree, value);
   if (x == NULL) {
     BSTNODE *newNode = findBST(t->tree, value);
     //incrementRBTNODEfrequency(newNode);
     RBTNODE *n = getBSTNODE(newNode);
     n->frequency += 1;
+    t->numNodes += 1;
   }
   else {
     insertionFixUp(t->tree, x);
@@ -343,6 +353,7 @@ int findRBT(RBT *t, void *value) {
 }
 
 void deleteRBT(RBT *t, void *value) {
+  t->totalWords -= 1;
   BSTNODE *valToDelete = findBST(t->tree, value);
 
   if (valToDelete != NULL) {
@@ -353,6 +364,7 @@ void deleteRBT(RBT *t, void *value) {
       swapToLeafBST(t->tree, valToDelete);
       deletionFixUp(t->tree, valToDelete);
       pruneLeafBST(t->tree, valToDelete);         //FIXME: is this block right?
+      t->numNodes -= 1;
     }
   }
 }
@@ -363,10 +375,16 @@ int sizeRBT(RBT *t) {
 
 int wordsRBT(RBT *t) {
   //returns the number of words, including duplicates, in the tree
+  return t->totalWords;
 }
 
 void statisticsRBT(FILE *fp, RBT *t) {
   //prints statistics to fp
+  fprintf(fp, "Words/Phrases: %d\n", t->totalWords);
+  fprintf(fp, "Nodes: %d\n", t->numNodes);
+  fprintf(fp, "Minimum Depth: %d\n", findMinDepthRBT(getBSTroot(t->tree)));    //FIXME: figure it out
+  fprintf(fp, "Maximum Depth: %d\n", findMaxDepthRBT(getBSTroot(t->tree)));    //FIXME: figure it out
+
 }
 
 void displayRBT(FILE *fp, RBT *t) {
@@ -385,4 +403,42 @@ static void swapRBTNODE(void *n1, void *n2) {
   int ctemp = ra->frequency;
   ra->frequency = rb->frequency;
   rb->frequency = ctemp;
+}
+
+static int findMinDepthRBT(BSTNODE *root) {
+  if (root == NULL) {
+    return 0;
+  }
+  if (getBSTNODEleft(root) == NULL && getBSTNODEright(root) == NULL) {
+    return 1;
+  }
+  if (!getBSTNODEleft(root)) {
+    return findMinDepthRBT(getBSTNODEright(root)) + 1;
+  }
+  if (!getBSTNODEright(root)) {
+    return findMinDepthRBT(getBSTNODEleft(root)) + 1;
+  }
+
+  return min(findMinDepthRBT(getBSTNODEleft(root)), findMinDepthRBT(getBSTNODEright(root))) + 1;
+}
+
+static int findMaxDepthRBT(BSTNODE *root) {
+  if (root == NULL) return 0;
+  else {
+    int L_depth = findMaxDepthRBT(getBSTNODEleft(root));
+    int R_depth = findMaxDepthRBT(getBSTNODEright(root));
+
+    if (L_depth > R_depth) {
+      return L_depth + 1;
+    }
+    else return R_depth + 1;
+  }
+}
+
+static int min(int a, int b) {
+    if (a < b) return a;
+    else if (a > b) return b;
+    else {
+      return a;
+    }
 }
