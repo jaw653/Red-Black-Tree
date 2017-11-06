@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include "string.h"
 #include "bst.h"
@@ -102,8 +103,10 @@ static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
   if (s1 && s2) {
     if (s1->value && s2->value) {
       if (s1->value == s2->value && s1->left == s2->left) {
-        if (s1->right == s2->right && s1->parent == s2->parent) {
-          return true;
+        if (s1->right && s2->right && s1->parent && s2->parent) {
+          if (s1->right == s2->right && s1->parent == s2->parent) {
+            return true;
+          }
         }
       }
     }
@@ -117,6 +120,9 @@ static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value
     //assert?
 
     root = newBSTNODE(value, parent);
+    if (parent == NULL)
+      root->parent = root;
+
     t->size += 1;
 
     return root;
@@ -180,6 +186,8 @@ static bool isLeaf(BSTNODE *node) {
 }
 
 static bool isLeftChild(BSTNODE *node) {
+  if (getBSTNODEparent(node) == NULL) return false;
+  if (getBSTNODEleft(getBSTNODEparent(node))) return false;
   if (structsAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) {
     return true;
   }
@@ -188,6 +196,8 @@ static bool isLeftChild(BSTNODE *node) {
 }
 
 static bool isRightChild(BSTNODE *node) {
+  if (getBSTNODEparent(node) == NULL) return false;
+  if (getBSTNODEright(getBSTNODEparent(node))) return false;
   if (structsAreEqual(node, getBSTNODEright(getBSTNODEparent(node)))) {
     return true;
   }
@@ -198,17 +208,25 @@ static bool isRightChild(BSTNODE *node) {
 static void printLevel(FILE *fp, BSTNODE *root, BST *t, int level) {
   if (root == NULL) return;
   if (level == 1) {
-    fprintf(fp, "%d: \n", level-1);
+    fprintf(fp, "%d: ", level-1);
     if (isLeaf(root)) fprintf(fp, "=");
     t->display(fp, root->value);
-    if (getBSTNODEparent(root) == NULL) {
+
+    if (getBSTNODEparent(root) != NULL) {
       fprintf(fp, "(");
       t->display(fp, getBSTNODEparent(root)->value);
       fprintf(fp, ")-");
     }
+    else {
+      fprintf(fp, "(");
+      t->display(fp, root->value);
+      fprintf(fp, ")-");
+    }
+printf("\nFLAG2\n");
     if (isLeftChild(root)) fprintf(fp, "l");
     if (isRightChild(root)) fprintf(fp, "r");
-    fprintf(fp, " ");                                   //FIXME: need to figure out how to not print final whitespace
+printf("FLAG3\n");
+    //fprintf(fp, " ");                                   //FIXME: need to figure out how to not print final whitespace
   }
   else if (level > 1) {
     printLevel(fp, root->left, t, level-1);
@@ -237,12 +255,68 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
     return;
   }
   else {
-    int height = getHeight(root);
-    int i;
-    for (i = 1; i <= height; i++) {
-      //print levels;
-      printLevel(fp, root, t, i);
-      printf("\n");
+    QUEUE *q = newQUEUE(NULL);
+    BSTNODE *temp = root;
+
+    int node = 0;
+    int level = 0;
+    int prevLevel;
+
+    while (temp) {
+      //printf("===LEVEL IS: %d===\n", level);
+      //print temp node data
+      /* If node is the first of a new level */
+      if (node == pow(2, level) - 1) {
+        if (level != 0) fprintf(fp, "\n");
+        fprintf(fp, "%d: ", level);
+        level += 1;
+      }
+      prevLevel = level - 2;
+      t->display(fp, temp->value);
+      fprintf(fp, "(");
+      t->display(fp, getBSTNODEparent(temp)->value);
+      fprintf(fp, ")-");
+
+      /* If right child */
+      if (node == prevLevel*2 + 2 && node != 0) {
+        fprintf(fp, "r");
+      }
+      /* If left child */
+      else if (node != 0){
+        fprintf(fp, "l");
+      }
+
+      //printf("node is: %d\n");
+      if (node != (prevLevel*2) + 2 && node != 0) fprintf(fp, " ");
+      //printf("===LEVEL: %d===|||", level);
+      //printf("===PREV-LEVEL: %d===", prevLevel);
+      //printf("|||===node is: %d===", node);
+      //printf("|||===formula is: %d===\n", (prevLevel * 2) +2);
+
+
+      //enqueue temp nodes children (left children first)
+      if (getBSTNODEleft(temp)) enqueue(q, getBSTNODEleft(temp));
+      if (getBSTNODEright(temp)) enqueue(q, getBSTNODEright(temp));
+      //dequeue and assign the dequeue's value to temp
+      if (sizeQUEUE(q) > 0) temp = dequeue(q);
+      if (sizeQUEUE(q) == 0) {
+        fprintf(fp, "\n%d: ", level);
+        t->display(fp, temp->value);
+        fprintf(fp, "(");
+        t->display(fp, getBSTNODEparent(temp)->value);
+        fprintf(fp, ")-");
+
+        /* If right child */
+        if (node == prevLevel*2 + 2 && node != 0) {
+          fprintf(fp, "r");
+        }
+        /* If left child */
+        else {
+          fprintf(fp, "l");
+        }
+        break;
+      }
+      node += 1;
     }
   }
 }
