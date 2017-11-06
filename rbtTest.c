@@ -18,7 +18,10 @@ int main(void) {
   insertRBT(tree, newRBTNODE("node3"));
   printf("3 inserts successful\n");
 
-  printf("Attempting to delete...\n");
+  printf("Attempting to display...\n");
+  displayRBT(stdout, tree);
+
+  printf("\nAttempting to delete...\n");
   deleteRBT(tree, newRBTNODE("node3"));
   printf("Delete successful\n");
 
