@@ -5,13 +5,16 @@
  *
  * This file serves as the implementation for the red-black tree interface.
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include "rbt.h"
 #include "bst.h"
 #include "rbtnode.h"
+#include "queue.h"
 
 struct rbt {
     struct bst *tree;
@@ -327,4 +330,5 @@ void statisticsRBT(FILE *fp, RBT *t) {
 
 void displayRBT(FILE *fp, RBT *t) {
   //just use displalyBST?
+  displayBST(fp, t->tree);
 }
