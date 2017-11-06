@@ -312,14 +312,13 @@ int findRBT(RBT *t, void *value) {
 void deleteRBT(RBT *t, void *value) {
   BSTNODE *valToDelete = findBST(t->tree, value);
 
-  if (valToDelete == NULL) {
-    //what to do? the value to be deleted is not here?
-  }
-  int newFreq = decrementRBTNODEfrequency(getBSTNODE(valToDelete));
-  if (newFreq == 0) {
-    swapToLeafBST(t->tree, valToDelete);
-    deletionFixUp(t->tree, valToDelete);
-    pruneLeafBST(t->tree, valToDelete);         //FIXME: is this block right?
+  if (valToDelete != NULL) {
+    int newFreq = decrementRBTNODEfrequency(getBSTNODE(valToDelete));
+    if (newFreq == 0) {
+      swapToLeafBST(t->tree, valToDelete);
+      deletionFixUp(t->tree, valToDelete);
+      pruneLeafBST(t->tree, valToDelete);         //FIXME: is this block right?
+    }
   }
 }
 
