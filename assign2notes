@@ -1,5 +1,9 @@
 To Do:
 ------
+-MUST GET RID OF PUBLIC WRAPPERSSSSS!!!!
+-need to change trees.c to be sure it handles options correctly (including no "-g/-r" arg and +/-
+	one arg"
+-still have to "clean" the text being read in
 -must test all trees (a lot). especially fixup routines to see if nodes are going to the correct spot
 -must figure out wordsBST()/wordsGT()/wordsRBT()
 -must figure out statisticsBST()
