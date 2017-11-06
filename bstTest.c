@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include "bst.h"
 #include "real.h"
-#include "string.h"
 
 int main(void) {
     BST *tree = newBST(displayREAL, compareREAL, NULL);
     printf("tree successfully initiailized\n");
-/*
+
     insertBST(tree, newREAL(7));
     printf("1 insert successful\n");
 
@@ -18,11 +17,11 @@ int main(void) {
 
     insertBST(tree, newREAL(8));
     printf("4 inserts successful\n");
-*/
+
     printf("Attempting to display tree...\n");
     displayBST(stdout, tree);
     printf("\n");
-
+/*
     printf("Attempting to find node w/ value 6\n");
     BSTNODE *node = findBST(tree, newREAL(6));
     if (node) printf("node found\n");
@@ -40,6 +39,6 @@ int main(void) {
     //printf("node->left is: %p\n", node->left);
     //printf("node->right is: %p\n", node->right);
     //printf("node->parent->value is: %s\n", getSTRING(node->parent->value));
-
+*/
     return 0;
 }

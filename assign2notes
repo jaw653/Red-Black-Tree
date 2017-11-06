@@ -13,6 +13,7 @@ To Do:
 	this OK?
 -test trying to deleteBST() a NULL value and see what happens
 -do I need to add any specific assertions?
+-need to figure out how to get rid of final whitespace in printLevel() in bst.c
 
 rbt To Do:
 ----------
