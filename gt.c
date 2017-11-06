@@ -8,7 +8,6 @@
 
 #include "bst.h"
 #include "gt.h"
-#include "gtnode.h"
 
 struct gt {
   struct bst *tree;
@@ -22,9 +21,11 @@ struct GTNODE {
   int frequency;
 };
 
+static void swapGTNODE(void *, void *);
+
 GT *newGT(void (*d)(FILE *, void *), int (*c)(void *, void *)) {
   GT *t = malloc(sizeof(struct gt));
-  t->tree = newBST(d, c, NULL);
+  t->tree = newBST(d, c, swapGTNODE);
   t->display = d;
   t->comparator = c;
 
@@ -40,7 +41,6 @@ void insertGT(GT *t, void *value) {
     n->frequency += 1;
   }
   else {
-    //incrementGTNODEfrequency(getBSTNODE(x));
     GTNODE *xx = getBSTNODE(x);
     xx->frequency += 1;
   }
@@ -85,4 +85,17 @@ void statisticsGT(FILE *fp, GT *t) {
 
 void displayGT(FILE *fp, GT *t) {
   displayBST(fp, t->tree);
+}
+
+static void swapGTNODE(void *n1, void *n2) {
+  GTNODE *ra = getBSTNODE(n1);
+  GTNODE *rb = getBSTNODE(n2);
+
+  void *vtemp = ra->value;
+  ra->value = rb->value;
+  rb->value = vtemp;
+
+  int ctemp = ra->frequency;
+  ra->frequency = rb->frequency;
+  rb->frequency = ctemp;
 }
