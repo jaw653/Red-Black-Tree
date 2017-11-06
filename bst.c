@@ -189,6 +189,7 @@ static bool isLeaf(BSTNODE *node) {
   else return false;
 }
 
+/*
 static bool isLeftChild(BSTNODE *node) {
   if (getBSTNODEparent(node) == NULL) return false;
   if (getBSTNODEleft(getBSTNODEparent(node))) return false;
@@ -208,7 +209,7 @@ static bool isRightChild(BSTNODE *node) {
 
   return false;
 }
-
+*/
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   if (t->size == 0) {
     fprintf(fp, "EMPTY");
