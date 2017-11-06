@@ -1,9 +1,9 @@
 Action List:
 ------------
--statistics(), words() for all three data structs
--cleaning tokens (get rid of commas, etc.)
--make test (do some actual testing if time)
--get rid of rbtnode and gtnode
+-improve maketest => test all ds's as much as you can 
+-clean tokens (get rid of commas, etc.)
+-submit to dropbox2
+-submit to final submit
 
 To Do:
 ------

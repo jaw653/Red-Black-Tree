@@ -3,15 +3,20 @@
 # The University of Alabama
 
 OPTS = -Wall -Wextra -std=c99
-OBJS = bst.o rbt.o integer.o string.o real.o rbtnode.o queue.o scanner.o cda.o gt.o gtnode.o
-TYPE_OBJS = integer.o real.o string.o
+OBJS = bst.o rbt.o string.o queue.o scanner.o cda.o gt.o trees.o real.o
 # other objs Below
 # TESTOBJS = tests...
 TESTEXES = runBSTtest
 
-all: $(OBJS)
+trees: $(OBJS)
+	gcc $(OPTS) $(OBJS) -o trees -lm
 
-# test: $(OBJS) $(TESTOBJS)
+test: trees
+	#./bstTest
+	trees
+
+trees.o: trees.c
+	gcc $(OPTS) trees.c -c
 
 bst.o: bst.c bst.h
 	gcc $(OPTS) -c bst.c -lm
@@ -25,9 +30,6 @@ rbtnode.o: rbtnode.c rbtnode.h
 gt.o: gt.c gt.h
 	gcc $(OPTS) gt.c -c
 
-gtnode.o: gtnode.c gtnode.h
-	gcc $(OPTS) gtnode.c -c
-
 queue.o: queue.c queue.h
 	gcc $(OPTS) queue.c -c
 
@@ -37,9 +39,6 @@ scanner.o: scanner.c scanner.h
 cda.o: cda.c cda.h
 	gcc $(OPTS) cda.c -c
 
-integer.o: integer.c integer.h
-	gcc $(OPTS) -c integer.c
-
 string.o: string.c string.h
 	gcc $(OPTS) -c string.c
 
@@ -47,4 +46,10 @@ real.o: real.c real.h
 	gcc $(OPTS) -c real.c
 
 clean:
-	rm -rf *.o $(TESTEXES) ./a.out
+	rm -rf *.o $(TESTEXES) ./a.out trees bstTest
+
+#******************************************************************************#
+# *** TEST OBJECTS *** #
+#******************************************************************************#
+test-bst.o: bst.o
+	gcc $(OPTS) $(OBJS) bstTest.c -lm -o bstTest
