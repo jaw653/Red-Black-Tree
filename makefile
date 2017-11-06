@@ -14,7 +14,7 @@ all: $(OBJS)
 # test: $(OBJS) $(TESTOBJS)
 
 bst.o: bst.c bst.h
-	gcc $(OPTS) -c bst.c
+	gcc $(OPTS) -c bst.c -lm
 
 rbt.o: rbt.c rbt.h
 	gcc $(OPTS) rbt.c -c
