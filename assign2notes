@@ -1,5 +1,7 @@
 To Do:
 ------
+-must test all trees (a lot). especially fixup routines to see if nodes are going to the correct spot
+-must figure out wordsBST()/wordsGT()/wordsRBT()
 -must figure out statisticsBST()
 -does insertBST() need to account for duplicate values?
 	-->nope, "all key values are unique"
@@ -15,13 +17,9 @@ To Do:
 
 rbt To Do:
 ----------
--HOW DO I GO ABOUT HANDLING INSERTING THE SAME VALUE???
 -constructor/struct, might need some more blocks of mem in there for freq
--so if I'm correct, the value inserted into the rbt will be a struct that
-	holds the color/frequency/any other pertinent information?
 -do we need to account for trying to rotate when one of the needed nodes is
 	null?
--still need to update frequency in phrase object, rn it just stays 0
 -how to handle the user requesting to delete a value that is not in the tree
 -seg faults that may occur may be due to not checking if a given node
 	exists, for example calling getnodeR() when there is no nodeR...
