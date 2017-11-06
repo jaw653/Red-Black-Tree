@@ -297,7 +297,6 @@ void insertRBT(RBT *t, void *value) {
 }
 
 int findRBT(RBT *t, void *value) {
-  findBST(t->tree, value);
   RBTNODE *p = getBSTNODE(findBST(t->tree, value));
 
   /* Value is not in the tree */
