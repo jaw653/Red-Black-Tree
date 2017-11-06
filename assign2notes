@@ -1,6 +1,15 @@
+Action List:
+------------
+-statistics(), words() for all three data structs
+-cleaning tokens (get rid of commas, etc.)
+-make test (do some actual testing if time)
+-get rid of rbtnode and gtnode
+
 To Do:
 ------
--MUST GET RID OF PUBLIC WRAPPERSSSSS!!!!
+-I think I need to write the swapper functions inside the rbt and gt files
+-for deleteRBT(), when should i remove from tree? when its 0, when its about to be zero, when it's
+	less than 0???
 -need to change trees.c to be sure it handles options correctly (including no "-g/-r" arg and +/-
 	one arg"
 -still have to "clean" the text being read in
@@ -44,3 +53,4 @@ General Miscellaneous:
 ----------------------
 -what's the difference when you print to stderr?
 -MUST USE THE TEST2 DROPBOX PRIOR TO SUBMISSION
+-MUST MAKE A MAKE TEST

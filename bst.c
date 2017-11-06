@@ -30,6 +30,11 @@ struct bstnode {
   struct bstnode *left;
   struct bstnode *right;
 };
+
+static int findMinDepthBST(BSTNODE *root);
+static int findMaxDepthBST(BSTNODE *root);
+static int min(int, int);
+
 /****************************** Private functions *****************************/
 static BSTNODE *newBSTNODE(void *value, BSTNODE *parent) {
   BSTNODE *node;
@@ -93,6 +98,7 @@ void setBSTNODEparent(BSTNODE *n, BSTNODE *replacement) {
 struct bst {
   struct bstnode *root;
   int size;
+  int numWords;
   void (*display)(FILE *, void *);
   int (*comparator)(void *, void *);
   void (*swapper)(void *, void *);
@@ -189,6 +195,7 @@ static bool isLeaf(BSTNODE *node) {
   else return false;
 }
 
+/*
 static bool isLeftChild(BSTNODE *node) {
   if (getBSTNODEparent(node) == NULL) return false;
   if (getBSTNODEleft(getBSTNODEparent(node))) return false;
@@ -208,7 +215,7 @@ static bool isRightChild(BSTNODE *node) {
 
   return false;
 }
-
+*/
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   if (t->size == 0) {
     fprintf(fp, "EMPTY");
@@ -312,13 +319,13 @@ BSTNODE *getBSTroot(BST *t) {
 }
 
 BSTNODE *insertBST(BST *t, void *value) {
+  t->numWords += 1;
   t->root = insertHelper(t, t->root, NULL, value);
   return t->root;
 }
 
 BSTNODE *findBST(BST *t, void *value) {
   if (t->size == 0) {
-    printf("ERROR: t->size is 0\n");
     return NULL;
   }
   else {
@@ -328,7 +335,6 @@ BSTNODE *findBST(BST *t, void *value) {
 
 BSTNODE *deleteBST(BST *t, void *value) {
   if (t->size == 0) {
-    printf("ERROR: t->size is 0\n");
     return NULL;
   }
 
@@ -412,12 +418,49 @@ int sizeBST(BST *t) {
 }
 
 void statisticsBST(FILE *fp, BST *t) {
-  fprintf(fp, "Words/Phrases: %d\n", 5);      //FIXME: should be the actual number of words/Phrases
-  fprintf(fp, "Nodes: %d\n", t->size);        //FIXME: should be some other number idk what...
-  fprintf(fp, "Maximum depth: %d\n", 5);      //FIXME: need correct stat here
-  fprintf(fp, "Minimum depth: %d\n", 5);      //FIXME: need correct stat here
+  fprintf(fp, "Nodes: %d\n", t->size);
+  fprintf(fp, "Minimum depth: %d\n", findMinDepthBST(t->root));
+  fprintf(fp, "Maximum depth: %d\n", findMaxDepthBST(t->root));
 }
 
 void displayBST(FILE *fp, BST *t) {
   displayHelper(fp, t->root, t);
+}
+
+static int findMinDepthBST(BSTNODE *root) {
+  if (root == NULL) {
+    return 0;
+  }
+  if (root->left == NULL && root->right == NULL) {
+    return 1;
+  }
+  if (!root->left) {
+    return findMinDepthBST(root->right) + 1;
+  }
+  if (!root->right) {
+    return findMinDepthBST(root->left) + 1;
+  }
+
+  return min(findMinDepthBST(root->left), findMinDepthBST(root->right)) + 1;
+}
+
+static int findMaxDepthBST(BSTNODE *root) {
+  if (root == NULL) return 0;
+  else {
+    int L_depth = findMaxDepthBST(root->left);
+    int R_depth = findMaxDepthBST(root->right);
+
+    if (L_depth > R_depth) {
+      return L_depth + 1;
+    }
+    else return R_depth + 1;
+  }
+}
+
+static int min(int a, int b) {
+  if (a < b) return a;
+  else if (a > b) return b;
+  else {
+    return a;
+  }
 }
