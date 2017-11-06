@@ -16,9 +16,15 @@ struct gt {
   int (*comparator)(void *, void *);
 };
 
+typedef struct GTNODE GTNODE;
+struct GTNODE {
+  char *value;
+  int frequency;
+};
+
 GT *newGT(void (*d)(FILE *, void *), int (*c)(void *, void *)) {
   GT *t = malloc(sizeof(struct gt));
-  t->tree = newBST(displayGTNODE, compareGTNODE, swapGTNODE);
+  t->tree = newBST(d, c, NULL);
   t->display = d;
   t->comparator = c;
 
@@ -30,22 +36,25 @@ void insertGT(GT *t, void *value) {
 
   if (x == NULL) {
     BSTNODE *newNode = findBST(t->tree, value);
-    incrementGTNODEfrequency(getBSTNODE(newNode));
+    GTNODE *n = getBSTNODE(newNode);
+    n->frequency += 1;
   }
   else {
-    incrementGTNODEfrequency(getBSTNODE(x));
+    //incrementGTNODEfrequency(getBSTNODE(x));
+    GTNODE *xx = getBSTNODE(x);
+    xx->frequency += 1;
   }
 }
 
 int findGT(GT *t, void *value) {
-  GTNODE *p = getGTNODE(findBST(t->tree, value));
+  GTNODE *p = getBSTNODE(findBST(t->tree, value));
 
   /* Value is not in the tree */
   if (p == NULL) {
     return 0;
   }
   else {
-    return getGTNODEfrequency(p);
+    return p->frequency;
   }
 }
 
@@ -53,8 +62,10 @@ void deleteGT(GT *t, void *value) {
   BSTNODE *valueToDelete = findBST(t->tree, value);
 
   if (valueToDelete != NULL) {
-    int newFreq = decrementGTNODEfrequency(getGTNODE(valueToDelete));
-    if (newFreq == 0) {
+    GTNODE *gtToDelete = getBSTNODE(valueToDelete);
+    gtToDelete->frequency -= 1;
+
+    if (gtToDelete->frequency == 0) {
       deleteBST(t->tree, value);
     }
   }
@@ -73,5 +84,5 @@ void statisticsGT(FILE *fp, GT *t) {
 }
 
 void displayGT(FILE *fp, GT *t) {
-  displaBST(fp, t->tree);
+  displayBST(fp, t->tree);
 }
