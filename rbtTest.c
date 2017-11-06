@@ -25,6 +25,10 @@ int main(void) {
   deleteRBT(tree, newRBTNODE("node3"));
   printf("Delete successful\n");
 
+  printf("Attempting to find...\n");
+  int count = findRBT(tree, newRBTNODE("node1"));
+  printf("find successful, count is: %d\n", count);
+
   printf("Size is: %d\n", sizeRBT(tree));
 
   return 0;
