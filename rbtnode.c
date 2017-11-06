@@ -35,7 +35,7 @@ char *setRBTNODE(RBTNODE *p, char *str) {
 }
 
 void displayRBTNODE(FILE *fp, void *p) {
-  fprintf(fp, "%s-%c\n", getRBTNODE(p), getRBTNODEcolor(p));
+  fprintf(fp, "%s-%c", getRBTNODE(p), getRBTNODEcolor(p));
 }
 
 char getRBTNODEcolor(RBTNODE *p) {
