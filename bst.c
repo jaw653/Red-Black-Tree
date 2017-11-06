@@ -205,50 +205,6 @@ static bool isRightChild(BSTNODE *node) {
   return false;
 }
 
-static void printLevel(FILE *fp, BSTNODE *root, BST *t, int level) {
-  if (root == NULL) return;
-  if (level == 1) {
-    fprintf(fp, "%d: ", level-1);
-    if (isLeaf(root)) fprintf(fp, "=");
-    t->display(fp, root->value);
-
-    if (getBSTNODEparent(root) != NULL) {
-      fprintf(fp, "(");
-      t->display(fp, getBSTNODEparent(root)->value);
-      fprintf(fp, ")-");
-    }
-    else {
-      fprintf(fp, "(");
-      t->display(fp, root->value);
-      fprintf(fp, ")-");
-    }
-printf("\nFLAG2\n");
-    if (isLeftChild(root)) fprintf(fp, "l");
-    if (isRightChild(root)) fprintf(fp, "r");
-printf("FLAG3\n");
-    //fprintf(fp, " ");                                   //FIXME: need to figure out how to not print final whitespace
-  }
-  else if (level > 1) {
-    printLevel(fp, root->left, t, level-1);
-    printLevel(fp, root->right, t, level-1);
-  }
-}
-
-static int getHeight(BSTNODE *root) {
-  if (root == NULL) return 0;
-  else {
-    int Lheight, Rheight;
-    if (root->left) Lheight = getHeight(root->left);
-    if (root->right) Rheight = getHeight(root->right);
-
-    if (Lheight > Rheight) {
-      return (Lheight + 1);
-    }
-    else {
-      return (Rheight + 1);
-    }
-  }
-}
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   if (t->size == 0) {
     fprintf(fp, "EMPTY");
@@ -263,15 +219,15 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
     int prevLevel;
 
     while (temp) {
-      //printf("===LEVEL IS: %d===\n", level);
-      //print temp node data
-      /* If node is the first of a new level */
+      /* If node is the first of a new level, print so */
       if (node == pow(2, level) - 1) {
         if (level != 0) fprintf(fp, "\n");
         fprintf(fp, "%d: ", level);
         level += 1;
       }
+
       prevLevel = level - 2;
+
       t->display(fp, temp->value);
       fprintf(fp, "(");
       t->display(fp, getBSTNODEparent(temp)->value);
@@ -286,19 +242,15 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
         fprintf(fp, "l");
       }
 
-      //printf("node is: %d\n");
       if (node != (prevLevel*2) + 2 && node != 0) fprintf(fp, " ");
-      //printf("===LEVEL: %d===|||", level);
-      //printf("===PREV-LEVEL: %d===", prevLevel);
-      //printf("|||===node is: %d===", node);
-      //printf("|||===formula is: %d===\n", (prevLevel * 2) +2);
 
-
-      //enqueue temp nodes children (left children first)
+      /* Enqueue temp nodes children (left children first) */
       if (getBSTNODEleft(temp)) enqueue(q, getBSTNODEleft(temp));
       if (getBSTNODEright(temp)) enqueue(q, getBSTNODEright(temp));
-      //dequeue and assign the dequeue's value to temp
+
+      /* Dequeue and assign the dequeue's value to temp */
       if (sizeQUEUE(q) > 0) temp = dequeue(q);
+
       if (sizeQUEUE(q) == 0) {
         fprintf(fp, "\n%d: ", level);
         t->display(fp, temp->value);
@@ -307,15 +259,16 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
         fprintf(fp, ")-");
 
         /* If right child */
-        if (node == prevLevel*2 + 2 && node != 0) {
+        if (node == (prevLevel+1)*2 + 2 && node != 0) {
           fprintf(fp, "r");
         }
         /* If left child */
-        else {
+        else if (node != 0) {
           fprintf(fp, "l");
         }
         break;
       }
+
       node += 1;
     }
   }
