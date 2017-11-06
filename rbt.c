@@ -240,14 +240,14 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
   bool loop = true;
   while (loop) {
     if (nodesAreEqual(getBSTroot(tree), x)) break;
-    if (getRBTNODEcolor(getBSTNODE(x)) == 'R') break;
+    if (getRBTNODEcolor(getBSTNODE(x)) == 'R' || x == NULL break;
     if (getRBTNODEcolor(getBSTNODE(sibling)) == 'R' || sibling == NULL) {
       setRBTNODEcolor(getBSTNODE(parent), 'R');
       setRBTNODEcolor(getBSTNODE(sibling), 'B');
 
       rotate(tree, sibling, getBSTNODEparent(sibling));
     }
-    else if (getRBTNODEcolor(getBSTNODE(nephew)) == 'R') {
+    else if (getRBTNODEcolor(getBSTNODE(nephew)) == 'R' || nephew == NULL) {
       setRBTNODEcolor(getBSTNODE(sibling), getRBTNODEcolor(getBSTNODE(parent)));
       setRBTNODEcolor(getBSTNODE(parent), 'B');
       setRBTNODEcolor(getBSTNODE(nephew), 'B');
@@ -256,7 +256,7 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
 
       break;
     }
-    else if (getRBTNODEcolor(getBSTNODE(niece)) == 'R') {
+    else if (getRBTNODEcolor(getBSTNODE(niece)) == 'R' || niece == NULL) {
       setRBTNODEcolor(getBSTNODE(niece), 'B');
       setRBTNODEcolor(getBSTNODE(sibling), 'R');
 
@@ -286,11 +286,18 @@ RBT *newRBT(
 
 void insertRBT(RBT *t, void *value) {
   BSTNODE *x = insertBST(t->tree, value);
-  insertionFixUp(t->tree, x);
-  incrementRBTNODEfrequency(getBSTNODE(x));   //FIXME: idk if this is in the right spot...
+  if (x == NULL) {
+    BSTNODE *newNode = findBST(t->tree, value);
+    incrementRBTNODEfrequency(newNode);
+  }
+  else {
+    insertionFixUp(t->tree, x);
+    incrementRBTNODEfrequency(getBSTNODE(x));   //FIXME: idk if this is in the right spot...
+  }
 }
 
 int findRBT(RBT *t, void *value) {
+  findBST(t->tree, value);
   RBTNODE *p = getBSTNODE(findBST(t->tree, value));
 
   /* Value is not in the tree */
