@@ -1,5 +1,7 @@
 To Do:
 ------
+-for deleteRBT(), when should i remove from tree? when its 0, when its about to be zero, when it's
+	less than 0???
 -MUST GET RID OF PUBLIC WRAPPERSSSSS!!!!
 -need to change trees.c to be sure it handles options correctly (including no "-g/-r" arg and +/-
 	one arg"
