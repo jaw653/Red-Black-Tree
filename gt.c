@@ -30,10 +30,10 @@ void insertGT(GT *t, void *value) {
 
   if (x == NULL) {
     BSTNODE *newNode = findBST(t->tree, value);
-    incrementGTNODEfrequency(newNode);
+    incrementGTNODEfrequency(getBSTNODE(newNode));
   }
   else {
-    incrementGTNODEfrequency(x);
+    incrementGTNODEfrequency(getBSTNODE(x));
   }
 }
 

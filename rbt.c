@@ -240,7 +240,7 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
   bool loop = true;
   while (loop) {
     if (nodesAreEqual(getBSTroot(tree), x)) break;
-    if (getRBTNODEcolor(getBSTNODE(x)) == 'R' || x == NULL break;
+    if (getRBTNODEcolor(getBSTNODE(x)) == 'R' || x == NULL) break;
     if (getRBTNODEcolor(getBSTNODE(sibling)) == 'R' || sibling == NULL) {
       setRBTNODEcolor(getBSTNODE(parent), 'R');
       setRBTNODEcolor(getBSTNODE(sibling), 'B');
