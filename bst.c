@@ -116,8 +116,12 @@ static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
 }
 
 static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value) {
-  if (root == NULL) {
+  if (root == NULL || t->comparator(value, root->value) == 0) {
     //assert?
+    /* What should I do if values are the same */
+    if (t->comparator(value, root->value) == 0) {
+      return NULL;
+    }
 
     root = newBSTNODE(value, parent);
     if (parent == NULL)
@@ -315,7 +319,9 @@ BSTNODE *findBST(BST *t, void *value) {
     printf("ERROR: t->size is 0\n");
     return NULL;
   }
-  return findHelper(t->root, t->comparator, value);
+  else {
+    return findHelper(t->root, t->comparator, value);
+  }
 }
 
 BSTNODE *deleteBST(BST *t, void *value) {
