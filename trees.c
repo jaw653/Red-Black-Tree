@@ -10,6 +10,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
 #include "bst.h"
 #include "rbt.h"
@@ -48,5 +49,6 @@ int main(int argc, char *argv[]) {
   else {
     //red/black tree opts
   }
+
   return 0;
 }
