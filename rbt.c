@@ -13,7 +13,6 @@
 
 #include "rbt.h"
 #include "bst.h"
-#include "rbtnode.h"
 #include "queue.h"
 
 struct rbt {
@@ -29,6 +28,7 @@ struct RBTNODE {
   char *value;
 };
 
+static void swapRBTNODE(void *, void *);
 /***************************** Private Functions ******************************/
 /* Compare two bst structs, returns true if the same */
 static bool nodesAreEqual(BSTNODE *s1, BSTNODE *s2) {
@@ -307,7 +307,7 @@ RBT *newRBT(
 )
 {
     RBT *t = malloc(sizeof(struct rbt));
-    t->tree = newBST(d, c, NULL);           //FIXME: init with swapper function, change other fc's to use swapper function
+    t->tree = newBST(d, c, swapRBTNODE);           //FIXME: init with swapper function, change other fc's to use swapper function
     t->display = d;
     t->comparator = c;
 
@@ -372,4 +372,17 @@ void statisticsRBT(FILE *fp, RBT *t) {
 void displayRBT(FILE *fp, RBT *t) {
   //just use displalyBST?
   displayBST(fp, t->tree);
+}
+
+static void swapRBTNODE(void *n1, void *n2) {
+  RBTNODE *ra = getBSTNODE(n1);
+  RBTNODE *rb = getBSTNODE(n2);
+
+  void *vtemp = ra->value;
+  ra->value = rb->value;
+  rb->value = vtemp;
+
+  int ctemp = ra->frequency;
+  ra->frequency = rb->frequency;
+  rb->frequency = ctemp;
 }
