@@ -1,6 +1,5 @@
 To Do:
 ------
--change displayBST() to have format for this new project, must use a queue
 -must figure out statisticsBST()
 -does insertBST() need to account for duplicate values?
 	-->nope, "all key values are unique"
@@ -13,7 +12,6 @@ To Do:
 	this OK?
 -test trying to deleteBST() a NULL value and see what happens
 -do I need to add any specific assertions?
--need to figure out how to get rid of final whitespace in printLevel() in bst.c
 
 rbt To Do:
 ----------
