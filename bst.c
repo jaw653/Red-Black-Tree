@@ -6,15 +6,7 @@
  * This is the implementation file for the bst.h inteface
  */
 
-/*
- * Questions:
- *            -setBSTNODE, should it just set n->value = value?
- *            -setBSTNODEleft, copies all replacement stuff to n->left, is this ok?
- *            -when should swapleaf swap with pred and when successor
- *            -do we need to account for equal values in the bst
- *            -right now, findbst does not account for if the value is not in the tree, should it?
- *            -insertBST does not account for duplicate values, should it?
- */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
