@@ -1,6 +1,7 @@
 ------------
 Action List:
 ------------
+-test all possible functions in bst.c
 -get rid of all print/flag statements
 -test inserting duplicate values (not into bst(?) but into rbt and gt
 -improve maketest => test all ds's as much as you can 
