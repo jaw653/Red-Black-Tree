@@ -23,7 +23,7 @@ struct GTNODE {
   int frequency;
 };
 
-static void swapGTNODE(void *, void *);
+static void swapGTNODE(BSTNODE *, BSTNODE *);
 static int findMinDepthGT(BSTNODE *);
 static int findMaxDepthGT(BSTNODE *);
 static int min(int, int);
@@ -101,7 +101,7 @@ void displayGT(FILE *fp, GT *t) {
   displayBST(fp, t->tree);
 }
 
-static void swapGTNODE(void *n1, void *n2) {
+static void swapGTNODE(BSTNODE *n1, BSTNODE *n2) {
   GTNODE *ra = getBSTNODE(n1);
   GTNODE *rb = getBSTNODE(n2);
 
