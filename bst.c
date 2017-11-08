@@ -108,17 +108,12 @@ struct bst {
 
 /***************************** Helper function(s) *****************************/
 static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
-  if (s1 && s2) {
-    if (s1->value && s2->value) {
-      if (s1->value == s2->value && s1->left == s2->left) {
-        if (s1->right && s2->right && s1->parent && s2->parent) {
-          if (s1->right == s2->right && s1->parent == s2->parent) {
+  if (s1 && s2)
+    if (s1->value && s2->value)
+      if (s1->value == s2->value && s1->left == s2->left)
+        if (s1->right && s2->right && s1->parent && s2->parent)
+          if (s1->right == s2->right && s1->parent == s2->parent)
             return true;
-          }
-        }
-      }
-    }
-  }
 
   return false;
 }
