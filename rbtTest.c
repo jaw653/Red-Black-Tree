@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #include "rbt.h"
-#include "rbtnode.h"
 
 int main(void) {
   printf("Attempting to Initialize rbt tree...\n");

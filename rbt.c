@@ -30,7 +30,7 @@ struct RBTNODE {
   char *value;
 };
 
-static void swapRBTNODE(void *, void *);
+static void swapRBTNODE(BSTNODE *, BSTNODE *);
 static int findMinDepthRBT(BSTNODE *);
 static int findMaxDepthRBT(BSTNODE *);
 static int min(int, int);
@@ -392,7 +392,7 @@ void displayRBT(FILE *fp, RBT *t) {
   displayBST(fp, t->tree);
 }
 
-static void swapRBTNODE(void *n1, void *n2) {
+static void swapRBTNODE(BSTNODE *n1, BSTNODE *n2) {
   RBTNODE *ra = getBSTNODE(n1);
   RBTNODE *rb = getBSTNODE(n2);
 

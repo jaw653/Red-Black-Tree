@@ -3,18 +3,14 @@
  * The University of Alabama
  */
 
-/*
- * Questions:
-            -should i print an error message if there are no cmdln args? or should I do something anyway
-            -need to check to handle empty files
- */
-
 #include <stdio.h>
 #include <string.h>
 
 #include "bst.h"
+#include "string.h"
 #include "rbt.h"
 #include "gt.h"
+#include "scanner.h"
 
 static void populateGT(FILE *fp, GT *tree);
 static void populateRBT(FILE *fp, RBT *tree);
@@ -23,9 +19,17 @@ static void executeCommandsRBT(FILE *fp, FILE *outputFile, RBT *tree);
 
 int main(int argc, char *argv[]) {
   /* If no command line arguments */
-  if (argc == 1) {
+  if (argc <= 1) {
     //print error message?
     return 0;
+  }
+
+  int i;
+  for (i = 0; i < argc; i++) {
+    if (strcmp(argv[i], "-v") == 0) {
+      printf("Jake A. Wachs\n");
+      return 0;
+    }
   }
 
   char *corpusName, *commandsName, *outputFileName;
@@ -59,22 +63,23 @@ int main(int argc, char *argv[]) {
   else outputFile = NULL;
 
   //read corpus text into bst
-  BST *wordsTree;
-
   if (strcmp(argv[argc - (argc-1)], "-g") == 0) {
-    wordsTree = newGT(displaySTRING, compareSTRING);
+    GT *wordsTree = newGT(displaySTRING, compareSTRING);
     populateGT(corpus, wordsTree);
-    executeCommandsGT(commands, outputFile, wordsTree);
+    if (outputFile == NULL) executeCommandsGT(commands, stdout, wordsTree);
+    else executeCommandsGT(commands, outputFile, wordsTree);
     //read in and complete commands
   }
   else {
-    wordsTree = newRBT(displaySTRING, compareSTRING);
+    RBT *wordsTree = newRBT(displaySTRING, compareSTRING);
     populateRBT(corpus, wordsTree);
-    executeCommandsRBT(commands, outputFile, wordsTree);
+    if (outputFile == NULL) executeCommandsRBT(commands, stdout, wordsTree);
+    else executeCommandsRBT(commands, outputFile, wordsTree);
   }
 
   if (corpus) fclose(corpus);
   if (commands) fclose(commands);
+  if (outputFile) fclose(outputFile);
 
   return 0;
 }
@@ -83,12 +88,10 @@ static void populateGT(FILE *fp, GT *tree) {
   char *str = readToken(fp);
 
   while (str) {
-    if (strcmp(str, "var") == 0) {
-      char *s = readToken(fp);
-      STRING *value = newSTRING(s);
+    char *s = readToken(fp);
+    STRING *value = newSTRING(s);
 
-      insertGT(tree, value);
-    }
+    insertGT(tree, value);
 
     str = readToken(fp);
   }
@@ -98,12 +101,10 @@ static void populateRBT(FILE *fp, RBT *tree) {
   char *str = readToken(fp);
 
   while (str) {
-    if (strcmp(str, "var") == 0) {
-      char *s = readToken(fp);
-      STRING *value = newSTRING(s);
+    char *s = readToken(fp);
+    STRING *value = newSTRING(s);
 
-      insertRBT(tree, value);
-    }
+    insertRBT(tree, value);
 
     str = readToken(fp);
   }
@@ -122,7 +123,7 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
       insertGT(tree, newSTRING(obj));
     }
     /* Delete from tree */
-    else if (strmpc(str, "d") == 0) {
+    else if (strcmp(str, "d") == 0) {
       char *obj = readToken(fp);
       if (obj[0] == '"') {
         strcat(obj, readToken(fp));
@@ -172,7 +173,7 @@ static void executeCommandsRBT(FILE *fp, FILE *outputFile, RBT *tree) {
       insertRBT(tree, newSTRING(obj));
     }
     /* Delete from tree */
-    else if (strmpc(str, "d") == 0) {
+    else if (strcmp(str, "d") == 0) {
       char *obj = readToken(fp);
       if (obj[0] == '"') {
         strcat(obj, readToken(fp));

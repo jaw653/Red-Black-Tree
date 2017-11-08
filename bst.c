@@ -20,6 +20,7 @@
 #include <stdbool.h>
 #include <math.h>
 
+#include "real.h"
 #include "string.h"
 #include "bst.h"
 #include "queue.h"
@@ -31,6 +32,7 @@ struct bstnode {
   struct bstnode *right;
 };
 
+static BSTNODE *copyNODE(BSTNODE *giver);
 static int findMinDepthBST(BSTNODE *root);
 static int findMaxDepthBST(BSTNODE *root);
 static int min(int, int);
@@ -101,7 +103,7 @@ struct bst {
   int numWords;
   void (*display)(FILE *, void *);
   int (*comparator)(void *, void *);
-  void (*swapper)(void *, void *);
+  void (*swapper)(BSTNODE *, BSTNODE *);
 };
 
 /***************************** Helper function(s) *****************************/
@@ -122,12 +124,13 @@ static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
 }
 
 static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value) {
+  if (root && root->value) {
+    if (t->comparator(root->value, value) == 0) return NULL;
+  }
+
   if (root == NULL || t->comparator(value, root->value) == 0) {
     //assert?
     /* What should I do if values are the same */
-    if (t->comparator(value, root->value) == 0) {
-      return NULL;
-    }
 
     root = newBSTNODE(value, parent);
     if (parent == NULL)
@@ -230,7 +233,7 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
     int prevLevel;
 
     while (temp) {
-      /* If node is the first of a new level, print so */
+      /* If node is the first of a new level, print level indicator */
       if (node == pow(2, level) - 1) {
         if (level != 0) fprintf(fp, "\n");
         fprintf(fp, "%d: ", level);
@@ -264,11 +267,18 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
       if (sizeQUEUE(q) > 0) temp = dequeue(q);
 
       if (sizeQUEUE(q) == 0) {
+        if (getBSTNODE(temp) == NULL) break;
+
         fprintf(fp, "\n%d: ", level);
+
         if (isLeaf(temp)) fprintf(fp, "=");
-        t->display(fp, temp->value);
+
+        if (temp->value) t->display(fp, temp->value);
+
         fprintf(fp, "(");
-        t->display(fp, getBSTNODEparent(temp)->value);
+        //if (getBSTNODEparent(temp)) printf("got parent\n");
+        //if (getBSTNODEparent(temp)->value) printf("got parent value\n");
+        if (getBSTNODE(temp) != NULL) t->display(fp, getBSTNODEparent(temp)->value);
         fprintf(fp, ")-");
 
         /* If right child */
@@ -279,6 +289,7 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
         else if (node != 0) {
           fprintf(fp, "l");
         }
+
         break;
       }
 
@@ -292,7 +303,7 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
 BST *newBST(
   void (*d)(FILE *, void *),
   int (*c)(void *, void *),
-  void (*s)(void *, void *))
+  void (*s)(BSTNODE *, BSTNODE *))
 {
 
     BST *tree = malloc(sizeof(struct bst));
@@ -312,7 +323,6 @@ void setBSTroot(BST *t, BSTNODE *replacement) {
 
 BSTNODE *getBSTroot(BST *t) {
   if (!t || !t->root) {
-    printf("returning null...\n");
     return NULL;
   }
   return t->root;
@@ -338,20 +348,21 @@ BSTNODE *deleteBST(BST *t, void *value) {
     return NULL;
   }
 
-  BSTNODE *returnNode;
-
   BSTNODE *node = findBST(t, value);
+
   if (node == NULL) {
     printf("Value ");
     t->display(stdout, value);
     printf(" not found.\n");
   }
+
   node = swapToLeafBST(t, node);
-  returnNode = node;
+
+  BSTNODE *returnNODE = copyNODE(node);
 
   pruneLeafBST(t, node);
 
-  return returnNode;
+  return returnNODE;
 }
 
 BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
@@ -425,6 +436,30 @@ void statisticsBST(FILE *fp, BST *t) {
 
 void displayBST(FILE *fp, BST *t) {
   displayHelper(fp, t->root, t);
+}
+
+static BSTNODE *copyNODE(BSTNODE *giver) {
+  if (giver == NULL) return NULL;
+
+  BSTNODE *newNode = malloc(sizeof(struct bst));
+
+  if (giver->value)
+    newNode->value = giver->value;
+  else newNode->value = NULL;
+
+  if (giver->parent)
+    newNode->parent = giver->parent;
+  else newNode->parent = NULL;
+
+  if (giver->left)
+    newNode->left = giver->left;
+  else newNode->left = NULL;
+
+  if (giver->right)
+    newNode->right = giver->right;
+  else newNode->right = NULL;
+
+  return newNode;
 }
 
 static int findMinDepthBST(BSTNODE *root) {
