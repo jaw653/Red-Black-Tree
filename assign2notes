@@ -4,53 +4,32 @@ Action List:
 -clean tokens (get rid of commas, etc.)
 -submit to dropbox2
 -submit to final submit
+-test all trees
+-ensure swapToLeaf() is swapping to the correct leaf. It should prefer predecessor
+-test trying to deleteBST/RBT/GT() a NULL value and see what happens...what should happen?
+-check that swapper is not swapping entire structs and in RBT maintains color
+-test all 3 DS's extensively
+-fix make test/see if I already fixed make test
+-use the test2 dropbox prior to submission
 
-To Do:
-------
--I think I need to write the swapper functions inside the rbt and gt files
--for deleteRBT(), when should i remove from tree? when its 0, when its about to be zero, when it's
-	less than 0???
--need to change trees.c to be sure it handles options correctly (including no "-g/-r" arg and +/-
-	one arg"
--still have to "clean" the text being read in
--must test all trees (a lot). especially fixup routines to see if nodes are going to the correct spot
--must figure out wordsBST()/wordsGT()/wordsRBT()
--must figure out statisticsBST()
--does insertBST() need to account for duplicate values?
-	-->nope, "all key values are unique"
--does findBST() need to account for the value not being in the tree?
--is swapToLeaf() currently swapping to the correct leaf (pred vs succes)
--does removeBST() need to account for empty tree/value not in tree?
-	-->so if tree is empty, should it say value not found or print another
-	message?
--currently findBST() and deleteBST() will print error messages and exit, is
-	this OK?
--test trying to deleteBST() a NULL value and see what happens
--do I need to add any specific assertions?
-
-rbt To Do:
+Questions:
 ----------
--constructor/struct, might need some more blocks of mem in there for freq
--do we need to account for trying to rotate when one of the needed nodes is
-	null?
--how to handle the user requesting to delete a value that is not in the tree
--seg faults that may occur may be due to not checking if a given node
-	exists, for example calling getnodeR() when there is no nodeR...
--BE CAREFUL, NULL POINTERS SHOULD COUNT AS RED WHEN LOOKING AT:
-	if (parent[or others] are red) then...
--after deletionfixup, what value should i be pruning()?
--right now, swapping entire structs, need to maintain colorings...
--deleting should decrement the freq, then when freq==0, remove node
--haven't tested the findRBT() fc yet b/c frequency is not yet accounted for
+-for deleteRBT(), when should i remove from tree? when it's 0, when it's about to be zero, when
+	it's less than 0?
+-does findBST() need to account for the value not being in the tree?
+-is swapToLeaf() swapping to the correct leaf
+-does deleteBST() need to account for empty tree or the value not being in the tree?
+	-->so if the tree is empty, should is say value not found or print another messsage?
+-any specific assertions needed?
+-do we need to account for rotating in the RBT if one of the nodes to rotate is null?
+-how should I handle the user requesting to delete a value not in the tree? Should I handle it at 	all?
+-in RBT after deletionFixUp(), what value should I be pruning?
+-in trees.c, check to see if empty files? how to handle if there are?
+-in trees.c, should I print an error message if there are no cmd line args, or do something else?
+-what's the difference between printing to stdout and stderr?
 
-trees.c to do:
+Helpful Notes:
 --------------
--check to see if empty files?
--should I print an error message if there are no command line arguments, should I do something else w/ 
-	the program?
-
-General Miscellaneous:
-----------------------
--what's the difference when you print to stderr?
--MUST USE THE TEST2 DROPBOX PRIOR TO SUBMISSION
--MUST MAKE A MAKE TEST
+-seg faults that may occur could be due to not checking if a given node exists. i.e. calling 
+	getNodeR() when there is no nodeR
+-BE CAREFUL, null pointers should count as red when looking at if (node is red) then...
