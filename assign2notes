@@ -1,5 +1,8 @@
+------------
 Action List:
 ------------
+-get rid of all print/flag statements
+-test inserting duplicate values (not into bst(?) but into rbt and gt
 -improve maketest => test all ds's as much as you can 
 -clean tokens (get rid of commas, etc.)
 -submit to dropbox2
@@ -11,7 +14,9 @@ Action List:
 -test all 3 DS's extensively
 -fix make test/see if I already fixed make test
 -use the test2 dropbox prior to submission
+-go through all tests in the first eval and try them on your program
 
+----------
 Questions:
 ----------
 -for deleteRBT(), when should i remove from tree? when it's 0, when it's about to be zero, when
@@ -28,6 +33,7 @@ Questions:
 -in trees.c, should I print an error message if there are no cmd line args, or do something else?
 -what's the difference between printing to stdout and stderr?
 
+--------------
 Helpful Notes:
 --------------
 -seg faults that may occur could be due to not checking if a given node exists. i.e. calling 
