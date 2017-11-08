@@ -4,7 +4,7 @@
 
 int main(void) {
     BST *tree = newBST(displayREAL, compareREAL, NULL);
-    printf("tree successfully initiailized\n");
+    printf("\nTree successfully initiailized\n");
 
     insertBST(tree, newREAL(7));
     printf("1 insert successful\n");
@@ -18,8 +18,23 @@ int main(void) {
     insertBST(tree, newREAL(8));
     printf("4 inserts successful\n");
 
-    printf("Attempting to display tree...\n");
+    printf("\nAttempting to display tree...\n");
     displayBST(stdout, tree);
+    printf("\n");
+
+    printf("\nBST size is: %d\n", sizeBST(tree));
+
+    printf("\nAttempting to delete value 6...\n");
+    BSTNODE *deleted = deleteBST(tree, newREAL(6));
+    printf("Deleted value is: %lf\n", getREAL(getBSTNODE(deleted)));
+
+    printf("Tree is: \n");
+    displayBST(stdout, tree);
+    printf("\n");
+
+    printf("\nBST size is: %d\n", sizeBST(tree));
+
+
     printf("\n");
 /*
     printf("Attempting to find node w/ value 6\n");
