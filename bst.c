@@ -40,13 +40,15 @@ static void traverseRight(BST *, BSTNODE *, bool);
 static void traverseLeft(BST *, BSTNODE *, bool);
 static bool isLeaf(BSTNODE *);
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t);
-
 static BSTNODE *copyNODE(BSTNODE *giver);
 static int findMinDepthBST(BSTNODE *root);
 static int findMaxDepthBST(BSTNODE *root);
 static int min(int, int);
 
-/*** BSTNODE Constructor ***/
+
+/******************************************************************************/
+/***                           BSTNODE Functions                            ***/
+/******************************************************************************/
 static BSTNODE *newBSTNODE(void *value, BSTNODE *parent) {
   BSTNODE *node;
   if (value == NULL) node = NULL;
@@ -105,6 +107,10 @@ void setBSTNODEparent(BSTNODE *n, BSTNODE *replacement) {
   n->parent->right = replacement->right;
 }
 
+
+/******************************************************************************/
+/***                           BST Functions                                ***/
+/******************************************************************************/
 struct bst {
   struct bstnode *root;
   int size;
@@ -254,7 +260,7 @@ void displayBST(FILE *fp, BST *t) {
 
 
 /******************************************************************************/
-/***                           Helper function(s)                           ***/
+/***                           Helper Functions                             ***/
 /******************************************************************************/
 static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
   if (s1 && s2)
