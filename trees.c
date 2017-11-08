@@ -3,12 +3,6 @@
  * The University of Alabama
  */
 
-/*
- * Questions:
-            -should i print an error message if there are no cmdln args? or should I do something anyway
-            -need to check to handle empty files
- */
-
 #include <stdio.h>
 #include <string.h>
 
@@ -28,6 +22,14 @@ int main(int argc, char *argv[]) {
   if (argc <= 1) {
     //print error message?
     return 0;
+  }
+
+  int i;
+  for (i = 0; i < argc; i++) {
+    if (strcmp(argv[i], "-v") == 0) {
+      printf("Jake A. Wachs\n");
+      return 0;
+    }
   }
 
   char *corpusName, *commandsName, *outputFileName;
