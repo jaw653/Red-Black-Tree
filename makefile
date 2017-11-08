@@ -13,7 +13,7 @@ trees: $(OBJS)
 
 test: trees
 	#./bstTest
-	trees
+	./trees
 
 trees.o: trees.c
 	gcc $(OPTS) trees.c -c
