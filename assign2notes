@@ -1,6 +1,9 @@
 ------------
 Action List:
 ------------
+-curr working on cleaning. must remove quotes from string
+
+-fix/test insert/deleteRBT/GT
 -test all possible functions in bst.c
 -get rid of all print/flag statements
 -test inserting duplicate values (not into bst(?)) but into rbt and gt
@@ -9,10 +12,8 @@ Action List:
 -submit to test2 dropbox
 -submit to final submit
 -test all trees
--ensure swapToLeaf() is swapping to the correct leaf. It should prefer predecessor [X]
 -test trying to deleteBST/RBT/GT() a NULL value and see what happens...what should happen?
 -check that swapper is not swapping entire structs and in RBT maintains color
--test all 3 DS's extensively
 -fix make test/see if I already fixed make test
 -go through all tests in the first eval and try them on your program
 
