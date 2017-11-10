@@ -27,17 +27,17 @@ struct bstnode {
 
 /******************* Helper function signatures *******************************/
 static void displayNODE(BST *, FILE *, BSTNODE *, bool);
-static bool structsAreEqual(BSTNODE *, BSTNODE *);
+//static bool structsAreEqual(BSTNODE *, BSTNODE *);
 static BSTNODE *insertHelper(BST *, BSTNODE *, BSTNODE *, void *, bool);
 static BSTNODE *findHelper(BSTNODE *, int (*)(void *, void *), void *);
-static BSTNODE *traverseRight(BST *, BSTNODE *, bool);
-static BSTNODE *traverseLeft(BST *, BSTNODE *, bool);
-static bool isLeaf(BSTNODE *);
+//static BSTNODE *traverseRight(BST *, BSTNODE *, bool);
+//static BSTNODE *traverseLeft(BST *, BSTNODE *, bool);
+//static bool isLeaf(BSTNODE *);
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t);
 static BSTNODE *copyNODE(BSTNODE *giver);
 static int findMinDepthBST(BSTNODE *root);
 static int findMaxDepthBST(BSTNODE *root);
-static int min(int, int);
+//static int min(int, int);
 
 
 /******************************************************************************/
@@ -171,11 +171,11 @@ BSTNODE *deleteBST(BST *t, void *value) {
   }
 
   node = swapToLeafBST(t, node);
-printf("node is: %lf\n", getREAL(getBSTNODE(node)));
+
   BSTNODE *returnNODE = copyNODE(node);
 
   pruneLeafBST(t, node);
-printf("flag3\n");
+
   return returnNODE;
 }
 
@@ -209,40 +209,6 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
   }
 
   return node;
-/*
-  if (t->swapper) {
-    if (isLeaf(node)) return node;
-    if (node->left) {
-      /* Swap curr node w/ predecessor *
-      t->swapper(node->left, node);
-      return traverseRight(t, node->left, true);
-    }
-    else if (node->right) {
-      /* Swap curr node w/ successor *
-      t->swapper(node->right, node);
-      return traverseLeft(t, node->right, true);
-    }
-  }
-  else {
-    if (isLeaf(node)) return node;
-    if (node->left) {
-      /* Swap curr node w/ predecessor *
-      void *tmp = node->value;
-      node->value = node->left->value;
-      node->left->value = tmp;
-    //  printf("FLAG\n");
-      return traverseRight(t, node->left, false);
-    }
-    else if (node->right) {
-      /* Swap curr node w/ successor *
-      void *tmp = node->value;
-      node->value = node->right->value;
-      node->right->value = tmp;
-      return traverseLeft(t, node->right, false);
-    }
-  }
-*/
-  return NULL;
 }
 
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
@@ -288,6 +254,7 @@ static void displayNODE(BST *t, FILE *fp, BSTNODE *node, bool isRoot) {
   }
 }
 
+/*
 static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
   if (s1 && s2)
     if (s1->value && s2->value)
@@ -298,6 +265,7 @@ static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
 
   return false;
 }
+*/
 
 static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value, bool isLeftChild) {
   if (root && root->value) {
@@ -305,9 +273,6 @@ static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value
   }
 
   if (root == NULL || t->comparator(value, root->value) == 0) {
-    //assert?
-    /* What should I do if values are the same */
-
     root = newBSTNODE(value, parent);
     root->isLeftChild = isLeftChild;
 
@@ -341,6 +306,7 @@ static BSTNODE *findHelper(BSTNODE *root, int (*comparator)(void *, void *), voi
   }
 }
 
+/*
 static BSTNODE *traverseRight(BST *t, BSTNODE *node, bool useSwapper) {
   while (node->right) {
     if (useSwapper == true) {
@@ -358,6 +324,7 @@ static BSTNODE *traverseRight(BST *t, BSTNODE *node, bool useSwapper) {
 
   return node;
 }
+
 
 static BSTNODE *traverseLeft(BST *t, BSTNODE *node, bool useSwapper) {
   while (node->left) {
@@ -380,7 +347,7 @@ static bool isLeaf(BSTNODE *node) {
   if (!node->left && !node->right) return true;
   else return false;
 }
-
+*/
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   if (root == NULL) {
     fprintf(fp, "EMPTY\n");
@@ -399,8 +366,6 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
 
     int i = 0;
     while (i < height) {
-      //printf("i is: %d\n", i);
-      //printf("sizeQUEUE is: %d\n", sizeQUEUE(nodesQueue));
       BSTNODE *currNode = dequeue(nodesQueue);
       nodesInCurrLevel -= 1;
 
@@ -482,6 +447,7 @@ static int findMaxDepthBST(BSTNODE *root) {
   }
 }
 
+/*
 static int min(int a, int b) {
   if (a < b) return a;
   else if (a > b) return b;
@@ -489,3 +455,4 @@ static int min(int a, int b) {
     return a;
   }
 }
+*/
