@@ -26,10 +26,10 @@ int main(void) {
   deleteRBT(tree, newREAL(6));
   printf("Delete successful\n");
 
-  printf("\n Tree is now: \n");
+  printf("\nTree is now: \n");
   displayRBT(stdout, tree);
   printf("\n");
-  
+
   printf("Attempting to find...\n");
   int count = findRBT(tree, newREAL(8));
   printf("find successful, count is: %d\n", count);
