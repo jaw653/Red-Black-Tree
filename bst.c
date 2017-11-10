@@ -171,24 +171,54 @@ BSTNODE *deleteBST(BST *t, void *value) {
   }
 
   node = swapToLeafBST(t, node);
-
+printf("node is: %lf\n", getREAL(getBSTNODE(node)));
   BSTNODE *returnNODE = copyNODE(node);
 
   pruneLeafBST(t, node);
-
+printf("flag3\n");
   return returnNODE;
 }
 
 BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+
+  if (t->swapper) {
+    if (node->left) {
+      t->swapper(node, node->left);
+      node = swapToLeafBST(t, node->left);
+    }
+    else if (node->right) {
+      t->swapper(node, node->right);
+      node = swapToLeafBST(t, node->right);
+    }
+  }
+  else {
+    if (node->left) {
+      void *tmp = node->value;
+      node->value = node->left->value;
+      node->left->value = tmp;
+      node = swapToLeafBST(t, node->left);
+    }
+    else if (node->right) {
+      void *tmp = node->value;
+      node->value = node->right->value;
+      node->right->value = tmp;
+      node = swapToLeafBST(t, node->right);
+    }
+  }
+
+  return node;
+/*
   if (t->swapper) {
     if (isLeaf(node)) return node;
     if (node->left) {
-      /* Swap curr node w/ predecessor */
+      /* Swap curr node w/ predecessor *
       t->swapper(node->left, node);
       return traverseRight(t, node->left, true);
     }
     else if (node->right) {
-      /* Swap curr node w/ successor */
+      /* Swap curr node w/ successor *
       t->swapper(node->right, node);
       return traverseLeft(t, node->right, true);
     }
@@ -196,8 +226,7 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
   else {
     if (isLeaf(node)) return node;
     if (node->left) {
-      /* Swap curr node w/ predecessor */
-      printf("node->value is: %lf\n", getREAL(getBSTNODE(node)));
+      /* Swap curr node w/ predecessor *
       void *tmp = node->value;
       node->value = node->left->value;
       node->left->value = tmp;
@@ -205,28 +234,26 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
       return traverseRight(t, node->left, false);
     }
     else if (node->right) {
-      /* Swap curr node w/ successor */
+      /* Swap curr node w/ successor *
       void *tmp = node->value;
       node->value = node->right->value;
       node->right->value = tmp;
       return traverseLeft(t, node->right, false);
     }
   }
-
+*/
   return NULL;
 }
 
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
   /* If left child */
-  if (structsAreEqual(leaf->parent->left, leaf)) {
-    free(leaf->parent->left);
+  if (leaf->isLeftChild) {
+    leaf->parent->left = NULL;
   }
   /* If right child */
-  else if (structsAreEqual(leaf->parent->right, leaf)) {
-    free(leaf->parent->right);
+  else {
+    leaf->parent->right = NULL;
   }
-
-  free(leaf);
 
   t->size -= 1;
 }
@@ -448,8 +475,8 @@ static int findMaxDepthBST(BSTNODE *root) {
   if (root == NULL) return 0;
   else {
     int L_depth, R_depth;
-    L_depth = findMaxDepthBST(root->left);
-    R_depth = findMaxDepthBST(root->right);
+    L_depth = findMaxDepthBST(getBSTNODEleft(root));
+    R_depth = findMaxDepthBST(getBSTNODEright(root));
 
     return (L_depth>R_depth?L_depth:R_depth) + 1;
   }
