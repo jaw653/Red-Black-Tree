@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "bst.h"
 #include "string.h"
@@ -12,6 +13,7 @@
 #include "gt.h"
 #include "scanner.h"
 
+static bool fileIsEmpty(FILE *fp);
 static void populateGT(FILE *fp, GT *tree);
 static void populateRBT(FILE *fp, RBT *tree);
 static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree);
@@ -57,24 +59,35 @@ int main(int argc, char *argv[]) {
     outputFileName = argv[4];
   }
 
+  printf("corpus name is: %s\n", corpusName);
+  printf("commandsName is: %s\n", commandsName);
+  printf("outputFileName is: %s\n", outputFileName);
+
   corpus = fopen(corpusName, "r");
   commands = fopen(commandsName, "r");
   if (outputFileName != NULL) outputFile = fopen(outputFileName, "r");
   else outputFile = NULL;
 
-  //read corpus text into bst
+
   if (strcmp(argv[argc - (argc-1)], "-g") == 0) {
+    printf("option is -g\n");
     GT *wordsTree = newGT(displaySTRING, compareSTRING);
     populateGT(corpus, wordsTree);
-    if (outputFile == NULL) executeCommandsGT(commands, stdout, wordsTree);
-    else executeCommandsGT(commands, outputFile, wordsTree);
-    //read in and complete commands
+
+    if (outputFile == NULL)
+      executeCommandsGT(commands, stdout, wordsTree);
+    else
+      executeCommandsGT(commands, outputFile, wordsTree);
   }
   else {
+    printf("option is -r\n");
     RBT *wordsTree = newRBT(displaySTRING, compareSTRING);
     populateRBT(corpus, wordsTree);
-    if (outputFile == NULL) executeCommandsRBT(commands, stdout, wordsTree);
-    else executeCommandsRBT(commands, outputFile, wordsTree);
+
+    if (outputFile == NULL)
+      executeCommandsRBT(commands, stdout, wordsTree);
+    else
+      printf("else\n"); executeCommandsRBT(commands, outputFile, wordsTree);
   }
 
   if (corpus) fclose(corpus);
@@ -84,128 +97,151 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
+static bool fileIsEmpty(FILE *fp) {
+  int size;
+  if (fp != NULL) {
+    fseek(fp, 0, SEEK_END);
+    size = ftell(fp);
+
+    if (size == 0)
+      return true;
+    else
+      return false;
+  }
+  return true;
+}
+
 static void populateGT(FILE *fp, GT *tree) {
-  char *str = readToken(fp);
+  if (!fileIsEmpty(fp)) {
+    char *str = readToken(fp);
 
-  while (str) {
-    char *s = readToken(fp);
-    STRING *value = newSTRING(s);
+    while (str) {
+      char *s = readToken(fp);
+      STRING *value = newSTRING(s);
 
-    insertGT(tree, value);
+      insertGT(tree, value);
 
-    str = readToken(fp);
+      str = readToken(fp);
+    }
   }
 }
 
 static void populateRBT(FILE *fp, RBT *tree) {
-  char *str = readToken(fp);
+  if (!fileIsEmpty(fp)) {
+    char *str = readToken(fp);
 
-  while (str) {
-    char *s = readToken(fp);
-    STRING *value = newSTRING(s);
+    while (str) {
+      if (str) break;
+      char *s = readToken(fp);
+      STRING *value = newSTRING(s);
 
-    insertRBT(tree, value);
+      insertRBT(tree, value);
 
-    str = readToken(fp);
+      str = readToken(fp);
+    }
   }
 }
 
 static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
-  char *str = readToken(fp);
+  if (!fileIsEmpty(fp)) {
+    char *str = readToken(fp);
 
-  while (str) {
-    /* Insert to tree */
-    if (strcmp(str, "i") == 0) {
-      char *obj = readToken(fp);
-      if (obj[0] == '"') {
-        strcat(obj, readToken(fp));
+    while (str) {
+      /* Insert to tree */
+      if (strcmp(str, "i") == 0) {
+        char *obj = readToken(fp);
+        if (obj[0] == '"') {
+          strcat(obj, readToken(fp));
+        }
+        insertGT(tree, newSTRING(obj));
       }
-      insertGT(tree, newSTRING(obj));
-    }
-    /* Delete from tree */
-    else if (strcmp(str, "d") == 0) {
-      char *obj = readToken(fp);
-      if (obj[0] == '"') {
-        strcat(obj, readToken(fp));
+      /* Delete from tree */
+      else if (strcmp(str, "d") == 0) {
+        char *obj = readToken(fp);
+        if (obj[0] == '"') {
+          strcat(obj, readToken(fp));
+        }
+        deleteGT(tree, newSTRING(obj));
       }
-      deleteGT(tree, newSTRING(obj));
-    }
-    /* Report frequency */
-    else if (strcmp(str, "f") == 0) {
-      char *obj = readToken(fp);
-      if (obj[0] == '"') {
-        strcat(obj, readToken(fp));
+      /* Report frequency */
+      else if (strcmp(str, "f") == 0) {
+        char *obj = readToken(fp);
+        if (obj[0] == '"') {
+          strcat(obj, readToken(fp));
+        }
+        int freq = findGT(tree, newSTRING(obj));
+        fprintf(outputFile, "Frequency of %s is: %d\n", obj, freq);
       }
-      int freq = findGT(tree, newSTRING(obj));
-      fprintf(outputFile, "Frequency of %s is: %d\n", obj, freq);
-    }
-    /* Show the tree */
-    else if (strcmp(str, "s") == 0) {
-      char *obj = readToken(fp);
-      if (obj[0] == '"') {
-        strcat(obj, readToken(fp));
+      /* Show the tree */
+      else if (strcmp(str, "s") == 0) {
+        char *obj = readToken(fp);
+        if (obj[0] == '"') {
+          strcat(obj, readToken(fp));
+        }
+        displayGT(outputFile, tree);
       }
-      displayGT(outputFile, tree);
-    }
-    /* Report statistics */
-    else if (strcmp(str, "r") == 0) {
-      char *obj = readToken(fp);
-      if (obj[0] == '"') {
-        strcat(obj, readToken(fp));
+      /* Report statistics */
+      else if (strcmp(str, "r") == 0) {
+        char *obj = readToken(fp);
+        if (obj[0] == '"') {
+          strcat(obj, readToken(fp));
+        }
+        statisticsGT(outputFile, tree);
       }
-      statisticsGT(outputFile, tree);
-    }
 
-    str = readToken(fp);
+      str = readToken(fp);
+    }
   }
 }
 
 static void executeCommandsRBT(FILE *fp, FILE *outputFile, RBT *tree) {
-  char *str = readToken(fp);
+  if (!fileIsEmpty(fp)) {
+    char *str = readToken(fp);
 
-  while (str) {
-    /* Insert to tree */
-    if (strcmp(str, "i") == 0) {
-      char *obj = readToken(fp);
-      if (obj[0] == '"') {
-        strcat(obj, readToken(fp));
+    while (str) {
+      /* Insert to tree */
+      if (strcmp(str, "i") == 0) {
+        char *obj = readToken(fp);
+        if (obj[0] == '"') {
+          strcat(obj, readToken(fp));
+        }
+        insertRBT(tree, newSTRING(obj));
       }
-      insertRBT(tree, newSTRING(obj));
-    }
-    /* Delete from tree */
-    else if (strcmp(str, "d") == 0) {
-      char *obj = readToken(fp);
-      if (obj[0] == '"') {
-        strcat(obj, readToken(fp));
+      /* Delete from tree */
+      else if (strcmp(str, "d") == 0) {
+        char *obj = readToken(fp);
+        if (obj[0] == '"') {
+          strcat(obj, readToken(fp));
+        }
+        deleteRBT(tree, newSTRING(obj));
       }
-      deleteRBT(tree, newSTRING(obj));
-    }
-    /* Report frequency */
-    else if (strcmp(str, "f") == 0) {
-      char *obj = readToken(fp);
-      if (obj[0] == '"') {
-        strcat(obj, readToken(fp));
+      /* Report frequency */
+      else if (strcmp(str, "f") == 0) {
+        char *obj = readToken(fp);
+        if (obj[0] == '"') {
+          strcat(obj, readToken(fp));
+        }
+        int freq = findRBT(tree, newSTRING(obj));
+        fprintf(outputFile, "Frequency of %s is: %d\n", obj, freq);
       }
-      int freq = findRBT(tree, newSTRING(obj));
-      fprintf(outputFile, "Frequency of %s is: %d\n", obj, freq);
-    }
-    /* Show the tree */
-    else if (strcmp(str, "s") == 0) {
-      char *obj = readToken(fp);
-      if (obj[0] == '"') {
-        strcat(obj, readToken(fp));
+      /* Show the tree */
+      else if (strcmp(str, "s") == 0) {
+        char *obj = readToken(fp);
+        if (obj[0] == '"') {
+          strcat(obj, readToken(fp));
+        }
+        displayRBT(outputFile, tree);
       }
-      displayRBT(outputFile, tree);
-    }
-    /* Report statistics */
-    else if (strcmp(str, "r") == 0) {
-      char *obj = readToken(fp);
-      if (obj[0] == '"') {
-        strcat(obj, readToken(fp));
+      /* Report statistics */
+      else if (strcmp(str, "r") == 0) {
+        char *obj = readToken(fp);
+        if (obj[0] == '"') {
+          strcat(obj, readToken(fp));
+        }
+        statisticsRBT(outputFile, tree);
       }
-      statisticsRBT(outputFile, tree);
-    }
 
-    str = readToken(fp);
+      str = readToken(fp);
+    }
   }
 }
