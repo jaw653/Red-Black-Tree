@@ -36,6 +36,10 @@ static int findMaxDepthRBT(BSTNODE *);
 static int min(int, int);
 
 /***************************** Private Functions ******************************/
+static void displayRBTNODE(FILE *fp, void *x) {
+  RBTNODE *node = x;
+  fprintf(fp, "%s-%c", node->value, node->color);
+}
 /* Compare two bst structs, returns true if the same */
 static bool nodesAreEqual(BSTNODE *s1, BSTNODE *s2) {
   if (s1 && s2) {
@@ -205,8 +209,8 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
 
 
     if (nodesAreEqual(x, getBSTroot(tree))) break;
-    if (rbtParent->color == 'B') break;
-    if (rbtUncle->color == 'R' || uncle == NULL) {
+    if (rbtParent->color == 'B' || parent == NULL) break;
+    if (rbtUncle->color == 'R') {
       rbtParent->color = 'B';
       rbtUncle->color = 'B';
       rbtGrandParent->color = 'R';
@@ -274,14 +278,14 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
 
     if (nodesAreEqual(getBSTroot(tree), x)) break;
     RBTNODE *rbtX = getBSTNODE(x);
-    if (rbtX->color == 'R' || x == NULL) break;
+    if (rbtX->color == 'R') break;
     if (rbtSibling->color == 'R' || sibling == NULL) {
       rbtParent->color = 'R';
       rbtSibling->color = 'B';
 
       rotate(tree, sibling, getBSTNODEparent(sibling));
     }
-    else if (rbtNephew->color == 'R' || nephew == NULL) {
+    else if (rbtNephew->color == 'R') {
       rbtSibling->color = rbtParent->color;
       rbtParent->color = 'B';
       rbtNephew->color = 'B';
@@ -290,7 +294,7 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
 
       break;
     }
-    else if (rbtNiece->color == 'R' || niece == NULL) {
+    else if (rbtNiece->color == 'R') {
       rbtNiece->color = 'B';
       rbtSibling->color = 'R';
 
@@ -313,7 +317,7 @@ RBT *newRBT(
 )
 {
     RBT *t = malloc(sizeof(struct rbt));
-    t->tree = newBST(d, c, swapRBTNODE);           //FIXME: init with swapper function, change other fc's to use swapper function
+    t->tree = newBST(displayRBTNODE, c, swapRBTNODE);           //FIXME: init with swapper function, change other fc's to use swapper function
     t->display = d;
     t->comparator = c;
     t->totalWords = 0;
@@ -327,7 +331,6 @@ void insertRBT(RBT *t, void *value) {
   BSTNODE *x = insertBST(t->tree, value);
   if (x == NULL) {
     BSTNODE *newNode = findBST(t->tree, value);
-    //incrementRBTNODEfrequency(newNode);
     RBTNODE *n = getBSTNODE(newNode);
     n->frequency += 1;
     t->numNodes += 1;
