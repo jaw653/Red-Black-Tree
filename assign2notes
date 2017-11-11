@@ -1,8 +1,10 @@
 ------------
 Action List:
 ------------
--curr working on cleaning. must remove quotes from string
+-curr working on cleaning. still must check for empty files
 
+-fix contiguous whitespace cleaner
+-make sure empty strings are not being inserted to your data structures
 -fix/test insert/deleteRBT/GT
 -test all possible functions in bst.c
 -get rid of all print/flag statements
@@ -20,6 +22,7 @@ Action List:
 ----------
 Questions:
 ----------
+-can "contiguous whitesapce" be more than 2 spaces in a row?
 -for deleteRBT(), when should i remove from tree? when it's 0, when it's about to be zero, when
 	it's less than 0?
 -does findBST() need to account for the value not being in the tree?
