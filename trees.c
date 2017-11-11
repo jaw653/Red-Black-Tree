@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "bst.h"
 #include "string.h"
@@ -14,6 +15,10 @@
 #include "gt.h"
 #include "scanner.h"
 
+static bool stringIsEmpty(char *);
+static int getFirstCharIndex(char *);
+static int getLastCharIndex(char *);
+static char *cleanString(char *);
 static char *removeQuotes(char *);
 static bool fileIsEmpty(FILE *fp);
 static void populateGT(FILE *fp, GT *tree);
@@ -36,6 +41,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  /* Reading in file names to file pointers */
   char *corpusName, *commandsName, *outputFileName;
   FILE *corpus;
   FILE *commands;
@@ -63,17 +69,13 @@ int main(int argc, char *argv[]) {
     commandsName = argv[3];
     outputFileName = argv[4];
   }
-
-  printf("corpus name is: %s\n", corpusName);
-  printf("commandsName is: %s\n", commandsName);
-  printf("outputFileName is: %s\n", outputFileName);
-
   corpus = fopen(corpusName, "r");
   commands = fopen(commandsName, "r");
   if (outputFileName != NULL) outputFile = fopen(outputFileName, "r");
   else outputFile = NULL;
 
 
+  /* Determing if rbt or gt, populating BST, and executing commands file */
   if (strcmp(argv[argc - (argc-1)], "-g") == 0) {
     GT *wordsTree = newGT(displaySTRING, compareSTRING);
     populateGT(corpus, wordsTree);
@@ -99,9 +101,67 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
+/******************************************************************************/
+/***                          Helper Functions                              ***/
+/******************************************************************************/
+static bool stringIsEmpty(char *str) {
+  int i;
+  int len = strlen(str);
+  for (i = 0; i < len; i++) {
+    if (isalpha(str[i])) return false;
+  }
+  return true;
+}
+static int getFirstCharIndex(char *str) {
+  int index = 0;
+  int len = strlen(str);
+  while (!isalpha(str[index]) && index < len) {
+    index += 1;
+  }
+  return index;
+}
+
+static int getLastCharIndex(char *str) {
+  int index = strlen(str) - 1;
+  while (!isalpha(str[index]) && index > -1) {
+    index -= 1;
+  }
+  return index;
+}
+
+static char *cleanString(char *str) {
+  int i;
+  int j = 0;
+  int len = strlen(str);
+  char *newStr = malloc(sizeof(char) * strlen(str));
+  int firstCharIndex = getFirstCharIndex(str);
+  int lastCharIndex = getLastCharIndex(str);
+
+  for (i = 0; i < len; i++) {
+    if (isalpha(str[i])) {
+      newStr[j] = str[i];
+      j += 1;
+    }
+    if (isspace(str[i]) && !isspace(str[i-1])) {
+      if (i <= lastCharIndex && i >= firstCharIndex) {
+        newStr[j] = str[i];
+        j += 1;
+      }
+    }
+  }
+
+  int len2 = strlen(newStr);
+  for (i = 0; i < len2; i++) {
+    newStr[i] = tolower(newStr[i]);
+  }
+
+  return newStr;
+}
+
 static char *getEntirePhrase(FILE *fp, char *str) {
   if (str[0] == '"') {
-    while (str[strlen(str) - 1] != '"') {
+    int len = strlen(str) - 1;
+    while (str[len] != '"') {
       strcat(str, " ");
       strcat(str, readToken(fp));
     }
@@ -169,6 +229,7 @@ static void populateRBT(FILE *fp, RBT *tree) {
   }
 }
 
+/***************************** Execute Commands *******************************/
 static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
   //if (!fileIsEmpty(fp)) {
     char *str = readToken(fp);
@@ -177,19 +238,24 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
       /* Insert to tree */
       if (strcmp(str, "i") == 0) {
         str = readToken(fp);
-        str = getEntirePhrase(fp, str);
-        insertGT(tree, newSTRING(str));
+        if (!stringIsEmpty(str)) {
+          str = getEntirePhrase(fp, str);
+          str = cleanString(str);
+          insertGT(tree, newSTRING(str));
+        }
       }
       /* Delete from tree */
       else if (strcmp(str, "d") == 0) {
         str = readToken(fp);
         str = getEntirePhrase(fp, str);
+        str = cleanString(str);
         deleteGT(tree, newSTRING(str));
       }
       /* Report frequency */
       else if (strcmp(str, "f") == 0) {
         str = readToken(fp);
         str = getEntirePhrase(fp, str);
+        str = cleanString(str);
         int freq = findGT(tree, newSTRING(str));
         fprintf(outputFile, "Frequency of %s is: %d\n", str, freq);
       }
@@ -215,22 +281,24 @@ static void executeCommandsRBT(FILE *fp, FILE *outputFile, RBT *tree) {
       /* Insert to tree */
       if (strcmp(str, "i") == 0) {
         str = readToken(fp);
-        str = getEntirePhrase(fp, str);
-
-        insertRBT(tree, newSTRING(str));
+        if (!stringIsEmpty(str)) {
+          str = getEntirePhrase(fp, str);
+          str = cleanString(str);
+          insertRBT(tree, newSTRING(str));
+        }
       }
       /* Delete from tree */
       else if (strcmp(str, "d") == 0) {
         str = readToken(fp);
         str = getEntirePhrase(fp, str);
-
+        str = cleanString(str);
         deleteRBT(tree, newSTRING(str));
       }
       /* Report frequency */
       else if (strcmp(str, "f") == 0) {
         str = readToken(fp);
         str = getEntirePhrase(fp, str);
-
+        str = cleanString(str);
         int freq = findRBT(tree, newSTRING(str));
         fprintf(outputFile, "Frequency of %s is: %d\n", str, freq);
       }
