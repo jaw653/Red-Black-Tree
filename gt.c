@@ -19,18 +19,26 @@ struct gt {
 
 typedef struct GTNODE GTNODE;
 struct GTNODE {
-  char *value;
+  void *value;
   int frequency;
 };
-
+static GTNODE *newGTNODE(void *value);
+static void displayGTNODE(FILE *, void *x);
 static void swapGTNODE(BSTNODE *, BSTNODE *);
 static int findMinDepthGT(BSTNODE *);
 static int findMaxDepthGT(BSTNODE *);
 static int min(int, int);
 
+static GTNODE *newGTNODE(void *value) {
+  GTNODE *node = malloc(sizeof(struct GTNODE));
+  node->value = value;
+  node->frequency = 1;
+
+  return node;
+}
 GT *newGT(void (*d)(FILE *, void *), int (*c)(void *, void *)) {
   GT *t = malloc(sizeof(struct gt));
-  t->tree = newBST(d, c, swapGTNODE);
+  t->tree = newBST(displayGTNODE, c, swapGTNODE);
   t->display = d;
   t->comparator = c;
   t->totalWords = 0;
@@ -40,18 +48,14 @@ GT *newGT(void (*d)(FILE *, void *), int (*c)(void *, void *)) {
 }
 
 void insertGT(GT *t, void *value) {
-  t->totalWords += 1;
-  BSTNODE *x = insertBST(t->tree, value);
-
-  if (x == NULL) {
-    BSTNODE *newNode = findBST(t->tree, value);
-    GTNODE *n = getBSTNODE(newNode);
-    n->frequency += 1;
-    t->numNodes += 1;
+  BSTNODE *valueToFind = findBST(t->tree, value);
+  /* If value is in the tree, just increment it */
+  if (valueToFind != NULL) {
+    getBSTNODE(valueToFind)->frequency += 1;
   }
   else {
-    GTNODE *xx = getBSTNODE(x);
-    xx->frequency += 1;
+    GTNODE *valueObject = newGTNODE(value);
+    insertBST(t->tree, valueObject);
   }
 }
 
@@ -101,6 +105,10 @@ void displayGT(FILE *fp, GT *t) {
   displayBST(fp, t->tree);
 }
 
+static void displayGTNODE(FILE *fp, void *x) {
+  GTNODE *node = x;
+  fprintf(fp, "%s-%d", node->value, node->frequency);
+}
 static void swapGTNODE(BSTNODE *n1, BSTNODE *n2) {
   GTNODE *ra = getBSTNODE(n1);
   GTNODE *rb = getBSTNODE(n2);
