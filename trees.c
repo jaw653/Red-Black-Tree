@@ -79,6 +79,7 @@ int main(int argc, char *argv[]) {
   if (strcmp(argv[argc - (argc-1)], "-g") == 0) {
     GT *wordsTree = newGT(displaySTRING, compareSTRING);
     populateGT(corpus, wordsTree);
+
     if (outputFile == NULL)
       executeCommandsGT(commands, stdout, wordsTree);
     else
@@ -142,7 +143,7 @@ static char *cleanString(char *str) {
       newStr[j] = str[i];
       j += 1;
     }
-    if (isspace(str[i]) && !isspace(str[i-1])) {
+    if (isspace(str[i]) && !isspace(str[j-1])) {
       if (i <= lastCharIndex && i >= firstCharIndex) {
         newStr[j] = str[i];
         j += 1;
@@ -160,8 +161,7 @@ static char *cleanString(char *str) {
 
 static char *getEntirePhrase(FILE *fp, char *str) {
   if (str[0] == '"') {
-    int len = strlen(str) - 1;
-    while (str[len] != '"') {
+    while (str[strlen(str)-1] != '"') {
       strcat(str, " ");
       strcat(str, readToken(fp));
     }
@@ -199,34 +199,31 @@ static bool fileIsEmpty(FILE *fp) {
 }
 
 static void populateGT(FILE *fp, GT *tree) {
-  if (!fileIsEmpty(fp)) {
+//  if (!fileIsEmpty(fp)) {
     char *str = readToken(fp);
 
     while (str) {
-      char *s = readToken(fp);
-      STRING *value = newSTRING(s);
-
-      insertGT(tree, value);
-
+//printf("flag1\n");
+      str = cleanString(str);
+      insertGT(tree, newSTRING(str));
+//printf("flag2\n");
       str = readToken(fp);
+//printf("flag3\n");
     }
-  }
+//  }
 }
 
 static void populateRBT(FILE *fp, RBT *tree) {
-  if (!fileIsEmpty(fp)) {
+  //if (!fileIsEmpty(fp)) {
     char *str = readToken(fp);
 
     while (str) {
-      if (str) break;
-      char *s = readToken(fp);
-      STRING *value = newSTRING(s);
-
-      insertRBT(tree, value);
+      str = cleanString(str);
+      insertRBT(tree, newSTRING(str));
 
       str = readToken(fp);
     }
-  }
+  //}
 }
 
 /***************************** Execute Commands *******************************/
