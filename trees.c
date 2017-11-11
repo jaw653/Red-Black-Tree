@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "bst.h"
 #include "string.h"
@@ -13,6 +14,7 @@
 #include "gt.h"
 #include "scanner.h"
 
+static char *removeQuotes(char *);
 static bool fileIsEmpty(FILE *fp);
 static void populateGT(FILE *fp, GT *tree);
 static void populateRBT(FILE *fp, RBT *tree);
@@ -35,7 +37,10 @@ int main(int argc, char *argv[]) {
   }
 
   char *corpusName, *commandsName, *outputFileName;
-  FILE *corpus, *commands, *outputFile;
+  FILE *corpus;
+  FILE *commands;
+  FILE *outputFile;
+
   if (argc == 4) {
     if (strcmp(argv[1], "-g") == 0 || strcmp(argv[1], "-r") == 0) {
       corpusName = argv[2];
@@ -70,24 +75,21 @@ int main(int argc, char *argv[]) {
 
 
   if (strcmp(argv[argc - (argc-1)], "-g") == 0) {
-    printf("option is -g\n");
     GT *wordsTree = newGT(displaySTRING, compareSTRING);
     populateGT(corpus, wordsTree);
-
     if (outputFile == NULL)
       executeCommandsGT(commands, stdout, wordsTree);
     else
       executeCommandsGT(commands, outputFile, wordsTree);
   }
   else {
-    printf("option is -r\n");
     RBT *wordsTree = newRBT(displaySTRING, compareSTRING);
     populateRBT(corpus, wordsTree);
 
     if (outputFile == NULL)
       executeCommandsRBT(commands, stdout, wordsTree);
     else
-      printf("else\n"); executeCommandsRBT(commands, outputFile, wordsTree);
+      executeCommandsRBT(commands, outputFile, wordsTree);
   }
 
   if (corpus) fclose(corpus);
@@ -95,6 +97,29 @@ int main(int argc, char *argv[]) {
   if (outputFile) fclose(outputFile);
 
   return 0;
+}
+
+static char *getEntirePhrase(FILE *fp, char *str) {
+  if (str[0] == '"') {
+    while (str[strlen(str) - 1] != '"') {
+      strcat(str, " ");
+      strcat(str, readToken(fp));
+    }
+    str = removeQuotes(str);
+  }
+
+  return str;
+}
+static char *removeQuotes(char *str) {
+  int len = strlen(str);
+  int i;
+  char *newStr = malloc(sizeof(char) * 1000);
+
+  for (i = 1; i < len-1; i++) {
+    newStr[i-1] = str[i];
+  }
+
+  return newStr;
 }
 
 static bool fileIsEmpty(FILE *fp) {
@@ -108,6 +133,8 @@ static bool fileIsEmpty(FILE *fp) {
     else
       return false;
   }
+
+  rewind(fp);
   return true;
 }
 
@@ -143,105 +170,80 @@ static void populateRBT(FILE *fp, RBT *tree) {
 }
 
 static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
-  if (!fileIsEmpty(fp)) {
+  //if (!fileIsEmpty(fp)) {
     char *str = readToken(fp);
 
     while (str) {
       /* Insert to tree */
       if (strcmp(str, "i") == 0) {
-        char *obj = readToken(fp);
-        if (obj[0] == '"') {
-          strcat(obj, readToken(fp));
-        }
-        insertGT(tree, newSTRING(obj));
+        str = readToken(fp);
+        str = getEntirePhrase(fp, str);
+        insertGT(tree, newSTRING(str));
       }
       /* Delete from tree */
       else if (strcmp(str, "d") == 0) {
-        char *obj = readToken(fp);
-        if (obj[0] == '"') {
-          strcat(obj, readToken(fp));
-        }
-        deleteGT(tree, newSTRING(obj));
+        str = readToken(fp);
+        str = getEntirePhrase(fp, str);
+        deleteGT(tree, newSTRING(str));
       }
       /* Report frequency */
       else if (strcmp(str, "f") == 0) {
-        char *obj = readToken(fp);
-        if (obj[0] == '"') {
-          strcat(obj, readToken(fp));
-        }
-        int freq = findGT(tree, newSTRING(obj));
-        fprintf(outputFile, "Frequency of %s is: %d\n", obj, freq);
+        str = readToken(fp);
+        str = getEntirePhrase(fp, str);
+        int freq = findGT(tree, newSTRING(str));
+        fprintf(outputFile, "Frequency of %s is: %d\n", str, freq);
       }
       /* Show the tree */
       else if (strcmp(str, "s") == 0) {
-        char *obj = readToken(fp);
-        if (obj[0] == '"') {
-          strcat(obj, readToken(fp));
-        }
         displayGT(outputFile, tree);
       }
       /* Report statistics */
       else if (strcmp(str, "r") == 0) {
-        char *obj = readToken(fp);
-        if (obj[0] == '"') {
-          strcat(obj, readToken(fp));
-        }
         statisticsGT(outputFile, tree);
       }
 
       str = readToken(fp);
     }
-  }
+  //}
 }
 
 static void executeCommandsRBT(FILE *fp, FILE *outputFile, RBT *tree) {
-  if (!fileIsEmpty(fp)) {
+  //if (!fileIsEmpty(fp)) {
     char *str = readToken(fp);
 
     while (str) {
       /* Insert to tree */
       if (strcmp(str, "i") == 0) {
-        char *obj = readToken(fp);
-        if (obj[0] == '"') {
-          strcat(obj, readToken(fp));
-        }
-        insertRBT(tree, newSTRING(obj));
+        str = readToken(fp);
+        str = getEntirePhrase(fp, str);
+
+        insertRBT(tree, newSTRING(str));
       }
       /* Delete from tree */
       else if (strcmp(str, "d") == 0) {
-        char *obj = readToken(fp);
-        if (obj[0] == '"') {
-          strcat(obj, readToken(fp));
-        }
-        deleteRBT(tree, newSTRING(obj));
+        str = readToken(fp);
+        str = getEntirePhrase(fp, str);
+
+        deleteRBT(tree, newSTRING(str));
       }
       /* Report frequency */
       else if (strcmp(str, "f") == 0) {
-        char *obj = readToken(fp);
-        if (obj[0] == '"') {
-          strcat(obj, readToken(fp));
-        }
-        int freq = findRBT(tree, newSTRING(obj));
-        fprintf(outputFile, "Frequency of %s is: %d\n", obj, freq);
+        str = readToken(fp);
+        str = getEntirePhrase(fp, str);
+
+        int freq = findRBT(tree, newSTRING(str));
+        fprintf(outputFile, "Frequency of %s is: %d\n", str, freq);
       }
       /* Show the tree */
       else if (strcmp(str, "s") == 0) {
-        char *obj = readToken(fp);
-        if (obj[0] == '"') {
-          strcat(obj, readToken(fp));
-        }
         displayRBT(outputFile, tree);
       }
       /* Report statistics */
       else if (strcmp(str, "r") == 0) {
-        char *obj = readToken(fp);
-        if (obj[0] == '"') {
-          strcat(obj, readToken(fp));
-        }
         statisticsRBT(outputFile, tree);
       }
 
       str = readToken(fp);
     }
-  }
+//  }
 }
