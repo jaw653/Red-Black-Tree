@@ -268,10 +268,6 @@ static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
 */
 
 static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value, bool isLeftChild) {
-  if (root && root->value) {
-    if (t->comparator(root->value, value) == 0) return NULL;
-  }
-
   if (root == NULL || t->comparator(value, root->value) == 0) {
     root = newBSTNODE(value, parent);
     root->isLeftChild = isLeftChild;
