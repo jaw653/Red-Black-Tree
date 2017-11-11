@@ -27,15 +27,23 @@ typedef struct RBTNODE RBTNODE;
 struct RBTNODE {
   int frequency;
   char color;
-  char *value;
+  void *value;
 };
 
+static RBTNODE *newRBTNODE(void *);
 static void swapRBTNODE(BSTNODE *, BSTNODE *);
 static int findMinDepthRBT(BSTNODE *);
 static int findMaxDepthRBT(BSTNODE *);
 static int min(int, int);
 
 /***************************** Private Functions ******************************/
+static RBTNODE *newRBTNODE(void *value) {
+  RBTNODE *node = malloc(sizeof(struct RBTNODE));
+  node->frequency = 1;
+  node->color = 'B';
+  node->value = value;
+}
+
 static void displayRBTNODE(FILE *fp, void *x) {
   RBTNODE *node = x;
   fprintf(fp, "%s-%c", node->value, node->color);
@@ -327,6 +335,18 @@ RBT *newRBT(
 }
 
 void insertRBT(RBT *t, void *value) {
+  BSTNODE *valueToFind = findBST(t->tree, value);
+  /* If value is in the tree, just increment it */
+  if (valueToFind != NULL) {
+    getBSTNODE(valueToFind)->frequency += 1;
+  }
+  else {
+    RBTNODE *valueObject = newRBTNODE(value);
+    BSTNODE *insertedNode = insertBST(t->tree, valueObject);
+    insertionFixUp(t->tree, insertedNode);
+  }
+  t->totalWords += 1;                       //FIXME: when to increment totalWords/phrases?
+/*
   t->totalWords += 1;
   BSTNODE *x = insertBST(t->tree, value);
   if (x == NULL) {
@@ -341,6 +361,7 @@ void insertRBT(RBT *t, void *value) {
     RBTNODE *xx = getBSTNODE(x);
     xx->frequency += 1;
   }
+*/
 }
 
 int findRBT(RBT *t, void *value) {
