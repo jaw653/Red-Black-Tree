@@ -1,23 +1,21 @@
 ------------
 Action List:
 ------------
--statistics() and display() for rbt/gt?
+-check rbt extensively to make sure all nodes are changing to the correct color/fixups are right
 -check cleanString() to make sure it works on lots of edge cases
 -must check for empty files!!!
 -make sure empty strings are not being inserted to your data structures
--fix/test insert/deleteRBT/GT
--test all possible functions in bst.c
+-test all possible functions in bst
 -get rid of all print/flag statements
--test inserting duplicate values (not into bst(?)) but into rbt and gt
+-test inserting duplicate values into rbt and gt
 -improve maketest => test all ds's as much as you can 
--submit to test2 dropbox
+-submit to test2 dropbox (use this to test extensively as well)
 -submit to final submit
--test all trees
 -test trying to deleteBST/RBT/GT() a NULL value and see what happens...what should happen?
 -check that swapper is not swapping entire structs and in RBT maintains color
 -fix make test/see if I already fixed make test
 -go through all tests in the first eval and try them on your program
-
+-check to make sure statistics() is correct for rbt/gt
 ----------
 Questions:
 ----------
