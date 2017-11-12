@@ -21,6 +21,7 @@ Action List:
 ----------
 Questions:
 ----------
+-when to increment totalWords/Phrases?
 -can "contiguous whitesapce" be more than 2 spaces in a row?
 -for deleteRBT(), when should i remove from tree? when it's 0, when it's about to be zero, when
 	it's less than 0?
