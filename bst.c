@@ -19,7 +19,7 @@
 
 struct bstnode {
   bool isLeftChild;
-  void *value;
+  void *value;      //points to a gtnode or rbtnode
   struct bstnode *parent;
   struct bstnode *left;
   struct bstnode *right;
