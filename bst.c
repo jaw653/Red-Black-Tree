@@ -6,15 +6,7 @@
  * This is the implementation file for the bst.h inteface
  */
 
-/*
- * Questions:
- *            -setBSTNODE, should it just set n->value = value?
- *            -setBSTNODEleft, copies all replacement stuff to n->left, is this ok?
- *            -when should swapleaf swap with pred and when successor
- *            -do we need to account for equal values in the bst
- *            -right now, findbst does not account for if the value is not in the tree, should it?
- *            -insertBST does not account for duplicate values, should it?
- */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -26,18 +18,31 @@
 #include "queue.h"
 
 struct bstnode {
-  void *value;
+  bool isLeftChild;
+  void *value;      //points to a gtnode or rbtnode
   struct bstnode *parent;
   struct bstnode *left;
   struct bstnode *right;
 };
 
+/******************* Helper function signatures *******************************/
+static void displayNODE(BST *, FILE *, BSTNODE *, bool);
+//static bool structsAreEqual(BSTNODE *, BSTNODE *);
+static BSTNODE *insertHelper(BST *, BSTNODE *, BSTNODE *, void *, bool);
+static BSTNODE *findHelper(BSTNODE *, int (*)(void *, void *), void *);
+//static BSTNODE *traverseRight(BST *, BSTNODE *, bool);
+//static BSTNODE *traverseLeft(BST *, BSTNODE *, bool);
+//static bool isLeaf(BSTNODE *);
+static void displayHelper(FILE *fp, BSTNODE *root, BST *t);
 static BSTNODE *copyNODE(BSTNODE *giver);
 static int findMinDepthBST(BSTNODE *root);
 static int findMaxDepthBST(BSTNODE *root);
-static int min(int, int);
+//static int min(int, int);
 
-/****************************** Private functions *****************************/
+
+/******************************************************************************/
+/***                           BSTNODE Functions                            ***/
+/******************************************************************************/
 static BSTNODE *newBSTNODE(void *value, BSTNODE *parent) {
   BSTNODE *node;
   if (value == NULL) node = NULL;
@@ -50,7 +55,6 @@ static BSTNODE *newBSTNODE(void *value, BSTNODE *parent) {
 
   return node;
 }
-/******************************************************************************/
 
 void *getBSTNODE(BSTNODE *n) {
   if (!n) return NULL;
@@ -97,6 +101,10 @@ void setBSTNODEparent(BSTNODE *n, BSTNODE *replacement) {
   n->parent->right = replacement->right;
 }
 
+
+/******************************************************************************/
+/***                           BST Functions                                ***/
+/******************************************************************************/
 struct bst {
   struct bstnode *root;
   int size;
@@ -105,200 +113,6 @@ struct bst {
   int (*comparator)(void *, void *);
   void (*swapper)(BSTNODE *, BSTNODE *);
 };
-
-/***************************** Helper function(s) *****************************/
-static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
-  if (s1 && s2) {
-    if (s1->value && s2->value) {
-      if (s1->value == s2->value && s1->left == s2->left) {
-        if (s1->right && s2->right && s1->parent && s2->parent) {
-          if (s1->right == s2->right && s1->parent == s2->parent) {
-            return true;
-          }
-        }
-      }
-    }
-  }
-
-  return false;
-}
-
-static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value) {
-  if (root && root->value) {
-    if (t->comparator(root->value, value) == 0) return NULL;
-  }
-
-  if (root == NULL || t->comparator(value, root->value) == 0) {
-    //assert?
-    /* What should I do if values are the same */
-
-    root = newBSTNODE(value, parent);
-    if (parent == NULL)
-      root->parent = root;
-
-    t->size += 1;
-
-    return root;
-  }
-  else if (t->comparator(value, root->value) < 0) {
-    root->left = insertHelper(t, root->left, root, value);
-  }
-  else {
-    root->right = insertHelper(t, root->right, root, value);
-  }
-
-  return root;
-}
-
-static BSTNODE *findHelper(BSTNODE *root, int (*comparator)(void *, void *), void *value) {
-  if (root == NULL || comparator(value, root->value) == 0) {
-    if (root == NULL) return NULL;
-    return root;
-  }
-  else if (comparator(value, root->value) < 0) {
-    return findHelper(root->left, comparator, value);
-  }
-  else {
-    return findHelper(root->right, comparator, value);
-  }
-}
-
-static void traverseRight(BST *t, BSTNODE *node, bool useSwapper) {
-  while (node->right) {
-    if (useSwapper == true) {
-      t->swapper(node, node->right);
-    }
-    else {
-      void *tmp = node->value;
-      node->value = node->right->value;
-      node->right->value = tmp;
-    }
-
-    node = node->right;
-  }
-}
-
-static void traverseLeft(BST *t, BSTNODE *node, bool useSwapper) {
-  while (node->left) {
-    if (useSwapper == true) {
-      t->swapper(node, node->left);
-    }
-    else {
-      void *tmp = node->value;
-      node->value = node->left->value;
-      node->left->value = tmp;
-    }
-
-    node = node->left;
-  }
-}
-
-static bool isLeaf(BSTNODE *node) {
-  if (!node->left && !node->right) return true;
-  else return false;
-}
-
-/*
-static bool isLeftChild(BSTNODE *node) {
-  if (getBSTNODEparent(node) == NULL) return false;
-  if (getBSTNODEleft(getBSTNODEparent(node))) return false;
-  if (structsAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) {
-    return true;
-  }
-
-  return false;
-}
-
-static bool isRightChild(BSTNODE *node) {
-  if (getBSTNODEparent(node) == NULL) return false;
-  if (getBSTNODEright(getBSTNODEparent(node))) return false;
-  if (structsAreEqual(node, getBSTNODEright(getBSTNODEparent(node)))) {
-    return true;
-  }
-
-  return false;
-}
-*/
-static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
-  if (t->size == 0) {
-    fprintf(fp, "EMPTY");
-    return;
-  }
-  else {
-    QUEUE *q = newQUEUE(NULL);
-    BSTNODE *temp = root;
-
-    int node = 0;
-    int level = 0;
-    int prevLevel;
-
-    while (temp) {
-      /* If node is the first of a new level, print level indicator */
-      if (node == pow(2, level) - 1) {
-        if (level != 0) fprintf(fp, "\n");
-        fprintf(fp, "%d: ", level);
-        level += 1;
-      }
-
-      prevLevel = level - 2;
-
-      if (isLeaf(temp)) fprintf(fp, "=");
-      t->display(fp, temp->value);
-      fprintf(fp, "(");
-      t->display(fp, getBSTNODEparent(temp)->value);
-      fprintf(fp, ")-");
-
-      /* If right child */
-      if (node == prevLevel*2 + 2 && node != 0) {
-        fprintf(fp, "r");
-      }
-      /* If left child */
-      else if (node != 0){
-        fprintf(fp, "l");
-      }
-
-      if (node != (prevLevel*2) + 2 && node != 0) fprintf(fp, " ");
-
-      /* Enqueue temp nodes children (left children first) */
-      if (getBSTNODEleft(temp)) enqueue(q, getBSTNODEleft(temp));
-      if (getBSTNODEright(temp)) enqueue(q, getBSTNODEright(temp));
-
-      /* Dequeue and assign the dequeue's value to temp */
-      if (sizeQUEUE(q) > 0) temp = dequeue(q);
-
-      if (sizeQUEUE(q) == 0) {
-        if (getBSTNODE(temp) == NULL) break;
-
-        fprintf(fp, "\n%d: ", level);
-
-        if (isLeaf(temp)) fprintf(fp, "=");
-
-        if (temp->value) t->display(fp, temp->value);
-
-        fprintf(fp, "(");
-        //if (getBSTNODEparent(temp)) printf("got parent\n");
-        //if (getBSTNODEparent(temp)->value) printf("got parent value\n");
-        if (getBSTNODE(temp) != NULL) t->display(fp, getBSTNODEparent(temp)->value);
-        fprintf(fp, ")-");
-
-        /* If right child */
-        if (node == (prevLevel+1)*2 + 2 && node != 0) {
-          fprintf(fp, "r");
-        }
-        /* If left child */
-        else if (node != 0) {
-          fprintf(fp, "l");
-        }
-
-        break;
-      }
-
-      node += 1;
-    }
-  }
-}
-
-/******************************************************************************/
 
 BST *newBST(
   void (*d)(FILE *, void *),
@@ -330,7 +144,7 @@ BSTNODE *getBSTroot(BST *t) {
 
 BSTNODE *insertBST(BST *t, void *value) {
   t->numWords += 1;
-  t->root = insertHelper(t, t->root, NULL, value);
+  t->root = insertHelper(t, t->root, NULL, value, false);
   return t->root;
 }
 
@@ -366,60 +180,46 @@ BSTNODE *deleteBST(BST *t, void *value) {
 }
 
 BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
-  /* If swapper is not null */
-  if (t->swapper) {
-    if (isLeaf(node)) return node;
-    if (node->left) {
-      t->swapper(node->left, node);
-      node = node->left;
-      traverseRight(t, node, true);
+  if (node == NULL)
+    return NULL;
 
-      return swapToLeafBST(t, node);
+  if (t->swapper) {
+    if (node->left) {
+      t->swapper(node, node->left);
+      node = swapToLeafBST(t, node->left);
     }
     else if (node->right) {
-      t->swapper(node->right, node);
-      node = node->right;
-      traverseLeft(t, node, true);
-
-      return swapToLeafBST(t, node);
+      t->swapper(node, node->right);
+      node = swapToLeafBST(t, node->right);
     }
   }
   else {
-    if (isLeaf(node)) return node;
     if (node->left) {
       void *tmp = node->value;
       node->value = node->left->value;
       node->left->value = tmp;
-      node = node->left;
-      traverseRight(t, node, false);
-
-      return swapToLeafBST(t, node);
+      node = swapToLeafBST(t, node->left);
     }
     else if (node->right) {
       void *tmp = node->value;
       node->value = node->right->value;
       node->right->value = tmp;
-      node = node->right;
-      traverseLeft(t, node, false);
-
-      return swapToLeafBST(t, node);
+      node = swapToLeafBST(t, node->right);
     }
   }
 
-  return NULL;
+  return node;
 }
 
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
   /* If left child */
-  if (structsAreEqual(leaf->parent->left, leaf)) {
+  if (leaf->isLeftChild) {
     leaf->parent->left = NULL;
   }
   /* If right child */
-  else if (structsAreEqual(leaf->parent->right, leaf)) {
+  else {
     leaf->parent->right = NULL;
   }
-
-  free(leaf);
 
   t->size -= 1;
 }
@@ -436,6 +236,162 @@ void statisticsBST(FILE *fp, BST *t) {
 
 void displayBST(FILE *fp, BST *t) {
   displayHelper(fp, t->root, t);
+}
+
+
+/******************************************************************************/
+/***                           Helper Functions                             ***/
+/******************************************************************************/
+static void displayNODE(BST *t, FILE *fp, BSTNODE *node, bool isRoot) {
+  t->display(fp, node->value);
+  fprintf(fp, "(");
+  t->display(fp, getBSTNODEparent(node)->value);
+  fprintf(fp, ")-");
+
+  if (!isRoot) {
+    if (node->isLeftChild) fprintf(fp, "l");
+    else fprintf(fp, "r");
+  }
+}
+
+/*
+static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
+  if (s1 && s2)
+    if (s1->value && s2->value)
+      if (s1->value == s2->value && s1->left == s2->left)
+        if (s1->right && s2->right && s1->parent && s2->parent)
+          if (s1->right == s2->right && s1->parent == s2->parent)
+            return true;
+
+  return false;
+}
+*/
+
+static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value, bool isLeftChild) {
+  if (root == NULL || t->comparator(value, root->value) == 0) {
+    root = newBSTNODE(value, parent);
+    root->isLeftChild = isLeftChild;
+
+    if (parent == NULL)
+      root->parent = root;
+
+    t->size += 1;
+
+    return root;
+  }
+  else if (t->comparator(value, root->value) < 0) {
+    root->left = insertHelper(t, root->left, root, value, true);
+  }
+  else {
+    root->right = insertHelper(t, root->right, root, value, false);
+  }
+
+  return root;
+}
+
+static BSTNODE *findHelper(BSTNODE *root, int (*comparator)(void *, void *), void *value) {
+  if (root == NULL || comparator(value, root->value) == 0) {
+    if (root == NULL) return NULL;
+    return root;
+  }
+  else if (comparator(value, root->value) < 0) {
+    return findHelper(root->left, comparator, value);
+  }
+  else {
+    return findHelper(root->right, comparator, value);
+  }
+}
+
+/*
+static BSTNODE *traverseRight(BST *t, BSTNODE *node, bool useSwapper) {
+  while (node->right) {
+    if (useSwapper == true) {
+      t->swapper(node, node->right);
+    }
+    else {
+      //printf("swapping values %lf and %lf\n", getREAL(node->value), getREAL(node->right->value));
+      void *tmp = node->value;
+      node->value = node->right->value;
+      node->right->value = tmp;
+    }
+
+    node = node->right;
+  }
+
+  return node;
+}
+
+
+static BSTNODE *traverseLeft(BST *t, BSTNODE *node, bool useSwapper) {
+  while (node->left) {
+    if (useSwapper == true) {
+      t->swapper(node, node->left);
+    }
+    else {
+      void *tmp = node->value;
+      node->value = node->left->value;
+      node->left->value = tmp;
+    }
+
+    node = node->left;
+  }
+
+  return node;
+}
+
+static bool isLeaf(BSTNODE *node) {
+  if (!node->left && !node->right) return true;
+  else return false;
+}
+*/
+static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
+  if (root == NULL) {
+    fprintf(fp, "EMPTY\n");
+    return;
+  }
+  else {
+    QUEUE *nodesQueue = newQUEUE(NULL);
+    int nodesInCurrLevel = 1;
+    int nodesInNextLevel = 0;
+    int printLevel = 1;
+
+    enqueue(nodesQueue, root);
+
+    bool isRoot = true;
+    int height = findMaxDepthBST(root);
+
+    int i = 0;
+    while (i < height) {
+      BSTNODE *currNode = dequeue(nodesQueue);
+      nodesInCurrLevel -= 1;
+
+      if (currNode && i != height) {
+        if (isRoot) {
+          fprintf(fp, "%d: ", 0);
+          displayNODE(t, fp, currNode, true);
+          isRoot = false;
+        }
+        else {
+          displayNODE(t, fp, currNode, false);
+          if (nodesInCurrLevel != 0) fprintf(fp, " ");
+        }
+
+        enqueue(nodesQueue, getBSTNODEleft(currNode));
+        enqueue(nodesQueue, getBSTNODEright(currNode));
+        nodesInNextLevel += 2;
+      }
+      if (nodesInCurrLevel == 0) {
+        i += 1;
+        if (i == height) break;
+        fprintf(fp, "\n");
+        fprintf(fp, "%d: ", printLevel);
+
+        nodesInCurrLevel = nodesInNextLevel;
+        nodesInNextLevel = 0;
+        printLevel += 1;
+      }
+    }
+  }
 }
 
 static BSTNODE *copyNODE(BSTNODE *giver) {
@@ -459,39 +415,35 @@ static BSTNODE *copyNODE(BSTNODE *giver) {
     newNode->right = giver->right;
   else newNode->right = NULL;
 
+  if (giver->isLeftChild)
+    newNode->isLeftChild = giver->isLeftChild;
+  else newNode->isLeftChild = NULL;
+
   return newNode;
 }
 
 static int findMinDepthBST(BSTNODE *root) {
-  if (root == NULL) {
+  if (root == NULL)
     return 0;
-  }
-  if (root->left == NULL && root->right == NULL) {
-    return 1;
-  }
-  if (!root->left) {
-    return findMinDepthBST(root->right) + 1;
-  }
-  if (!root->right) {
-    return findMinDepthBST(root->left) + 1;
-  }
 
-  return min(findMinDepthBST(root->left), findMinDepthBST(root->right)) + 1;
+  int Lmin = findMinDepthBST(root->left);
+  int Rmin = findMinDepthBST(root->right);
+
+  return (Lmin<Rmin?Lmin:Rmin) + 1;
 }
 
 static int findMaxDepthBST(BSTNODE *root) {
   if (root == NULL) return 0;
   else {
-    int L_depth = findMaxDepthBST(root->left);
-    int R_depth = findMaxDepthBST(root->right);
+    int L_depth, R_depth;
+    L_depth = findMaxDepthBST(getBSTNODEleft(root));
+    R_depth = findMaxDepthBST(getBSTNODEright(root));
 
-    if (L_depth > R_depth) {
-      return L_depth + 1;
-    }
-    else return R_depth + 1;
+    return (L_depth>R_depth?L_depth:R_depth) + 1;
   }
 }
 
+/*
 static int min(int a, int b) {
   if (a < b) return a;
   else if (a > b) return b;
@@ -499,3 +451,4 @@ static int min(int a, int b) {
     return a;
   }
 }
+*/

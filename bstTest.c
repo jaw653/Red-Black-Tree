@@ -6,54 +6,54 @@ int main(void) {
     BST *tree = newBST(displayREAL, compareREAL, NULL);
     printf("\nTree successfully initiailized\n");
 
-    insertBST(tree, newREAL(7));
-    printf("1 insert successful\n");
-
-    insertBST(tree, newREAL(6));
-    printf("2 inserts successful\n");
+    insertBST(tree, newREAL(4));
+    printf("4 insert successful\n");
 
     insertBST(tree, newREAL(5));
+    printf("5 inserts successful\n");
+
+    insertBST(tree, newREAL(7));
+    printf("7 inserts successful\n");
+
+    insertBST(tree, newREAL(3));
     printf("3 inserts successful\n");
 
+    insertBST(tree, newREAL(2));
+    printf("2 inserts successful\n");
+
     insertBST(tree, newREAL(8));
-    printf("4 inserts successful\n");
+    printf("8 inserts successful\n");
 
-    printf("\nAttempting to display tree...\n");
+    insertBST(tree, newREAL(6));
+    printf("6 inserts successful\n");
+
+    insertBST(tree, newREAL(9));
+    printf("9 inserts successful\n");
+
+    insertBST(tree, newREAL(1));
+    printf("1 inserts successful\n");
+
+    insertBST(tree, newREAL(0));
+    printf("0 inserts successful\n");
+
+    printf("\nDisplaying the tree...\n");
     displayBST(stdout, tree);
     printf("\n");
 
-    printf("\nBST size is: %d\n", sizeBST(tree));
+    printf("print statistics...\n");
+    statisticsBST(stdout, tree);
+    printf("\n");
 
-    printf("\nAttempting to delete value 6...\n");
-    BSTNODE *deleted = deleteBST(tree, newREAL(6));
-    printf("Deleted value is: %lf\n", getREAL(getBSTNODE(deleted)));
+    printf("deleting the root via getBSTroot method...\n");
+    deleteBST(tree, getBSTNODE(getBSTroot(tree)));
 
-    printf("Tree is: \n");
+    printf("displaying the tree...\n");
     displayBST(stdout, tree);
     printf("\n");
 
-    printf("\nBST size is: %d\n", sizeBST(tree));
-
-
-    printf("\n");
-/*
-    printf("Attempting to find node w/ value 6\n");
-    BSTNODE *node = findBST(tree, newREAL(6));
-    if (node) printf("node found\n");
-    else printf("node NOT found\n");
-
-    printf("Attempting to remove node with value 6...\n");
-    deleteBST(tree, newREAL(6));
-    printf("value successfully deleted\n");
-
-    displayBST(stdout, tree);
+    printf("printing statistics...\n");
+    statisticsBST(stdout, tree);
     printf("\n");
 
-    printf("tree size is: %d\n", sizeBST(tree));
-    //printf("node value is: %s\n", getSTRING(node->value));
-    //printf("node->left is: %p\n", node->left);
-    //printf("node->right is: %p\n", node->right);
-    //printf("node->parent->value is: %s\n", getSTRING(node->parent->value));
-*/
     return 0;
 }

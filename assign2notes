@@ -1,25 +1,28 @@
 ------------
 Action List:
 ------------
+-statistics() and display() for rbt/gt?
+-check cleanString() to make sure it works on lots of edge cases
+-must check for empty files!!!
+-make sure empty strings are not being inserted to your data structures
+-fix/test insert/deleteRBT/GT
 -test all possible functions in bst.c
 -get rid of all print/flag statements
--test inserting duplicate values (not into bst(?) but into rbt and gt
+-test inserting duplicate values (not into bst(?)) but into rbt and gt
 -improve maketest => test all ds's as much as you can 
--clean tokens (get rid of commas, etc.)
--submit to dropbox2
+-submit to test2 dropbox
 -submit to final submit
 -test all trees
--ensure swapToLeaf() is swapping to the correct leaf. It should prefer predecessor
 -test trying to deleteBST/RBT/GT() a NULL value and see what happens...what should happen?
 -check that swapper is not swapping entire structs and in RBT maintains color
--test all 3 DS's extensively
 -fix make test/see if I already fixed make test
--use the test2 dropbox prior to submission
 -go through all tests in the first eval and try them on your program
 
 ----------
 Questions:
 ----------
+-when to increment totalWords/Phrases?
+-can "contiguous whitesapce" be more than 2 spaces in a row?
 -for deleteRBT(), when should i remove from tree? when it's 0, when it's about to be zero, when
 	it's less than 0?
 -does findBST() need to account for the value not being in the tree?
