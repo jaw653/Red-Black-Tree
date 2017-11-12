@@ -20,7 +20,7 @@ static int getFirstCharIndex(char *);
 static int getLastCharIndex(char *);
 static char *cleanString(char *);
 static char *removeQuotes(char *);
-static bool fileIsEmpty(FILE *fp);
+//static bool fileIsEmpty(FILE *fp);
 static void populateGT(FILE *fp, GT *tree);
 static void populateRBT(FILE *fp, RBT *tree);
 static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree);
@@ -182,6 +182,7 @@ static char *removeQuotes(char *str) {
   return newStr;
 }
 
+/*
 static bool fileIsEmpty(FILE *fp) {
   int size;
   if (fp != NULL) {
@@ -194,9 +195,10 @@ static bool fileIsEmpty(FILE *fp) {
       return false;
   }
 
-  rewind(fp);
+  //rewind(fp);
   return true;
 }
+*/
 
 static void populateGT(FILE *fp, GT *tree) {
 //  if (!fileIsEmpty(fp)) {
