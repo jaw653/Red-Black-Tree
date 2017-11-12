@@ -1,0 +1,3 @@
+check cleanstring to make sure it works on lots of edge cases. Must check for empty files!
+Fix/test insert/deleteRBT/GT. Test all possible functions in bst.c. Get rid of all print/flag statements. Fix make test/see if I already fixed maketest. Go throug all tests in the first eval. and try them on your corpus.
+
