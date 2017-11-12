@@ -34,6 +34,7 @@ struct RBTNODE {
 
 static RBTNODE *newRBTNODE(void *, void (*d)(FILE *, void *), int (*c)(void *, void *));
 static void displayRBTNODE(FILE *, void *);
+static int compareRBTNODE(void *, void *);
 static void swapRBTNODE(BSTNODE *, BSTNODE *);
 static int findMinDepthRBT(BSTNODE *);
 static int findMaxDepthRBT(BSTNODE *);
@@ -58,7 +59,7 @@ RBT *newRBT(
 )
 {
     RBT *t = malloc(sizeof(struct rbt));
-    t->tree = newBST(displayRBTNODE, c, swapRBTNODE);           //FIXME: init with swapper function, change other fc's to use swapper function
+    t->tree = newBST(displayRBTNODE, compareRBTNODE, swapRBTNODE);           //FIXME: init with swapper function, change other fc's to use swapper function
     t->display = d;
     t->comparator = c;
     t->totalWords = 0;
@@ -120,9 +121,8 @@ int wordsRBT(RBT *t) {
 }
 
 void statisticsRBT(FILE *fp, RBT *t) {
-  //prints statistics to fp
   fprintf(fp, "Words/Phrases: %d\n", t->totalWords);
-  fprintf(fp, "Nodes: %d\n", t->numNodes);
+  fprintf(fp, "Nodes: %d\n", sizeBST(t->tree));
   fprintf(fp, "Minimum Depth: %d\n", findMinDepthRBT(getBSTroot(t->tree)));    //FIXME: figure it out
   fprintf(fp, "Maximum Depth: %d\n", findMaxDepthRBT(getBSTroot(t->tree)));    //FIXME: figure it out
 
@@ -164,6 +164,13 @@ static void swapRBTNODE(BSTNODE *n1, BSTNODE *n2) {
   int ctemp = ra->frequency;
   ra->frequency = rb->frequency;
   rb->frequency = ctemp;
+}
+
+static int compareRBTNODE(void *v1, void *v2) {
+  RBTNODE *node1 = v1;
+  RBTNODE *node2 = v2;
+
+  return node1->comparator(node1->value, node2->value);
 }
 
 static int findMinDepthRBT(BSTNODE *root) {

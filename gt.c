@@ -28,13 +28,14 @@ struct GTNODE {
 static GTNODE *newGTNODE(void *value, void (*)(FILE *, void *), int (*)(void *, void *));
 static void displayGTNODE(FILE *, void *);
 static void swapGTNODE(BSTNODE *, BSTNODE *);
+static int compareGTNODE(void *, void *);
 static int findMinDepthGT(BSTNODE *);
 static int findMaxDepthGT(BSTNODE *);
 static int min(int, int);
 
 GT *newGT(void (*d)(FILE *, void *), int (*c)(void *, void *)) {
   GT *t = malloc(sizeof(struct gt));
-  t->tree = newBST(displayGTNODE, c, swapGTNODE);
+  t->tree = newBST(displayGTNODE, compareGTNODE, swapGTNODE);
   t->display = d;
   t->comparator = c;
   t->totalWords = 0;
@@ -92,7 +93,7 @@ int wordsGT(GT *t) {
 
 void statisticsGT(FILE *fp, GT *t) {
   fprintf(fp, "Words/Phrases: %d\n", t->totalWords);
-  fprintf(fp, "Nodes: %d\n", t->numNodes);
+  fprintf(fp, "Nodes: %d\n", sizeBST(t->tree));
   fprintf(fp, "Minimum Depth: %d\n", findMinDepthGT(getBSTroot(t->tree)));    //FIXME: figure it out
   fprintf(fp, "Maximum Depth: %d\n", findMaxDepthGT(getBSTroot(t->tree)));    //FIXME: figure it out
 }
@@ -132,6 +133,13 @@ static void swapGTNODE(BSTNODE *n1, BSTNODE *n2) {
   int ctemp = ra->frequency;
   ra->frequency = rb->frequency;
   rb->frequency = ctemp;
+}
+
+static int compareGTNODE(void *n1, void *n2) {
+  GTNODE *node1 = n1;
+  GTNODE *node2 = n2;
+
+  return node1->comparator(node1->value, node2->value);
 }
 
 static int findMinDepthGT(BSTNODE *root) {
