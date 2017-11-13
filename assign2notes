@@ -1,6 +1,9 @@
 ------------
 Action List:
 ------------
+-test/fix? rbt
+
+-try inserting a lot, then deleting all of them all the way to root, then + to empty tree again
 -check rbt extensively to make sure all nodes are changing to the correct color/fixups are right
 -check cleanString() to make sure it works on lots of edge cases
 -must check for empty files!!!
@@ -16,6 +19,7 @@ Action List:
 -fix make test/see if I already fixed make test
 -go through all tests in the first eval and try them on your program
 -check to make sure statistics() is correct for rbt/gt
+
 ----------
 Questions:
 ----------
