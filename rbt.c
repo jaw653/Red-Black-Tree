@@ -70,6 +70,7 @@ RBT *newRBT(
 
 void insertRBT(RBT *t, void *value) {
   BSTNODE *valueToFind = findBST(t->tree, value);
+  
   /* If value is in the tree, just increment it */
   if (valueToFind != NULL) {
     RBTNODE *nodeToIncrement = getBSTNODE(valueToFind);
