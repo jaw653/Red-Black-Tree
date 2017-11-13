@@ -153,6 +153,13 @@ BSTNODE *findBST(BST *t, void *value) {
     return NULL;
   }
   else {
+/*
+    printf("find3\n");
+    if (t->root) printf("t->root good\n");
+    if (t->comparator) printf("t->comp good\n");
+    if (value) printf("value good\n");
+    if (t->root->value) printf("t->root->value good\n");
+*/
     return findHelper(t->root, t->comparator, value);
   }
 }
@@ -268,7 +275,7 @@ static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
 */
 
 static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value, bool isLeftChild) {
-  if (root == NULL || t->comparator(value, root->value) == 0) {
+  if (root == NULL) {
     root = newBSTNODE(value, parent);
     root->isLeftChild = isLeftChild;
 
@@ -290,15 +297,24 @@ static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value
 }
 
 static BSTNODE *findHelper(BSTNODE *root, int (*comparator)(void *, void *), void *value) {
-  if (root == NULL || comparator(value, root->value) == 0) {
-    if (root == NULL) return NULL;
+  //if (value->value) printf("FIND VALUE->VALUE IS NOT GOOD\n");
+  if (root == NULL)
+    return NULL;
+
+  if (comparator(value, root->value) == 0) {
     return root;
   }
   else if (comparator(value, root->value) < 0) {
-    return findHelper(root->left, comparator, value);
+    if (getBSTNODEleft(root))
+      return findHelper(getBSTNODEleft(root), comparator, value);
+    else
+      return NULL;
   }
   else {
-    return findHelper(root->right, comparator, value);
+    if (getBSTNODEright(root))
+      return findHelper(getBSTNODEright(root), comparator, value);
+    else
+      return NULL;
   }
 }
 
