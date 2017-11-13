@@ -56,6 +56,10 @@ int main(void) {
 
   displayTree(tree);
 
+  printf("Statistics:\n");
+  statisticsGT(stdout, tree);
+  printf("\n\n");
+
   return 0;
 }
 
