@@ -78,7 +78,7 @@ void deleteGT(GT *t, void *value) {
     GTNODE *gtToDelete = getBSTNODE(valueToDelete);
     gtToDelete->frequency -= 1;
 
-    if (gtToDelete->frequency == 0) {
+    if (gtToDelete->frequency <= 0) {
       deleteBST(t->tree, valueNode);
     }
   }
