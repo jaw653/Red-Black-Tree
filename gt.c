@@ -8,11 +8,11 @@
 
 #include "bst.h"
 #include "gt.h"
+#include "real.h"
 
 struct gt {
   struct bst *tree;
   int totalWords;
-  int numNodes;
   void (*display)(FILE *, void *);
   int (*comparator)(void *, void *);
 };
@@ -28,31 +28,33 @@ struct GTNODE {
 static GTNODE *newGTNODE(void *value, void (*)(FILE *, void *), int (*)(void *, void *));
 static void displayGTNODE(FILE *, void *);
 static void swapGTNODE(BSTNODE *, BSTNODE *);
+static int compareGTNODE(void *, void *);
 static int findMinDepthGT(BSTNODE *);
 static int findMaxDepthGT(BSTNODE *);
 static int min(int, int);
 
 GT *newGT(void (*d)(FILE *, void *), int (*c)(void *, void *)) {
   GT *t = malloc(sizeof(struct gt));
-  t->tree = newBST(displayGTNODE, c, swapGTNODE);
+  t->tree = newBST(displayGTNODE, compareGTNODE, swapGTNODE);
   t->display = d;
   t->comparator = c;
   t->totalWords = 0;
-  t->numNodes = 0;
 
   return t;
 }
 
 void insertGT(GT *t, void *value) {
-  BSTNODE *valueToFind = findBST(t->tree, value);
+  GTNODE *valueNode = newGTNODE(value, t->display, t->comparator);
+
+  BSTNODE *valueToFind = findBST(t->tree, valueNode);
+
   /* If value is in the tree, just increment it */
   if (valueToFind != NULL) {
     GTNODE *nodeToIncrement = getBSTNODE(valueToFind);
     nodeToIncrement->frequency += 1;
   }
   else {
-    GTNODE *valueObject = newGTNODE(value, t->display, t->comparator);
-    insertBST(t->tree, valueObject);
+    insertBST(t->tree, valueNode);
   }
   t->totalWords += 1;                   //FIXME: when to increment totalWords?
 }
@@ -68,18 +70,20 @@ int findGT(GT *t, void *value) {
 }
 
 void deleteGT(GT *t, void *value) {
-  t->totalWords -= 1;
-  BSTNODE *valueToDelete = findBST(t->tree, value);
+  GTNODE *valueNode = newGTNODE(value, t->display, t->comparator);
+
+  BSTNODE *valueToDelete = findBST(t->tree, valueNode);
 
   if (valueToDelete != NULL) {
     GTNODE *gtToDelete = getBSTNODE(valueToDelete);
     gtToDelete->frequency -= 1;
 
-    if (gtToDelete->frequency == 0) {
-      deleteBST(t->tree, value);
-      t->numNodes -= 1;
+    if (gtToDelete->frequency <= 0) {
+      deleteBST(t->tree, valueNode);
     }
   }
+
+  t->totalWords -= 1;
 }
 
 int sizeGT(GT *t) {
@@ -92,7 +96,7 @@ int wordsGT(GT *t) {
 
 void statisticsGT(FILE *fp, GT *t) {
   fprintf(fp, "Words/Phrases: %d\n", t->totalWords);
-  fprintf(fp, "Nodes: %d\n", t->numNodes);
+  fprintf(fp, "Nodes: %d\n", sizeBST(t->tree));
   fprintf(fp, "Minimum Depth: %d\n", findMinDepthGT(getBSTroot(t->tree)));    //FIXME: figure it out
   fprintf(fp, "Maximum Depth: %d\n", findMaxDepthGT(getBSTroot(t->tree)));    //FIXME: figure it out
 }
@@ -132,6 +136,13 @@ static void swapGTNODE(BSTNODE *n1, BSTNODE *n2) {
   int ctemp = ra->frequency;
   ra->frequency = rb->frequency;
   rb->frequency = ctemp;
+}
+
+static int compareGTNODE(void *n1, void *n2) {
+  GTNODE *node1 = n1;
+  GTNODE *node2 = n2;
+
+  return node1->comparator(node1->value, node2->value);
 }
 
 static int findMinDepthGT(BSTNODE *root) {

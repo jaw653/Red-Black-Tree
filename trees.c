@@ -74,12 +74,10 @@ int main(int argc, char *argv[]) {
   if (outputFileName != NULL) outputFile = fopen(outputFileName, "r");
   else outputFile = NULL;
 
-
   /* Determing if rbt or gt, populating BST, and executing commands file */
   if (strcmp(argv[argc - (argc-1)], "-g") == 0) {
     GT *wordsTree = newGT(displaySTRING, compareSTRING);
     populateGT(corpus, wordsTree);
-
     if (outputFile == NULL)
       executeCommandsGT(commands, stdout, wordsTree);
     else
@@ -205,12 +203,9 @@ static void populateGT(FILE *fp, GT *tree) {
     char *str = readToken(fp);
 
     while (str) {
-//printf("flag1\n");
       str = cleanString(str);
       insertGT(tree, newSTRING(str));
-//printf("flag2\n");
       str = readToken(fp);
-//printf("flag3\n");
     }
 //  }
 }
