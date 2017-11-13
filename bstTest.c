@@ -55,5 +55,14 @@ int main(void) {
     statisticsBST(stdout, tree);
     printf("\n");
 
+    printf("attempting to find value 2...\n");
+    BSTNODE *foundNode = findBST(tree, newREAL(2));
+    if (foundNode)
+      printf("node found! accessed value is: %lf\n", getREAL(getBSTNODE(foundNode)));
+    else
+      printf("node not found :(\n");
+
+    printf("\n");
+
     return 0;
 }
