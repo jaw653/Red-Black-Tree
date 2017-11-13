@@ -27,7 +27,7 @@ struct bstnode {
 
 /******************* Helper function signatures *******************************/
 static void displayNODE(BST *, FILE *, BSTNODE *, bool);
-//static bool structsAreEqual(BSTNODE *, BSTNODE *);
+static bool structsAreEqual(BSTNODE *, BSTNODE *);
 static BSTNODE *insertHelper(BST *, BSTNODE *, BSTNODE *, void *, bool);
 static BSTNODE *findHelper(BSTNODE *, int (*)(void *, void *), void *);
 //static BSTNODE *traverseRight(BST *, BSTNODE *, bool);
@@ -153,13 +153,6 @@ BSTNODE *findBST(BST *t, void *value) {
     return NULL;
   }
   else {
-/*
-    printf("find3\n");
-    if (t->root) printf("t->root good\n");
-    if (t->comparator) printf("t->comp good\n");
-    if (value) printf("value good\n");
-    if (t->root->value) printf("t->root->value good\n");
-*/
     return findHelper(t->root, t->comparator, value);
   }
 }
@@ -167,6 +160,24 @@ BSTNODE *findBST(BST *t, void *value) {
 BSTNODE *deleteBST(BST *t, void *value) {
   if (t->size == 0) {
     return NULL;
+  }
+
+  /* Must be root */
+  if (t->size == 1) {
+    BSTNODE *node1 = findBST(t, value);
+
+    if (node1 == NULL) {
+      printf("Value ");
+      t->display(stdout, value);
+      printf(" not found.\n");
+    }
+
+    BSTNODE *returnVal = copyNODE(node1);
+
+    t->root = NULL;
+    t->size -= 1;
+
+    return returnVal;
   }
 
   BSTNODE *node = findBST(t, value);
@@ -219,6 +230,10 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
 }
 
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
+  if (structsAreEqual(leaf, t->root)) {
+    t->root = NULL;
+    printf("CORRECT THING EXECUTED\n");
+  }
   /* If left child */
   if (leaf->isLeftChild) {
     leaf->parent->left = NULL;
@@ -227,6 +242,8 @@ void pruneLeafBST(BST *t, BSTNODE *leaf) {
   else {
     leaf->parent->right = NULL;
   }
+  //setBSTNODE(leaf, NULL);
+  //setBSTroot(t, newBSTNODE(NULL, NULL));
 
   t->size -= 1;
 }
@@ -261,7 +278,7 @@ static void displayNODE(BST *t, FILE *fp, BSTNODE *node, bool isRoot) {
   }
 }
 
-/*
+
 static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
   if (s1 && s2)
     if (s1->value && s2->value)
@@ -272,7 +289,7 @@ static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
 
   return false;
 }
-*/
+
 
 static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value, bool isLeftChild) {
   if (root == NULL) {
@@ -361,6 +378,8 @@ static bool isLeaf(BSTNODE *node) {
 }
 */
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
+
+  //if t->size == 0...
   if (root == NULL) {
     fprintf(fp, "EMPTY\n");
     return;
