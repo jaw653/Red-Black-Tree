@@ -1,6 +1,7 @@
 ------------
 Action List:
 ------------
+-getBSTNODEparent is throwing segfault in rbt. work on fixing this
 -test/fix? rbt
 
 -try inserting a lot, then deleting all of them all the way to root, then + to empty tree again
