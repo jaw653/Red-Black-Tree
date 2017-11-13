@@ -69,19 +69,22 @@ RBT *newRBT(
 }
 
 void insertRBT(RBT *t, void *value) {
-  BSTNODE *valueToFind = findBST(t->tree, value);
-  
+  RBTNODE *valueNode = newRBTNODE(value, t->display, t->comparator);
+
+  BSTNODE *valueToFind = findBST(t->tree, valueNode);
+printf("flag1\n");
   /* If value is in the tree, just increment it */
   if (valueToFind != NULL) {
+printf("flag\n");
     RBTNODE *nodeToIncrement = getBSTNODE(valueToFind);
     nodeToIncrement->frequency += 1;
   }
   else {
-    RBTNODE *valueObject = newRBTNODE(value, t->display, t->comparator);
-    BSTNODE *insertedNode = insertBST(t->tree, valueObject);
-    insertionFixUp(t->tree, insertedNode);
+printf("flag2\n");
+    insertionFixUp(t->tree, valueToFind);
   }
-  t->totalWords += 1;                       //FIXME: when to increment totalWords/phrases?
+
+  t->totalWords += 1;
 }
 
 int findRBT(RBT *t, void *value) {
@@ -361,6 +364,7 @@ static void rotate(BST *tree, BSTNODE *x, BSTNODE *parent) {
 }
 
 static void insertionFixUp(BST *tree, BSTNODE *x) {
+printf("insertflag1\n");
   //BSTNODE *node = getBSTNODE(x);
   BSTNODE *parent = NULL;
   BSTNODE *grandParent = NULL;
@@ -369,8 +373,9 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
   RBTNODE *rbtParent = NULL;
   RBTNODE *rbtGrandParent = NULL;
   RBTNODE *rbtUncle = NULL;
-
+printf("insertflag2\n");
   if (getBSTNODEparent(x)) {
+    printf("good1\n");
     parent = getBSTNODEparent(x);
     if (getGrandParent(x)) {
       grandParent = getGrandParent(x);
@@ -378,7 +383,7 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
         uncle = getBSTNODEUncle(x);
     }
   }
-
+printf("fixup flag\n");
   bool loop = true;
   while (loop) {
     if (parent) rbtParent = getBSTNODE(parent);

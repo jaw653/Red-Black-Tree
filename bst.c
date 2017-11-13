@@ -90,7 +90,9 @@ void setBSTNODEright(BSTNODE *n, BSTNODE *replacement) {
 }
 
 BSTNODE *getBSTNODEparent(BSTNODE *n) {
+  printf("getparent\n");
   if (!n->parent) return NULL;
+  printf("getparent2\n");
   return n->parent;
 }
 
