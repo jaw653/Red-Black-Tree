@@ -27,7 +27,6 @@ struct bstnode {
 
 /******************* Helper function signatures *******************************/
 static void displayNODE(BST *, FILE *, BSTNODE *, bool);
-static bool structsAreEqual(BSTNODE *, BSTNODE *);
 static BSTNODE *insertHelper(BST *, BSTNODE *, BSTNODE *, void *, bool);
 static BSTNODE *findHelper(BSTNODE *, int (*)(void *, void *), void *);
 //static BSTNODE *traverseRight(BST *, BSTNODE *, bool);
@@ -66,6 +65,7 @@ void setBSTNODE(BSTNODE *n, void *value) {
 }
 
 BSTNODE *getBSTNODEleft(BSTNODE *n) {
+  if (n == NULL) return NULL;
   if (!n->left) return NULL;
   return n->left;
 }
@@ -88,6 +88,7 @@ void setBSTNODEleft(BSTNODE *n, BSTNODE *replacement) {
 }
 
 BSTNODE *getBSTNODEright(BSTNODE *n) {
+  if (n == NULL) return NULL;
   if (!n->right) return NULL;
   return n->right;
 }
@@ -108,6 +109,7 @@ void setBSTNODEright(BSTNODE *n, BSTNODE *replacement) {
 }
 
 BSTNODE *getBSTNODEparent(BSTNODE *n) {
+  if (n == NULL) return NULL;
   if (!n->parent) return NULL;
   return n->parent;
 }
@@ -160,9 +162,9 @@ void setBSTroot(BST *t, BSTNODE *replacement) {
 }
 
 BSTNODE *getBSTroot(BST *t) {
-  if (!t || !t->root) {
-    return NULL;
-  }
+  if (!t) return NULL;
+  if (!t->root) return NULL;
+
   return t->root;
 }
 
@@ -254,7 +256,7 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
 }
 
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
-  if (structsAreEqual(leaf, t->root)) {
+  if (sizeBST(t) == 1) {
     t->root = NULL;
   }
   /* If left child */
@@ -316,26 +318,7 @@ static void displayNODE(BST *t, FILE *fp, BSTNODE *node, bool isRoot) {
     else
       fprintf(fp, "r");
   }
-/*
-  if (!isRoot) {
-    if (structsAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) fprintf(fp, "l");
-    else if (structsAreEqual(node,fprintf(fp, "r");
-  }
-*/
 }
-
-
-static bool structsAreEqual(BSTNODE *s1, BSTNODE *s2) {
-  if (s1 && s2)
-    if (s1->value && s2->value)
-      if (s1->value == s2->value && s1->left == s2->left)
-        if (s1->right && s2->right && s1->parent && s2->parent)
-          if (s1->right == s2->right && s1->parent == s2->parent)
-            return true;
-
-  return false;
-}
-
 
 static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value, bool isLeftChild) {
   if (root == NULL) {
