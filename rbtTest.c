@@ -25,9 +25,9 @@ int main(void) {
 
   displayTree(tree);
 
-  //deleteValue(tree, 6);
-
-  //displayTree(tree);
+  deleteValue(tree, 6);
+  printf("size of tree is: %d\n", sizeRBT(tree));
+  displayTree(tree);
 
   findValue(tree, 8);
 
