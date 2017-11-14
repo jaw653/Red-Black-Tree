@@ -71,10 +71,20 @@ BSTNODE *getBSTNODEleft(BSTNODE *n) {
 }
 
 void setBSTNODEleft(BSTNODE *n, BSTNODE *replacement) {
-  n->left->value = replacement->value;
-  n->left->parent = replacement->parent;
-  n->left->left = replacement->left;
-  n->left->right = replacement->right;
+  n->left = replacement;
+/*
+  if (n) printf("n is good\n");
+  if (n->left) printf("n->left is good\n");
+  if (replacement != NULL) {
+    n->left->value = replacement->value;
+    n->left->parent = replacement->parent;
+    n->left->left = replacement->left;
+    n->left->right = replacement->right;
+  }
+  else {
+    n = NULL;
+  }
+*/
 }
 
 BSTNODE *getBSTNODEright(BSTNODE *n) {
@@ -83,10 +93,18 @@ BSTNODE *getBSTNODEright(BSTNODE *n) {
 }
 
 void setBSTNODEright(BSTNODE *n, BSTNODE *replacement) {
-  n->right->value = replacement->value;
-  n->right->parent = replacement->parent;
-  n->right->left = replacement->left;
-  n->right->right = replacement->right;
+  n->right = replacement;
+/*
+  if (replacement != NULL) {
+    n->right->value = replacement->value;
+    n->right->parent = replacement->parent;
+    n->right->left = replacement->left;
+    n->right->right = replacement->right;
+  }
+  else {
+    n = NULL;
+  }
+*/
 }
 
 BSTNODE *getBSTNODEparent(BSTNODE *n) {
@@ -95,10 +113,13 @@ BSTNODE *getBSTNODEparent(BSTNODE *n) {
 }
 
 void setBSTNODEparent(BSTNODE *n, BSTNODE *replacement) {
+  n->parent = replacement;
+/*
   n->parent->value = replacement->value;
   n->parent->parent = replacement->parent;
   n->parent->left = replacement->left;
   n->parent->right = replacement->right;
+*/
 }
 
 
@@ -132,7 +153,10 @@ BST *newBST(
 }
 
 void setBSTroot(BST *t, BSTNODE *replacement) {
-  t->root = replacement;
+  t->root->value = replacement->value;
+  t->root->parent = replacement->parent;
+  t->root->left = replacement->left;
+  t->root->right = replacement->right;
 }
 
 BSTNODE *getBSTroot(BST *t) {
@@ -399,6 +423,7 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
       BSTNODE *currNode = dequeue(nodesQueue);
       nodesInCurrLevel -= 1;
 
+//      if (currNode) printf("CURR NODE!!!\n");
       if (currNode && i != height) {
         if (isRoot) {
           fprintf(fp, "%d: ", 0);
@@ -416,6 +441,8 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
       }
       if (nodesInCurrLevel == 0) {
         i += 1;
+//        printf("i is: %d\n", i);
+//        printf("height is: %d", height);
         if (i == height) break;
         fprintf(fp, "\n");
         fprintf(fp, "%d: ", printLevel);
