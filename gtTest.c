@@ -50,7 +50,7 @@ int main(void) {
 
   displayTree(tree);
 
-  printf("Attempting to insert 10...\n");
+  printf("Attempting to insert 15...\n");
   insertGT(tree, newREAL(15));
   printf("successfully inserted.\n");
 
@@ -59,6 +59,13 @@ int main(void) {
   printf("Statistics:\n");
   statisticsGT(stdout, tree);
   printf("\n\n");
+
+  printf("attempting to find value 15...\n");
+  int count = findGT(tree, newREAL(15));
+  if (count)
+    printf("value found! its count is: %d\n", count);
+  else
+    printf("value not found :(\n");
 
   return 0;
 }

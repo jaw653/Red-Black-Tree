@@ -22,15 +22,15 @@ int main(void) {
   insertValue(tree, 4);
   insertValue(tree, 5);
   insertValue(tree, 15);
-  
-  displayTree(tree);
-/*
-  deleteValue(tree, 6);
 
   displayTree(tree);
+
+  //deleteValue(tree, 6);
+
+  //displayTree(tree);
 
   findValue(tree, 8);
-*/
+
   printf("Size is: %d\n", sizeRBT(tree));
 
   return 0;
