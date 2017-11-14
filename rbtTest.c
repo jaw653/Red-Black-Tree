@@ -18,16 +18,19 @@ int main(void) {
   insertValue(tree, 8);
   insertValue(tree, 3);
   insertValue(tree, 10);
-  //insertValue(tree, 1);
-
+  insertValue(tree, 1);
+  insertValue(tree, 4);
+  insertValue(tree, 5);
+  insertValue(tree, 15);
+  
   displayTree(tree);
-
+/*
   deleteValue(tree, 6);
 
   displayTree(tree);
 
   findValue(tree, 8);
-
+*/
   printf("Size is: %d\n", sizeRBT(tree));
 
   return 0;
