@@ -315,16 +315,47 @@ static bool nodesAreLinear(BSTNODE *x, BSTNODE *parent) {
 
 static void leftRotate(BST *tree, BSTNODE *x) {
   BSTNODE *y = getBSTNODEright(x);
+  setBSTNODEright(x, getBSTNODEleft(y));
+
+  if (getBSTNODEleft(y) != NULL) {
+    //y->left->parent = x
+    setBSTNODEparent(getBSTNODEleft(y), x);
+  }
+
+  //y->parent = x->parent
+  setBSTNODEparent(y, getBSTNODEparent(x));
+
+  if (getBSTNODEparent(x) == NULL) {
+    // root = y
+    setBSTroot(tree, y);
+  }
+  else if (nodesAreEqual(x, getBSTNODEleft(getBSTNODEparent(x)))) {
+    //x->parent->left = y
+    setBSTNODEleft(getBSTNODEparent(x), y);
+  }
+  else {
+    // x->parent->right = y
+    setBSTNODEright(getBSTNODEparent(x), y);
+  }
+
+  setBSTNODEleft(y, x);
+
+  setBSTNODEparent(x, y);
+
+/******************************************************************************/
+/*
+  BSTNODE *y = getBSTNODEright(x);
 
   setBSTNODEright(x, getBSTNODEleft(y));
   setBSTNODEparent(getBSTNODEleft(y), x);
+printf("flag\n");
   setBSTNODEparent(y, getBSTNODEparent(x));
 
-  /* If x is root */
+  /* If x is root *
   if (nodesAreEqual(x, getBSTNODEparent(x))) {
     setBSTroot(tree, y);
   }
-  /* x = x->parent->left */
+  /* x = x->parent->left *
   else if (nodesAreEqual(x, getBSTNODEleft(getBSTNODEparent(x)))) {
     setBSTNODEleft(getBSTNODEparent(x), y);
   }
@@ -334,16 +365,42 @@ static void leftRotate(BST *tree, BSTNODE *x) {
 
   setBSTNODEleft(y, x);
   setBSTNODEparent(x, y);
+*/
+/******************************************************************************/
 }
 
 static void rightRotate(BST *tree, BSTNODE *x) {
+  BSTNODE *y = getBSTNODEleft(x);
+  setBSTNODEleft(x, getBSTNODEright(y));
+
+  if (getBSTNODEright(y) != NULL) {
+    setBSTNODEparent(getBSTNODEright(y), x);
+  }
+
+  setBSTNODEparent(y, getBSTNODEparent(x));
+
+  if (getBSTNODEparent(x) == NULL) {
+    setBSTroot(tree, y);
+  }
+  else if (nodesAreEqual(x, getBSTNODEright(getBSTNODEparent(x)))) {
+    setBSTNODEright(getBSTNODEparent(x), y);
+  }
+  else {
+    setBSTNODEleft(getBSTNODEparent(x), y);
+  }
+
+  setBSTNODEright(y, x);
+
+  setBSTNODEparent(x, y);
+/******************************************************************************/
+/*
   BSTNODE *y = getBSTNODEleft(x);
 
   setBSTNODEleft(x, getBSTNODEright(y));
   setBSTNODEparent(getBSTNODEparent(y), x);
   setBSTNODEparent(y, getBSTNODEparent(x));
 
-  /* If node x is root */
+  /* If node x is root *
   if (nodesAreEqual(x, getBSTNODEparent(x))) {
     setBSTroot(tree, y);
   }
@@ -356,15 +413,24 @@ static void rightRotate(BST *tree, BSTNODE *x) {
 
   setBSTNODEright(y, x);
   setBSTNODEparent(x, y);
+*/
+/******************************************************************************/
 }
 
 static void rotate(BST *tree, BSTNODE *x, BSTNODE *parent) {
+  RBTNODE *r1 = getBSTNODE(x);
+  RBTNODE *r2 = getBSTNODE(parent);
+  printf("x value is: %lf\n", getREAL(r1->value));
+  printf("parent value is: %lf\n", getREAL(r2->value));
   if (nodesAreEqual(x, getBSTNODEleft(parent))) {
-    rightRotate(tree, x);
+    rightRotate(tree, parent);
   }
   else {
-    leftRotate(tree, x);
+    printf("left rotate\n");
+    leftRotate(tree, parent);
   }
+
+/******************************************************************************/
 }
 
 static void insertionFixUp(BST *tree, BSTNODE *x) {
@@ -476,33 +542,32 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
     if (uncle) rbtUncle = getBSTNODE(uncle);
 
 //printf("flag2\n");
-    if (sizeBST(tree) == 1) {
-      printf("node is root. breaking...\n"); break;
-    }
+    if (sizeBST(tree) == 1) break;
 //printf("flag3\n");
-    RBTNODE *r1 = getBSTNODE(getBSTNODEparent(x));
-    printf("parent value is: %lf\n", getREAL(r1->value));
-    printf("parent color is: %c\n", r1->color);
-    if (rbtParent->color == 'B') {
-      printf("parent is black. breaking...\n"); break;
+//    RBTNODE *r1 = getBSTNODE(getBSTNODEparent(x));
+//    printf("parent value is: %lf\n", getREAL(r1->value));
+//    printf("parent color is: %c\n", r1->color);
+    if (rbtParent->color == 'B') break;
+    if (rbtUncle) {
+      if (rbtUncle->color == 'R') {
+        rbtParent->color = 'B';
+        rbtUncle->color = 'B';
+        rbtGrandParent->color = 'R';
+
+  //      x = getGrandParent(x);
+
+        // Set x = grandParent
+        RBTNODE *rbt_x = getBSTNODE(x);
+        rbt_x->frequency = rbtGrandParent->frequency;
+        rbt_x->color = rbtGrandParent->color;
+        //rbt_x->value = rbtGrandParent->value;
+        rbt_x->display = rbtGrandParent->display;
+        rbt_x->comparator = rbtGrandParent->comparator;
+
+
+      }
     }
-    if (rbtUncle->color == 'R') {
-      rbtParent->color = 'B';
-      rbtUncle->color = 'B';
-      rbtGrandParent->color = 'R';
 
-//      x = getGrandParent(x);
-
-      // Set x = grandParent
-      RBTNODE *rbt_x = getBSTNODE(x);
-      rbt_x->frequency = rbtGrandParent->frequency;
-      rbt_x->color = rbtGrandParent->color;
-      //rbt_x->value = rbtGrandParent->value;
-      rbt_x->display = rbtGrandParent->display;
-      rbt_x->comparator = rbtGrandParent->comparator;
-
-
-    }
     else {
       if (nodesAreLinear(x, getBSTNODEparent(x)) == false) {
         BSTNODE *oldPar = getBSTNODEparent(x);   //These 2 assigns preserve the needed value
