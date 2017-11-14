@@ -1,3 +1,14 @@
+---------------
+Condensed to-do
+---------------
+-test/fix rbt
+-in testbst.sh, there is a problem with deleting a value, fix this
+-finalize makefile (make test, add anything extra needed)
+-remove #include of real.h or any other unneccesary/illegal files from rbt/gt/bst/trees(?)
+-all tests from submit1
+-test2 dropbox
+-submit
+
 ------------
 Action List:
 ------------
