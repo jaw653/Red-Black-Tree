@@ -1,8 +1,8 @@
 ------------
 Action List:
 ------------
--getBSTNODEparent is throwing segfault in rbt. work on fixing this
--test/fix? rbt
+-look into which nodes are changing color for rbt insertion fixup.
+	--looks like i just have to do insertionfixup, deletionfixup, and then testing
 
 -try inserting a lot, then deleting all of them all the way to root, then + to empty tree again
 -check rbt extensively to make sure all nodes are changing to the correct color/fixups are right
