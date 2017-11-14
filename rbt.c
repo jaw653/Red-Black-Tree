@@ -110,9 +110,9 @@ void deleteRBT(RBT *t, void *value) {
     rbtToDelete->frequency -= 1;
 
     if (rbtToDelete->frequency <= 0) {        //FIXME: should this remove occur here
-      swapToLeafBST(t->tree, valToDelete);
-      deletionFixUp(t->tree, valToDelete);
-      pruneLeafBST(t->tree, valToDelete);     //FIXME: is this block right?
+      BSTNODE *leaf = swapToLeafBST(t->tree, valToDelete);
+      deletionFixUp(t->tree, leaf);
+      pruneLeafBST(t->tree, leaf);     //FIXME: is this block right?
     }
 
     t->totalWords -= 1;
@@ -489,7 +489,7 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
     RBTNODE *rbtX = getBSTNODE(x);
 
     if (rbtX->color == 'R') break;
-    if (rbtSibling->color == 'R' || sibling == NULL) {
+    if (rbtSibling->color == 'R') {
       rbtParent->color = 'R';
       rbtSibling->color = 'B';
 
@@ -512,7 +512,12 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
     }
     else {
       rbtSibling->color = 'R';
-      x = parent;
+      //x = parent;
+      RBTNODE *rbt_x = getBSTNODE(x);
+      rbt_x = rbtParent->frequency;
+      rbt_x->color = rbtParent->color;
+      rbt_x->display = rbtParent->display;
+      rbt_x->comparator = rbtParent->comparator;
     }
   }
   //setRBTNODEcolor(getBSTNODE(x), 'B');   //FIXME: this should be outside the loop, there might be a screwed up bracket
