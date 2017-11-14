@@ -4,37 +4,54 @@
 #include "rbt.h"
 #include "real.h"
 
+static void displayTree(RBT *);
+static void insertValue(RBT *, int);
+static void deleteValue(RBT *, int);
+static void findValue(RBT *, int);
+
 int main(void) {
   printf("Attempting to Initialize rbt tree...\n");
   RBT *tree = newRBT(displayREAL, compareREAL);
-  printf("rbt tree successfully initiailized\n");
+  printf("rbt tree successfully initiailized\n\n");
 
-  printf("Attempting to insert...\n");
-  insertRBT(tree, newREAL(6));
-  printf("6 insert successful\n");
+  insertValue(tree, 6);
+  insertValue(tree, 8);
+  insertValue(tree, 3);
+  insertValue(tree, 10);
+  //insertValue(tree, 1);
 
-  insertRBT(tree, newREAL(8));
-  printf("8 inserts successful\n");
+  displayTree(tree);
 
-  insertRBT(tree, newREAL(3));
-  printf("3 inserts successful\n");
+  deleteValue(tree, 6);
 
-  printf("Attempting to display...\n");
-  displayRBT(stdout, tree);
+  displayTree(tree);
 
-  printf("\nAttempting to delete...\n");
-  deleteRBT(tree, newREAL(6));
-  printf("Delete successful\n");
-
-  printf("\nTree is now: \n");
-  displayRBT(stdout, tree);
-  printf("\n");
-
-  printf("Attempting to find...\n");
-  int count = findRBT(tree, newREAL(8));
-  printf("find successful, count is: %d\n", count);
+  findValue(tree, 8);
 
   printf("Size is: %d\n", sizeRBT(tree));
 
   return 0;
+}
+
+static void displayTree(RBT *tree) {
+  printf("Tree is:\n");
+  displayRBT(stdout, tree);
+  printf("\n\n");
+}
+
+static void insertValue(RBT *tree, int n) {
+  printf("Attempting to insert %d...\n", n);
+  insertRBT(tree, newREAL(n));
+  printf("%d insert successful.\n\n", n);
+}
+
+static void deleteValue(RBT *tree, int n) {
+  printf("Attempting to delete value %d...\n", n);
+  deleteRBT(tree, newREAL(n));
+  printf("Delete of %d successful.\n", n);
+}
+static void findValue(RBT *tree, int n) {
+  printf("Attempting to find %d...\n", n);
+  int count = findRBT(tree, newREAL(n));
+  printf("find successful, count is: %d\n", count);
 }
