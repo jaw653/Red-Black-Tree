@@ -491,15 +491,17 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
       rbtUncle->color = 'B';
       rbtGrandParent->color = 'R';
 
-      //x = getGrandParent(x);                //FIXME: might need to set() this
+//      x = getGrandParent(x);
 
       // Set x = grandParent
       RBTNODE *rbt_x = getBSTNODE(x);
       rbt_x->frequency = rbtGrandParent->frequency;
       rbt_x->color = rbtGrandParent->color;
-      rbt_x->value = rbtGrandParent->value;
+      //rbt_x->value = rbtGrandParent->value;
       rbt_x->display = rbtGrandParent->display;
       rbt_x->comparator = rbtGrandParent->comparator;
+
+
     }
     else {
       if (nodesAreLinear(x, getBSTNODEparent(x)) == false) {
