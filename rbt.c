@@ -18,7 +18,6 @@
 struct rbt {
     struct bst *tree;
     int totalWords;
-    int numNodes;
     void (*display)(FILE *, void *);
     int (*comparator)(void *, void *);
 };
@@ -63,7 +62,6 @@ RBT *newRBT(
     t->display = d;
     t->comparator = c;
     t->totalWords = 0;
-    t->numNodes = 0;
 
     return t;
 }
@@ -72,16 +70,15 @@ void insertRBT(RBT *t, void *value) {
   RBTNODE *valueNode = newRBTNODE(value, t->display, t->comparator);
 
   BSTNODE *valueToFind = findBST(t->tree, valueNode);
-printf("flag1\n");
+
   /* If value is in the tree, just increment it */
   if (valueToFind != NULL) {
-printf("flag\n");
     RBTNODE *nodeToIncrement = getBSTNODE(valueToFind);
     nodeToIncrement->frequency += 1;
   }
   else {
-printf("flag2\n");
-    insertionFixUp(t->tree, valueToFind);
+    BSTNODE *x = insertBST(t->tree, valueNode);
+    insertionFixUp(t->tree, x);   //the bstnode holds the rbtnode
   }
 
   t->totalWords += 1;
@@ -100,19 +97,21 @@ int findRBT(RBT *t, void *value) {
 }
 
 void deleteRBT(RBT *t, void *value) {
-  t->totalWords -= 1;
-  BSTNODE *valToDelete = findBST(t->tree, value);
+  RBTNODE *valueNode = newRBTNODE(value, t->display, t->comparator);
+
+  BSTNODE *valToDelete = findBST(t->tree, valueNode);
 
   if (valToDelete != NULL) {
     RBTNODE *rbtToDelete = getBSTNODE(valToDelete);
     rbtToDelete->frequency -= 1;
 
-    if (rbtToDelete->frequency == 0) {        //FIXME: should this remove occur here
+    if (rbtToDelete->frequency <= 0) {        //FIXME: should this remove occur here
       swapToLeafBST(t->tree, valToDelete);
       deletionFixUp(t->tree, valToDelete);
       pruneLeafBST(t->tree, valToDelete);     //FIXME: is this block right?
-      t->numNodes -= 1;
     }
+
+    t->totalWords -= 1;
   }
 }
 
@@ -364,7 +363,6 @@ static void rotate(BST *tree, BSTNODE *x, BSTNODE *parent) {
 }
 
 static void insertionFixUp(BST *tree, BSTNODE *x) {
-printf("insertflag1\n");
   //BSTNODE *node = getBSTNODE(x);
   BSTNODE *parent = NULL;
   BSTNODE *grandParent = NULL;
@@ -373,9 +371,8 @@ printf("insertflag1\n");
   RBTNODE *rbtParent = NULL;
   RBTNODE *rbtGrandParent = NULL;
   RBTNODE *rbtUncle = NULL;
-printf("insertflag2\n");
+
   if (getBSTNODEparent(x)) {
-    printf("good1\n");
     parent = getBSTNODEparent(x);
     if (getGrandParent(x)) {
       grandParent = getGrandParent(x);
@@ -383,7 +380,7 @@ printf("insertflag2\n");
         uncle = getBSTNODEUncle(x);
     }
   }
-printf("fixup flag\n");
+
   bool loop = true;
   while (loop) {
     if (parent) rbtParent = getBSTNODE(parent);
@@ -424,6 +421,7 @@ printf("fixup flag\n");
 
   RBTNODE *rbtRoot = getBSTNODE(getBSTroot(tree));
   rbtRoot->color = 'B';
+
 }
 
 static void deletionFixUp(BST *tree, BSTNODE *x) {
