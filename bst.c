@@ -90,9 +90,7 @@ void setBSTNODEright(BSTNODE *n, BSTNODE *replacement) {
 }
 
 BSTNODE *getBSTNODEparent(BSTNODE *n) {
-  printf("getparent\n");
   if (!n->parent) return NULL;
-  printf("getparent2\n");
   return n->parent;
 }
 
@@ -127,7 +125,7 @@ BST *newBST(
     tree->comparator = c;
     tree->swapper = s;
 
-    tree->root = newBSTNODE(NULL, NULL);
+    tree->root = newBSTNODE(NULL, tree->root);
     tree->size = 0;
 
     return tree;
@@ -234,7 +232,6 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
   if (structsAreEqual(leaf, t->root)) {
     t->root = NULL;
-    printf("CORRECT THING EXECUTED\n");
   }
   /* If left child */
   if (leaf->isLeftChild) {
