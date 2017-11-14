@@ -341,32 +341,6 @@ static void leftRotate(BST *tree, BSTNODE *x) {
   setBSTNODEleft(y, x);
 
   setBSTNODEparent(x, y);
-
-/******************************************************************************/
-/*
-  BSTNODE *y = getBSTNODEright(x);
-
-  setBSTNODEright(x, getBSTNODEleft(y));
-  setBSTNODEparent(getBSTNODEleft(y), x);
-printf("flag\n");
-  setBSTNODEparent(y, getBSTNODEparent(x));
-
-  /* If x is root *
-  if (nodesAreEqual(x, getBSTNODEparent(x))) {
-    setBSTroot(tree, y);
-  }
-  /* x = x->parent->left *
-  else if (nodesAreEqual(x, getBSTNODEleft(getBSTNODEparent(x)))) {
-    setBSTNODEleft(getBSTNODEparent(x), y);
-  }
-  else {
-    setBSTNODEright(getBSTNODEparent(x), y);
-  }
-
-  setBSTNODEleft(y, x);
-  setBSTNODEparent(x, y);
-*/
-/******************************************************************************/
 }
 
 static void rightRotate(BST *tree, BSTNODE *x) {
@@ -392,45 +366,15 @@ static void rightRotate(BST *tree, BSTNODE *x) {
   setBSTNODEright(y, x);
 
   setBSTNODEparent(x, y);
-/******************************************************************************/
-/*
-  BSTNODE *y = getBSTNODEleft(x);
-
-  setBSTNODEleft(x, getBSTNODEright(y));
-  setBSTNODEparent(getBSTNODEparent(y), x);
-  setBSTNODEparent(y, getBSTNODEparent(x));
-
-  /* If node x is root *
-  if (nodesAreEqual(x, getBSTNODEparent(x))) {
-    setBSTroot(tree, y);
-  }
-  else if (nodesAreEqual(x, getBSTNODEright(getBSTNODEparent(x)))) {
-    setBSTNODEright(getBSTNODEparent(x), y);
-  }
-  else {
-    setBSTNODEleft(getBSTNODEparent(x), y);
-  }
-
-  setBSTNODEright(y, x);
-  setBSTNODEparent(x, y);
-*/
-/******************************************************************************/
 }
 
 static void rotate(BST *tree, BSTNODE *x, BSTNODE *parent) {
-  RBTNODE *r1 = getBSTNODE(x);
-  RBTNODE *r2 = getBSTNODE(parent);
-  printf("x value is: %lf\n", getREAL(r1->value));
-  printf("parent value is: %lf\n", getREAL(r2->value));
   if (nodesAreEqual(x, getBSTNODEleft(parent))) {
     rightRotate(tree, parent);
   }
   else {
-    printf("left rotate\n");
     leftRotate(tree, parent);
   }
-
-/******************************************************************************/
 }
 
 static void insertionFixUp(BST *tree, BSTNODE *x) {
@@ -443,92 +387,8 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
   RBTNODE *rbtGrandParent = NULL;
   RBTNODE *rbtUncle = NULL;
 
-/******************************************************************************/
-/*
   bool loop = true;
   while (loop) {
-
-    if (parent) rbtParent = getBSTNODE(parent);
-    if (grandParent) rbtGrandParent = getBSTNODE(grandParent);
-    if (uncle) rbtUncle = getBSTNODE(uncle);
-
-    if (nodesAreEqual(x, getBSTroot(tree))) break;
-    if (parent) {
-      if (rbtParent->color == 'B') break;
-    }
-    if (uncle) {
-      if (rbtGrandParent->color == 'R') {
-        rbtParent->color = 'B';
-        rbtGrandParent->color = 'B';
-        if (grandParent) {
-          rbtGrandParent->color = 'R';
-        }
-        x = grandParent;
-      }
-    }
-    else {
-      // Uncle must be black
-
-      //if x and parent are not linear
-      if (nodesAreLinear(x, parent) == false) {
-        BSTNODE *oldParent = malloc(sizeof(struct bstnode));
-        oldParent->isLeftChild = parent->isLeftChild;
-        oldParent->value = parent->value;
-        oldParent->parent = parent->parent;
-        oldParent->left = parent->left;
-        oldParent->right = parent->right;
-
-        BSTNODE *oldX = malloc(sizeof(struct bstnode));
-        oldX->isLeftChild = x->isLeftChild;
-        oldX->value = x->value;
-        oldX->parent = x->parent;
-        oldX->left = x->left;
-        oldX->right = x->right;
-
-        //rotate x to parent
-        rotate(tree, x, parent);
-
-        // x = old parent
-        x->isLeftChild = oldParent->isLeftChild;
-        x->value = oldParent->value;
-        x->parent = oldParent->parent;
-        x->left = oldParent->left;
-        x->right = oldParent->right;
-
-        // parent = old x
-        parent->isLeftChild = oldX->isLeftChild;
-        parent->value = oldX->isLeftChild;
-        parent->parent = oldX->parent;
-        parent->left = oldX->left;
-        parent->right = oldX->right;
-      }
-
-      // color parent black
-      if (parent) {
-        rbtParent->color = 'B';
-      }
-
-      // color grandparent red
-      if (grandparent) {
-        rbtGrandParent->color = 'R';
-      }
-
-      // rotate parent to grandparent
-      rotate(tree, parent, grandparent);
-
-      break;
-    }
-  }
-
-  // color root black
-  BSTNODE *root = getBSTroot(tree);
-  getBSTNODE(root)->color = 'B';
-*/
-/******************************************************************************/
-
-  bool loop = true;
-  while (loop) {
-//printf("flag\n");
   if (getBSTNODEparent(x)) {
     parent = getBSTNODEparent(x);
     if (getGrandParent(x)) {
@@ -541,12 +401,9 @@ static void insertionFixUp(BST *tree, BSTNODE *x) {
     if (grandParent) rbtGrandParent = getBSTNODE(grandParent);
     if (uncle) rbtUncle = getBSTNODE(uncle);
 
-//printf("flag2\n");
     if (sizeBST(tree) == 1) break;
-//printf("flag3\n");
-//    RBTNODE *r1 = getBSTNODE(getBSTNODEparent(x));
-//    printf("parent value is: %lf\n", getREAL(r1->value));
-//    printf("parent color is: %c\n", r1->color);
+
+
     if (rbtParent->color == 'B') break;
     if (rbtUncle) {
       if (rbtUncle->color == 'R') {
