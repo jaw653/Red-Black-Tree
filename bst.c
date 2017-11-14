@@ -296,9 +296,33 @@ static void displayNODE(BST *t, FILE *fp, BSTNODE *node, bool isRoot) {
   fprintf(fp, ")-");
 
   if (!isRoot) {
-    if (node->isLeftChild) fprintf(fp, "l");
-    else fprintf(fp, "r");
+////printf("flag\n");
+    BSTNODE *parent = getBSTNODEparent(node);
+//printf("flag2\n");
+    BSTNODE *parLeft = getBSTNODEleft(parent);
+//printf("flag3\n");
+    void *nodeVal;
+    void *parLeftVal;
+    if(node)
+      nodeVal = node->value;
+    else
+      nodeVal = NULL;
+    if (parLeft)
+      parLeftVal = parLeft->value;
+    else
+      parLeftVal = NULL;
+//printf("flag4\n");
+    if (t->comparator(nodeVal, parLeftVal) == 0)
+      fprintf(fp, "l");
+    else
+      fprintf(fp, "r");
   }
+/*
+  if (!isRoot) {
+    if (structsAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) fprintf(fp, "l");
+    else if (structsAreEqual(node,fprintf(fp, "r");
+  }
+*/
 }
 
 
