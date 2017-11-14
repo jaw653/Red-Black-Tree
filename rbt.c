@@ -88,7 +88,8 @@ void insertRBT(RBT *t, void *value) {
 }
 
 int findRBT(RBT *t, void *value) {
-  RBTNODE *p = getBSTNODE(findBST(t->tree, value));
+  RBTNODE *valueNode = newRBTNODE(value, t->display, t->comparator);
+  RBTNODE *p = getBSTNODE(findBST(t->tree, valueNode));
 
   /* Value is not in the tree */
   if (p == NULL) {
@@ -463,28 +464,30 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
   RBTNODE *rbtNephew = NULL;
   RBTNODE *rbtNiece = NULL;
 
-  if (getBSTNODEparent(x)) {
-    parent = getBSTNODEparent(x);
-    if (getSibling(x)) {
-      sibling = getSibling(x);
-      if (getGrandParent(x)) {
-        if (getBSTNODEUncle(x)) {
-          if (getNephew(x)) nephew = getNephew(x);
-          if (getNiece(x)) niece = getNiece(x);
+  bool loop = true;
+  while (loop) {
+    if (getBSTNODEparent(x)) {
+      parent = getBSTNODEparent(x);
+      if (getSibling(x)) {
+        sibling = getSibling(x);
+        if (getGrandParent(x)) {
+          if (getBSTNODEUncle(x)) {
+            if (getNephew(x)) nephew = getNephew(x);
+            if (getNiece(x)) niece = getNiece(x);
+          }
         }
       }
     }
-  }
 
-  bool loop = true;
-  while (loop) {
     rbtParent = getBSTNODE(parent);
     rbtSibling = getBSTNODE(sibling);
     rbtNephew = getBSTNODE(nephew);
     rbtNiece = getBSTNODE(niece);
 
     if (nodesAreEqual(getBSTroot(tree), x)) break;
+
     RBTNODE *rbtX = getBSTNODE(x);
+
     if (rbtX->color == 'R') break;
     if (rbtSibling->color == 'R' || sibling == NULL) {
       rbtParent->color = 'R';

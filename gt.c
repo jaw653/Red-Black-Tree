@@ -62,7 +62,8 @@ void insertGT(GT *t, void *value) {
 }
 
 int findGT(GT *t, void *value) {
-  GTNODE *p = getBSTNODE(findBST(t->tree, value));
+  GTNODE *valueNode = newGTNODE(value, t->display, t->comparator);
+  GTNODE *p = getBSTNODE(findBST(t->tree, valueNode));
 
   /* Value is not in the tree */
   if (p == NULL)
