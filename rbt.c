@@ -176,6 +176,16 @@ static void swapRBTNODE(BSTNODE *n1, BSTNODE *n2) {
 static int compareRBTNODE(void *v1, void *v2) {
   RBTNODE *node1 = v1;
   RBTNODE *node2 = v2;
+//printf("compareRbt flag\n");
+  if (node1 == NULL) {
+    if (node2 == NULL)
+      return 0;
+    else
+      return -1;
+  }
+  if (node2 == NULL) {
+    return 1;
+  }
 
   return node1->comparator(node1->value, node2->value);
 }
@@ -326,7 +336,7 @@ static void leftRotate(BST *tree, BSTNODE *x) {
   //y->parent = x->parent
   setBSTNODEparent(y, getBSTNODEparent(x));
 
-  if (getBSTNODEparent(x) == NULL) {
+  if (nodesAreEqual(x, getBSTNODEparent(x))) {
     // root = y
     setBSTroot(tree, y);
   }
@@ -340,6 +350,7 @@ static void leftRotate(BST *tree, BSTNODE *x) {
   }
 
   setBSTNODEleft(y, x);
+
 
   setBSTNODEparent(x, y);
 }
@@ -513,11 +524,14 @@ static void deletionFixUp(BST *tree, BSTNODE *x) {
     else {
       rbtSibling->color = 'R';
       //x = parent;
+      x = parent;
+/*
       RBTNODE *rbt_x = getBSTNODE(x);
-      rbt_x = rbtParent->frequency;
+      rbt_x->frequency = rbtParent->frequency;
       rbt_x->color = rbtParent->color;
       rbt_x->display = rbtParent->display;
       rbt_x->comparator = rbtParent->comparator;
+*/
     }
   }
   //setRBTNODEcolor(getBSTNODE(x), 'B');   //FIXME: this should be outside the loop, there might be a screwed up bracket
