@@ -1,17 +1,16 @@
 !#\bin\bash
 
-printf "MAKING...\n"
+printf "\nMAKING...\n"
 make
-printf "MADE.\n"
+printf "\nMADE.\n"
 
 printf "COMPILING...\n"
 gcc -Wall -Wextra -std=c99 rbtTest.c rbt.o bst.o real.o cda.o queue.o -lm
 printf "COMPILED.\n"
 
-printf "EXECUTING...\n"
+printf "EXECUTING...\n\n"
 ./a.out
-printf "EXECUTED.\n"
+printf "EXECUTED.\n\n"
 
-printf "CLEANING...\n"
+printf "CLEANING...\n\n"
 make clean
-
