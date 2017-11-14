@@ -145,6 +145,16 @@ static int compareGTNODE(void *n1, void *n2) {
   GTNODE *node1 = n1;
   GTNODE *node2 = n2;
 
+  if (node1 == NULL) {
+    if (node2 == NULL)
+      return 0;
+    else
+      return -1;
+  }
+  if (node2 == NULL) {
+    return 1;
+  }
+
   return node1->comparator(node1->value, node2->value);
 }
 
