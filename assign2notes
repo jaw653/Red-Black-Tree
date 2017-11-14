@@ -1,7 +1,9 @@
 ---------------
 Condensed to-do
 ---------------
--test/fix rbt
+-test a right rotate for inserting in rbt
+-test/fix rbt delete/deletefixuproutine
+-finish trees.c (cleaning and stuff)
 -in testbst.sh, there is a problem with deleting a value, fix this
 -finalize makefile (make test, add anything extra needed)
 -remove #include of real.h or any other unneccesary/illegal files from rbt/gt/bst/trees(?)
