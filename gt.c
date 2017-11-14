@@ -86,9 +86,6 @@ void deleteGT(GT *t, void *value) {
 
     t->totalWords -= 1;
   }
-
-//  t->totalWords -= 1;
-  printf("totalWords is: %d\n", t->totalWords);
 }
 
 int sizeGT(GT *t) {
