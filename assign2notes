@@ -1,9 +1,11 @@
 ---------------
 Condensed to-do
 ---------------
--test a right rotate for inserting in rbt
--test/fix rbt delete/deletefixuproutine
--finish trees.c (cleaning and stuff)
+-IMPORTANT: in insertRBT, when the pseudocode says something like x = grandparent, I'm currently setting everyint in x = to its colleague in grandparent except for value; this may cause some major issues...
+-IMPORTANT: fix the displayBST function weird edge case (possibly using 2 queues)
+-finish trees.c
+-fix deleterbt
+
 -in testbst.sh, there is a problem with deleting a value, fix this
 -finalize makefile (make test, add anything extra needed)
 -remove #include of real.h or any other unneccesary/illegal files from rbt/gt/bst/trees(?)
@@ -14,6 +16,7 @@ Condensed to-do
 ------------
 Action List:
 ------------
+-test right rotates for inserting in rbt
 -look into which nodes are changing color for rbt insertion fixup.
 	--looks like i just have to do insertionfixup, deletionfixup, and then testing
 
