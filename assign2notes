@@ -1,6 +1,7 @@
 ---------------
 Condensed to-do
 ---------------
+-minimum depth is incorrect for trees -g corpus commands
 -finish trees.c
 -make sure that you are cleaning "hello_1234_world" correctly
 -for trees.c, is there supposed to be a newline printed at the end???
