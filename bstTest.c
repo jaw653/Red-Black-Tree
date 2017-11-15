@@ -1,3 +1,9 @@
+/* Author: Jake Wachs
+ * Date: November 13, 2017
+ *
+ * The University of Alabama
+ */
+
 #include <stdio.h>
 #include "bst.h"
 #include "real.h"

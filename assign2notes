@@ -1,6 +1,28 @@
+---------------
+Condensed to-do
+---------------
+-test findRBT()
+-IMPORTANT: in insertRBT, when the pseudocode says something like x = grandparent, I'm currently setting everyint in x = to its colleague in grandparent except for value; this may cause some major issues...
+-IMPORTANT: fix the displayBST function weird edge case (possibly using 2 queues)
+-finish trees.c
+-fix deleterbt
+
+-in testbst.sh, there is a problem with deleting a value, fix this
+-finalize makefile (make test, add anything extra needed)
+-remove #include of real.h or any other unneccesary/illegal files from rbt/gt/bst/trees(?)
+-all tests from submit1
+-test2 dropbox
+-submit
+
 ------------
 Action List:
 ------------
+-edge case --> deletionfixup() the root and makesure insertionfixup on the root is working
+-test right rotates for inserting in rbt
+-look into which nodes are changing color for rbt insertion fixup.
+	--looks like i just have to do insertionfixup, deletionfixup, and then testing
+
+-try inserting a lot, then deleting all of them all the way to root, then + to empty tree again
 -check rbt extensively to make sure all nodes are changing to the correct color/fixups are right
 -check cleanString() to make sure it works on lots of edge cases
 -must check for empty files!!!
@@ -16,6 +38,7 @@ Action List:
 -fix make test/see if I already fixed make test
 -go through all tests in the first eval and try them on your program
 -check to make sure statistics() is correct for rbt/gt
+
 ----------
 Questions:
 ----------

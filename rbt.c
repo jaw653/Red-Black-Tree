@@ -11,80 +11,109 @@
 #include <stdbool.h>
 #include <math.h>
 
+#include "real.h"
 #include "rbt.h"
 #include "bst.h"
 #include "queue.h"
 
-struct rbt {
-    struct bst *tree;
-    int totalWords;
-    int numNodes;
-    void (*display)(FILE *, void *);
-    int (*comparator)(void *, void *);
-};
+
 
 typedef struct RBTNODE RBTNODE;
-struct RBTNODE {
-  int frequency;
-  char color;
-  void *value;    //holds generic value, but this one is actually the STRING (or INTEGER or whatever)
-  void (*display)(FILE *, void *);
-  int (*comparator)(void *, void *);
-};
 
-static RBTNODE *newRBTNODE(void *, void (*d)(FILE *, void *), int (*c)(void *, void *));
+
+
+/*** RBTNODE Functions ***/
+static RBTNODE *newRBTNODE(void *, void (*)(FILE *, void *), int (*)(void *, void *));
 static void displayRBTNODE(FILE *, void *);
-static int compareRBTNODE(void *, void *);
 static void swapRBTNODE(BSTNODE *, BSTNODE *);
+static int compareRBTNODE(void *, void *);
+static char getColor(BSTNODE *);
+static void setColor(BSTNODE *, char);
+
+/*** Min/Max Functions ***/
+static int min(int, int);
 static int findMinDepthRBT(BSTNODE *);
 static int findMaxDepthRBT(BSTNODE *);
-static int min(int, int);
+
+/*** Rotate Functions ***/
 static bool nodesAreEqual(BSTNODE *, BSTNODE *);
-static BSTNODE *getBSTNODEUncle(BSTNODE *);
-static BSTNODE *getGrandParent(BSTNODE *);
-static BSTNODE *getGrandParent(BSTNODE *);
-static BSTNODE *getSibling(BSTNODE *);
-static BSTNODE *getNephew(BSTNODE *);
-static BSTNODE *getNiece(BSTNODE *);
+static bool isLeftChild(BSTNODE *);
 static bool nodesAreLinear(BSTNODE *, BSTNODE *);
 static void leftRotate(BST *, BSTNODE *);
 static void rightRotate(BST *, BSTNODE *);
 static void rotate(BST *, BSTNODE *, BSTNODE *);
+
+/*** Relationship Functions ***/
+static BSTNODE *getSibling(BSTNODE *);
+static BSTNODE *getUncle(BSTNODE *);
+static BSTNODE *getGrandParent(BSTNODE *);
+static BSTNODE *getNephew(BSTNODE *);
+static BSTNODE *getNiece(BSTNODE *);
+
+/*** Fixup Routine Functions ***/
 static void insertionFixUp(BST *, BSTNODE *);
 static void deletionFixUp(BST *, BSTNODE *);
 
+
+
+
+struct rbt {
+    struct bst *tree;
+    int totalWords;
+    void (*display)(FILE *, void *);
+    int (*comparator)(void *, void *);
+};
+
+struct RBTNODE {
+  int frequency;
+  char color;
+  void *value;    // Holds STRING/REAL/INTEGER
+  void (*display)(FILE *, void *);
+  int (*comparator)(void *, void *);
+};
+
+
+
+
+/******************************************************************************/
+/***                              Public Chunk                              ***/
+/******************************************************************************/
 RBT *newRBT(
   void (*d)(FILE *, void *),
   int (*c)(void *, void *)
 )
 {
     RBT *t = malloc(sizeof(struct rbt));
-    t->tree = newBST(displayRBTNODE, compareRBTNODE, swapRBTNODE);           //FIXME: init with swapper function, change other fc's to use swapper function
+    t->tree = newBST(displayRBTNODE, compareRBTNODE, swapRBTNODE);
     t->display = d;
     t->comparator = c;
     t->totalWords = 0;
-    t->numNodes = 0;
 
     return t;
 }
 
 void insertRBT(RBT *t, void *value) {
-  BSTNODE *valueToFind = findBST(t->tree, value);
-  /* If value is in the tree, just increment it */
-  if (valueToFind != NULL) {
-    RBTNODE *nodeToIncrement = getBSTNODE(valueToFind);
-    nodeToIncrement->frequency += 1;
+  RBTNODE *nodeToInsert = newRBTNODE(value, t->display, t->comparator);
+
+  BSTNODE *find = findBST(t->tree, nodeToInsert);
+
+  /* If already in the tree, just increment it */
+  if (find) {
+    RBTNODE *foundNode = getBSTNODE(find);
+    foundNode->frequency += 1;
   }
   else {
-    RBTNODE *valueObject = newRBTNODE(value, t->display, t->comparator);
-    BSTNODE *insertedNode = insertBST(t->tree, valueObject);
+    insertBST(t->tree, nodeToInsert);
+    BSTNODE *insertedNode = findBST(t->tree, nodeToInsert);
     insertionFixUp(t->tree, insertedNode);
+
   }
-  t->totalWords += 1;                       //FIXME: when to increment totalWords/phrases?
+  t->totalWords += 1;
 }
 
 int findRBT(RBT *t, void *value) {
-  RBTNODE *p = getBSTNODE(findBST(t->tree, value));
+  RBTNODE *valueNode = newRBTNODE(value, t->display, t->comparator);
+  RBTNODE *p = getBSTNODE(findBST(t->tree, valueNode));
 
   /* Value is not in the tree */
   if (p == NULL) {
@@ -95,20 +124,24 @@ int findRBT(RBT *t, void *value) {
   }
 }
 
+
 void deleteRBT(RBT *t, void *value) {
-  t->totalWords -= 1;
-  BSTNODE *valToDelete = findBST(t->tree, value);
+  RBTNODE *nodeToDelete = newRBTNODE(value, t->display, t->comparator);
 
-  if (valToDelete != NULL) {
-    RBTNODE *rbtToDelete = getBSTNODE(valToDelete);
-    rbtToDelete->frequency -= 1;
+  BSTNODE *find = findBST(t->tree, nodeToDelete);
 
-    if (rbtToDelete->frequency == 0) {        //FIXME: should this remove occur here
-      swapToLeafBST(t->tree, valToDelete);
-      deletionFixUp(t->tree, valToDelete);
-      pruneLeafBST(t->tree, valToDelete);     //FIXME: is this block right?
-      t->numNodes -= 1;
+  /* As long as it's in the tree, delete value */
+  if (find != NULL) {
+    RBTNODE *decrementNode = getBSTNODE(find);
+    decrementNode->frequency -= 1;
+
+    if (decrementNode->frequency <= 0) {
+      BSTNODE *leaf = swapToLeafBST(t->tree, find);
+      //deletionFixUp(t->tree, leaf);
+      //pruneLeafBST(t->tree, leaf);
+
     }
+    t->totalWords -= 1;
   }
 }
 
@@ -131,14 +164,26 @@ void statisticsRBT(FILE *fp, RBT *t) {
 void displayRBT(FILE *fp, RBT *t) {
   displayBST(fp, t->tree);
 }
+/******************************************************************************/
+/***                          End Public Chunk                              ***/
+/******************************************************************************/
+
+
+
+
+
+
+
+
+
 
 /******************************************************************************/
-/***                          Helper Functions                              ***/
+/***                          RBTNODE Functions                             ***/
 /******************************************************************************/
 static RBTNODE *newRBTNODE(void *value, void (*d)(FILE *, void *), int (*c)(void *, void *)) {
   RBTNODE *node = malloc(sizeof(struct RBTNODE));
   node->frequency = 1;
-  node->color = 'B';
+  node->color = 'R';
   node->value = value;
   node->display = d;
   node->comparator = c;
@@ -170,7 +215,48 @@ static int compareRBTNODE(void *v1, void *v2) {
   RBTNODE *node1 = v1;
   RBTNODE *node2 = v2;
 
+  if (node1 == NULL) {
+    if (node2 == NULL)
+      return 0;
+    else
+      return -1;
+  }
+  if (node2 == NULL) {
+    return 1;
+  }
+
   return node1->comparator(node1->value, node2->value);
+}
+
+static char getColor(BSTNODE *node) {
+  if (node == NULL)
+    return 'B';
+  else {
+    RBTNODE *valNode = getBSTNODE(node);
+    return valNode->color;
+  }
+
+}
+
+static void setColor(BSTNODE *node, char color) {
+  if (node == NULL)
+    return;
+
+  RBTNODE *valNode = getBSTNODE(node);
+
+  valNode->color = color;
+}
+
+
+/******************************************************************************/
+/***                          Min/Max Functions                             ***/
+/******************************************************************************/
+static int min(int a, int b) {
+    if (a < b) return a;
+    else if (a > b) return b;
+    else {
+      return a;
+    }
 }
 
 static int findMinDepthRBT(BSTNODE *root) {
@@ -203,137 +289,87 @@ static int findMaxDepthRBT(BSTNODE *root) {
   }
 }
 
-static int min(int a, int b) {
-    if (a < b) return a;
-    else if (a > b) return b;
-    else {
-      return a;
-    }
+
+
+/******************************************************************************/
+/***                          Rotate Functions                              ***/
+/******************************************************************************/
+static bool nodesAreEqual(BSTNODE *n1, BSTNODE *n2) {
+  if (n1 == NULL) {
+    if (n2 == NULL)
+      return true;
+    else
+      return false;
+  }
+  if (n2 == NULL)
+    return false;
+
+  RBTNODE *node1 = getBSTNODE(n1);
+  RBTNODE *node2 = getBSTNODE(n2);
+
+  if (node1->comparator(node1->value, node2->value) == 0)
+    return true;
+  else
+    return false;
 }
 
-/*
-static void displayRBTNODE(FILE *fp, void *x) {
-  RBTNODE *node = x;
-  fprintf(fp, "%s-%c", node->value, node->color);
-}
-*/
-/* Compare two bst structs, returns true if the same */
-static bool nodesAreEqual(BSTNODE *s1, BSTNODE *s2) {
-  if (s1 && s2) {
-    if (getBSTNODE(s1) && getBSTNODE(s2)) {
-      if (getBSTNODE(s1) == getBSTNODE(s2)) return true;
-    }
-  }
+static bool isLeftChild(BSTNODE *x) {
+  BSTNODE *parent = getBSTNODEparent(x);
 
-  return false;
-}
-
-static BSTNODE *getBSTNODEUncle(BSTNODE *node) {
-  BSTNODE *parent = NULL;
-  BSTNODE *grandParent = NULL;
-  if (getBSTNODEparent(node)) parent = getBSTNODEparent(node);
-  if (getBSTNODEparent(parent)) grandParent = getBSTNODEparent(parent);
-
-  if (grandParent) {
-    if (nodesAreEqual(getBSTNODEleft(grandParent), node)) {
-      if (getBSTNODEright(grandParent) != NULL) return getBSTNODEright(grandParent);
-    }
-    else {
-      if (getBSTNODEright(grandParent) != NULL) return getBSTNODEleft(grandParent);
-    }
-  }
-
-  return NULL;
-}
-
-static BSTNODE *getGrandParent(BSTNODE *node) {
-  if (getBSTNODEparent(node))
-    if (getBSTNODEparent(getBSTNODEparent(node))) {
-      return getBSTNODEparent(getBSTNODEparent(node));
-    }
-
-    return NULL;
-}
-
-static BSTNODE *getSibling(BSTNODE *node) {
-  if (getBSTNODEparent(node) && getBSTNODEleft(getBSTNODEparent(node))) {
-    if (nodesAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) {
-      if (getBSTNODEright(getBSTNODEparent(node))) return getBSTNODEright(getBSTNODEparent(node));
-    }
-  }
-  else if (getBSTNODEparent(node) && getBSTNODEright(getBSTNODEparent(node))) {
-    if (nodesAreEqual(node, getBSTNODEright(getBSTNODEparent(node)))) {
-      if (getBSTNODEleft(getBSTNODEparent(node))) return getBSTNODEleft(getBSTNODEparent(node));
-    }
-  }
-
-  return NULL;
-}
-
-static BSTNODE *getNephew(BSTNODE *node) {
-  BSTNODE *uncle = getBSTNODEUncle(node);
-  if (nodesAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) {
-    return getBSTNODEright(uncle);
-  }
-  else {
-    return getBSTNODEleft(uncle);
-  }
-}
-
-static BSTNODE *getNiece(BSTNODE *node) {
-  BSTNODE *uncle = getBSTNODEUncle(node);
-  if (nodesAreEqual(node, getBSTNODEleft(getBSTNODEparent(node)))) {
-    return getBSTNODEleft(uncle);
-  }
-  else {
-    return getBSTNODEright(uncle);
-  }
+  if (nodesAreEqual(getBSTNODEleft(parent), x))
+    return true;
+  else
+    return false;
 }
 
 static bool nodesAreLinear(BSTNODE *x, BSTNODE *parent) {
-  BSTNODE *grandParent = getBSTNODEparent(parent);
-
-  if (nodesAreEqual(x, getBSTNODEleft(parent))) {
-    if (nodesAreEqual(parent, getBSTNODEleft(grandParent))) {
-      return true;
-    }
-  }
-  if (nodesAreEqual(x, getBSTNODEright(parent))) {
-    if (nodesAreEqual(parent, getBSTNODEright(grandParent))) {
-      return true;
-    }
-  }
-
-  return false;
+  if (isLeftChild(parent) && isLeftChild(x))
+    return true;
+  else if (!isLeftChild(parent) && !isLeftChild(x))
+    return true;
+  else
+    return false;
 }
 
 static void leftRotate(BST *tree, BSTNODE *x) {
   BSTNODE *y = getBSTNODEright(x);
-
   setBSTNODEright(x, getBSTNODEleft(y));
-  setBSTNODEparent(getBSTNODEleft(y), x);
+
+  if (getBSTNODEleft(y) != NULL) {
+    //y->left->parent = x
+    setBSTNODEparent(getBSTNODEleft(y), x);
+  }
+
+  //y->parent = x->parent
   setBSTNODEparent(y, getBSTNODEparent(x));
 
-  if (getBSTNODEparent(x) == NULL) {
+  if (nodesAreEqual(x, getBSTNODEparent(x))) {
+    // root = y
     setBSTroot(tree, y);
   }
-  /* x = x->parent->left */
   else if (nodesAreEqual(x, getBSTNODEleft(getBSTNODEparent(x)))) {
+    //x->parent->left = y
     setBSTNODEleft(getBSTNODEparent(x), y);
   }
   else {
+    // x->parent->right = y
     setBSTNODEright(getBSTNODEparent(x), y);
   }
 
   setBSTNODEleft(y, x);
+
+
   setBSTNODEparent(x, y);
 }
 
 static void rightRotate(BST *tree, BSTNODE *x) {
   BSTNODE *y = getBSTNODEleft(x);
-
   setBSTNODEleft(x, getBSTNODEright(y));
-  setBSTNODEparent(getBSTNODEparent(y), x);
+
+  if (getBSTNODEright(y) != NULL) {
+    setBSTNODEparent(getBSTNODEright(y), x);
+  }
+
   setBSTNODEparent(y, getBSTNODEparent(x));
 
   if (getBSTNODEparent(x) == NULL) {
@@ -347,142 +383,175 @@ static void rightRotate(BST *tree, BSTNODE *x) {
   }
 
   setBSTNODEright(y, x);
+
   setBSTNODEparent(x, y);
 }
 
+
 static void rotate(BST *tree, BSTNODE *x, BSTNODE *parent) {
   if (nodesAreEqual(x, getBSTNODEleft(parent))) {
-    rightRotate(tree, x);
+    rightRotate(tree, parent);
   }
   else {
-    leftRotate(tree, x);
+    leftRotate(tree, parent);
   }
 }
 
-static void insertionFixUp(BST *tree, BSTNODE *x) {
-  //BSTNODE *node = getBSTNODE(x);
-  BSTNODE *parent = NULL;
-  BSTNODE *grandParent = NULL;
-  BSTNODE *uncle = NULL;
-
-  RBTNODE *rbtParent = NULL;
-  RBTNODE *rbtGrandParent = NULL;
-  RBTNODE *rbtUncle = NULL;
-
-  if (getBSTNODEparent(x)) {
-    parent = getBSTNODEparent(x);
-    if (getGrandParent(x)) {
-      grandParent = getGrandParent(x);
-      if (getBSTNODEUncle(x))
-        uncle = getBSTNODEUncle(x);
-    }
-  }
-
-  bool loop = true;
-  while (loop) {
-    if (parent) rbtParent = getBSTNODE(parent);
-    if (grandParent) rbtGrandParent = getBSTNODE(grandParent);
-    if (uncle) rbtUncle = getBSTNODE(uncle);
 
 
-    if (nodesAreEqual(x, getBSTroot(tree))) break;
-    if (rbtParent->color == 'B' || parent == NULL) break;
-    if (rbtUncle->color == 'R') {
-      rbtParent->color = 'B';
-      rbtUncle->color = 'B';
-      rbtGrandParent->color = 'R';
-      x = getGrandParent(x);                //FIXME: might need to set() this
+
+/******************************************************************************/
+/***                        Relationship Functions                          ***/
+/******************************************************************************/
+static BSTNODE *getSibling(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+
+  BSTNODE *parent = getBSTNODEparent(node);
+
+  // If node is root
+  if (nodesAreEqual(parent, node))
+    return NULL;
+
+  // If node is right child
+  if (nodesAreEqual(node, getBSTNODEright(parent)))
+    return getBSTNODEleft(parent);
+  else
+    return getBSTNODEright(parent);
+}
+
+static BSTNODE *getUncle(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+
+  BSTNODE *parent = getBSTNODEparent(node);
+
+  // If node is root
+  if (nodesAreEqual(parent, node))
+    return NULL;
+
+  return getSibling(parent);
+}
+
+static BSTNODE *getGrandParent(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+
+  BSTNODE *parent = getBSTNODEparent(node);
+
+  // Node is root
+  if (nodesAreEqual(parent, node))
+    return NULL;
+  // Parent is root
+  if (nodesAreEqual(parent, getBSTNODEparent(parent)))
+    return NULL;
+
+  return getBSTNODEparent(parent);
+}
+
+static BSTNODE *getNephew(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+
+  if (isLeftChild(node))
+    return getBSTNODEright(getSibling(node));
+  else
+    return getBSTNODEleft(getSibling(node));
+}
+
+static BSTNODE *getNiece(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+
+  if (isLeftChild(node))
+    return getBSTNODEleft(getSibling(node));
+  else
+    return getBSTNODEright(getSibling(node));
+}
+
+
+
+/******************************************************************************/
+/***                        Fixup Routine Functions                         ***/
+/******************************************************************************/
+static void insertionFixUp(BST *t, BSTNODE *x) {
+  while (1) {
+    BSTNODE *parent = getBSTNODEparent(x);
+    BSTNODE *uncle = getUncle(x);
+    BSTNODE *grandParent = getGrandParent(x);
+
+    // If x is the root, break
+    if (nodesAreEqual(x, parent))
+      break;
+    if (getColor(parent) == 'B')
+      break;
+
+    if (getColor(uncle) == 'R') {
+      setColor(parent, 'B');
+      setColor(uncle, 'B');
+      setColor(grandParent, 'R');
+      x = grandParent;
     }
     else {
-      if (nodesAreLinear(x, getBSTNODEparent(x)) == false) {
-        BSTNODE *oldPar = getBSTNODEparent(x);   //These 2 assigns preserve the needed values
+      //if x and parent are not linear
+      if (!nodesAreLinear(x, parent)) {
+        BSTNODE *oldparent = parent;
         BSTNODE *oldx = x;
 
-        /* Rotate x to parent */
-        rotate(tree, x, oldPar);
+        rotate(t, x, parent);
 
-        x = oldPar;
+        x = oldparent;
         parent = oldx;
-
       }
 
-      rbtParent->color = 'B';
-      rbtGrandParent->color = 'R';
+      setColor(parent, 'B');
+      setColor(grandParent, 'R');
 
-      /* Rotate parent to grandparent */
-      rotate(tree, parent, grandParent);
+      rotate(t, parent, grandParent);
 
       break;
     }
   }
-
-  RBTNODE *rbtRoot = getBSTNODE(getBSTroot(tree));
-  rbtRoot->color = 'B';
+  //color root black
+  BSTNODE *root = getBSTroot(t);
+  setColor(root, 'B');
 }
 
-static void deletionFixUp(BST *tree, BSTNODE *x) {
-  BSTNODE *parent = NULL;
-//  BSTNODE *grandParent = getGrandParent(x);
-//  BSTNODE *uncle = getBSTNODEUncle(x);
-  BSTNODE *sibling = NULL;
-  BSTNODE *nephew = NULL;
-  BSTNODE *niece = NULL;
+static void deletionFixUp(BST *t, BSTNODE *x) {
+  while (1) {
+    BSTNODE *parent = getBSTNODEparent(x);
+    BSTNODE *sibling = getSibling(x);
+    BSTNODE *niece = getNiece(x);
+    BSTNODE *nephew = getNephew(x);
 
-  RBTNODE *rbtParent = NULL;
-  RBTNODE *rbtSibling = NULL;
-  RBTNODE *rbtNephew = NULL;
-  RBTNODE *rbtNiece = NULL;
+    // If x is the root, break
+    if (nodesAreEqual(x, parent))
+      break;
 
-  if (getBSTNODEparent(x)) {
-    parent = getBSTNODEparent(x);
-    if (getSibling(x)) {
-      sibling = getSibling(x);
-      if (getGrandParent(x)) {
-        if (getBSTNODEUncle(x)) {
-          if (getNephew(x)) nephew = getNephew(x);
-          if (getNiece(x)) niece = getNiece(x);
-        }
-      }
+    if (getColor(x) == 'R')
+      break;
+
+    if (getColor(sibling) == 'R') {
+      setColor(parent, 'R');
+      setColor(sibling, 'B');
+      rotate(t, sibling, parent);
     }
-  }
-
-  bool loop = true;
-  while (loop) {
-    rbtParent = getBSTNODE(parent);
-    rbtSibling = getBSTNODE(sibling);
-    rbtNephew = getBSTNODE(nephew);
-    rbtNiece = getBSTNODE(niece);
-
-    if (nodesAreEqual(getBSTroot(tree), x)) break;
-    RBTNODE *rbtX = getBSTNODE(x);
-    if (rbtX->color == 'R') break;
-    if (rbtSibling->color == 'R' || sibling == NULL) {
-      rbtParent->color = 'R';
-      rbtSibling->color = 'B';
-
-      rotate(tree, sibling, getBSTNODEparent(sibling));
-    }
-    else if (rbtNephew->color == 'R') {
-      rbtSibling->color = rbtParent->color;
-      rbtParent->color = 'B';
-      rbtNephew->color = 'B';
-
-      rotate(tree, sibling, getBSTNODEparent(sibling));
-
+    else if (getColor(nephew) == 'R') {
+      setColor(sibling, getColor(parent));
+      setColor(parent, 'B');
+      setColor(nephew, 'B');
+      rotate(t, sibling, parent);
       break;
     }
-    else if (rbtNiece->color == 'R') {
-      rbtNiece->color = 'B';
-      rbtSibling->color = 'R';
-
-      rotate(tree, niece, getBSTNODEparent(niece));
+    else if (getColor(niece) == 'R') {
+      setColor(niece, 'B');
+      setColor(sibling, 'R');
+      rotate(t, niece, sibling);
     }
     else {
-      rbtSibling->color = 'R';
+      setColor(sibling, 'R');
       x = parent;
     }
   }
-  //setRBTNODEcolor(getBSTNODE(x), 'B');   //FIXME: this should be outside the loop, there might be a screwed up bracket
-  RBTNODE *xx = getBSTNODE(x);
-  xx->color = 'B';
+  setColor(x, 'B');
 }
