@@ -3,17 +3,22 @@
 # The University of Alabama
 
 OPTS = -Wall -Wextra -std=c99
-OBJS = bst.o rbt.o string.o queue.o scanner.o cda.o gt.o trees.o real.o
+TYPE_OBJS = real.o string.o
+UTIL_OBJS = scanner.o trees.o
+STRUCT_OBJS = cda.o queue.o bst.o rbt.o gt.o
+TEST_OBJS = test-bst.o test-rbt.o
+TEST_EXES = bstTest rbtTest
+OBJECT_BUNDLE = $(TYPE_OBJS) $(STRUCT_OBJS) $(UTIL_OBJS)
 # other objs Below
 # TESTOBJS = tests...
-TESTEXES = runBSTtest
 
-trees: $(OBJS)
-	gcc $(OPTS) $(OBJS) -o trees -lm
+trees: $(OBJECT_BUNDLE)
+	gcc $(OPTS) $(OBJECT_BUNDLE) -o trees -lm
 
-test: trees
+test: trees $(TEST_OBJS)
 	#./bstTest
-	./trees
+	./rbtTest
+	#./trees
 
 trees.o: trees.c
 	gcc $(OPTS) trees.c -c -lm
@@ -51,5 +56,8 @@ clean:
 #******************************************************************************#
 # *** TEST OBJECTS *** #
 #******************************************************************************#
-test-bst.o: bst.o
-	gcc $(OPTS) $(OBJS) bstTest.c -lm -o bstTest -lm
+test-bst.o: $(OBJECT_BUNDLE)
+	gcc $(OPTS) bst.o real.o queue.o cda.o bstTest.c -lm -o bstTest
+
+test-rbt.o: $(OBJECT_BUNDLE)
+	gcc $(OPTS) rbtTest.c rbt.o bst.o real.o cda.o queue.o -lm -o rbtTest
