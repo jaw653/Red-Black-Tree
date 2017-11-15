@@ -16,7 +16,7 @@ trees: $(OBJECT_BUNDLE)
 	gcc $(OPTS) $(OBJECT_BUNDLE) -o trees -lm
 
 test: trees $(TEST_OBJS)
-	#./bstTest
+	./bstTest
 	./rbtTest
 	#./trees
 
