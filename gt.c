@@ -58,7 +58,7 @@ void insertGT(GT *t, void *value) {
   }
 
   t->totalWords += 1;
-  printf("totalWords is: %d\n", t->totalWords);
+//  printf("totalWords is: %d\n", t->totalWords);
 }
 
 int findGT(GT *t, void *value) {
