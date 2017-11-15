@@ -22,6 +22,7 @@ int main(void) {
   insertValue(tree, 4);
   insertValue(tree, 5);
   insertValue(tree, 15);
+  insertValue(tree, 8);
 
   displayTree(tree);
 
