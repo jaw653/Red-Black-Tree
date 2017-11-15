@@ -39,7 +39,7 @@ int main(void) {
     displayTree(tree);
 
     printStatistics(tree);
-/*
+
     printf("attempting to find value 2...\n");
     BSTNODE *foundNode = findBST(tree, newREAL(2));
     if (foundNode)
@@ -48,7 +48,7 @@ int main(void) {
       printf("node not found :(\n");
 
     printf("\n");
-*/
+
     printf("Attempting to delete all values in tree, then make it display EMPTY\n");
     printf("original size is: %d\n", sizeBST(tree));
 /*
