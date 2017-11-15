@@ -47,9 +47,12 @@ static void rotate(BST *, BSTNODE *, BSTNODE *);
 static BSTNODE *getSibling(BSTNODE *);
 static BSTNODE *getUncle(BSTNODE *);
 static BSTNODE *getGrandParent(BSTNODE *);
+static BSTNODE *getNephew(BSTNODE *);
+static BSTNODE *getNiece(BSTNODE *);
 
 /*** Fixup Routine Functions ***/
 static void insertionFixUp(BST *, BSTNODE *);
+static void deletionFixUp(BST *, BSTNODE *);
 
 
 
@@ -123,7 +126,23 @@ int findRBT(RBT *t, void *value) {
 
 
 void deleteRBT(RBT *t, void *value) {
+  RBTNODE *nodeToDelete = newRBTNODE(value, t->display, t->comparator);
 
+  BSTNODE *find = findBST(t->tree, nodeToDelete);
+
+  /* As long as it's in the tree, delete value */
+  if (find != NULL) {
+    RBTNODE *decrementNode = getBSTNODE(find);
+    decrementNode->frequency -= 1;
+
+    if (decrementNode->frequency <= 0) {
+      BSTNODE *leaf = swapToLeafBST(t->tree, find);
+      //deletionFixUp(t->tree, leaf);
+      //pruneLeafBST(t->tree, leaf);
+
+    }
+    t->totalWords -= 1;
+  }
 }
 
 int sizeRBT(RBT *t) {
@@ -430,6 +449,25 @@ static BSTNODE *getGrandParent(BSTNODE *node) {
   return getBSTNODEparent(parent);
 }
 
+static BSTNODE *getNephew(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+
+  if (isLeftChild(node))
+    return getBSTNODEright(getSibling(node));
+  else
+    return getBSTNODEleft(getSibling(node));
+}
+
+static BSTNODE *getNiece(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+
+  if (isLeftChild(node))
+    return getBSTNODEleft(getSibling(node));
+  else
+    return getBSTNODEright(getSibling(node));
+}
 
 
 
@@ -477,4 +515,43 @@ static void insertionFixUp(BST *t, BSTNODE *x) {
   //color root black
   BSTNODE *root = getBSTroot(t);
   setColor(root, 'B');
+}
+
+static void deletionFixUp(BST *t, BSTNODE *x) {
+  while (1) {
+    BSTNODE *parent = getBSTNODEparent(x);
+    BSTNODE *sibling = getSibling(x);
+    BSTNODE *niece = getNiece(x);
+    BSTNODE *nephew = getNephew(x);
+
+    // If x is the root, break
+    if (nodesAreEqual(x, parent))
+      break;
+
+    if (getColor(x) == 'R')
+      break;
+
+    if (getColor(sibling) == 'R') {
+      setColor(parent, 'R');
+      setColor(sibling, 'B');
+      rotate(t, sibling, parent);
+    }
+    else if (getColor(nephew) == 'R') {
+      setColor(sibling, getColor(parent));
+      setColor(parent, 'B');
+      setColor(nephew, 'B');
+      rotate(t, sibling, parent);
+      break;
+    }
+    else if (getColor(niece) == 'R') {
+      setColor(niece, 'B');
+      setColor(sibling, 'R');
+      rotate(t, niece, sibling);
+    }
+    else {
+      setColor(sibling, 'R');
+      x = parent;
+    }
+  }
+  setColor(x, 'B');
 }
