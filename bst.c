@@ -313,6 +313,23 @@ static void displayNODE(BST *t, FILE *fp, BSTNODE *node, bool isRoot) {
     else
       parLeftVal = NULL;
 
+    if (nodeVal == NULL) {
+      if (parLeftVal == NULL) {
+        fprintf(fp, "l");
+        return;
+      }
+      else {
+        fprintf(fp, "r");
+        return;
+      }
+    }
+    else {
+      if (parLeftVal == NULL) {
+        fprintf(fp, "r");
+        return;
+      }
+    }
+
     if (t->comparator(nodeVal, parLeftVal) == 0)
       fprintf(fp, "l");
     else
@@ -414,6 +431,10 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
     return;
   }
   else {
+
+  }
+/*
+  else {
     QUEUE *nodesQueue = newQUEUE(NULL);
     int nodesInCurrLevel = 1;
     int nodesInNextLevel = 0;
@@ -459,6 +480,7 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
       }
     }
   }
+*/
 }
 
 static BSTNODE *copyNODE(BSTNODE *giver) {
