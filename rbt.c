@@ -137,9 +137,8 @@ void deleteRBT(RBT *t, void *value) {
 
     if (decrementNode->frequency <= 0) {
       BSTNODE *leaf = swapToLeafBST(t->tree, find);
-      //deletionFixUp(t->tree, leaf);
-      //pruneLeafBST(t->tree, leaf);
-
+      deletionFixUp(t->tree, leaf);
+      pruneLeafBST(t->tree, leaf);
     }
     t->totalWords -= 1;
   }
