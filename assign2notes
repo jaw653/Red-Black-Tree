@@ -1,12 +1,15 @@
 ---------------
 Condensed to-do
 ---------------
+-testBst.c is throwing a weird seg fault
 -test findRBT()
 -IMPORTANT: in insertRBT, when the pseudocode says something like x = grandparent, I'm currently setting everyint in x = to its colleague in grandparent except for value; this may cause some major issues...
 -IMPORTANT: fix the displayBST function weird edge case (possibly using 2 queues)
 -finish trees.c
 -fix deleterbt
 
+-it says something in the rubric about running trees w/ or w/o "./". figure this out.
+-when you remove real.h (if you have to?) make sure the make test still works...
 -in testbst.sh, there is a problem with deleting a value, fix this
 -finalize makefile (make test, add anything extra needed)
 -remove #include of real.h or any other unneccesary/illegal files from rbt/gt/bst/trees(?)
