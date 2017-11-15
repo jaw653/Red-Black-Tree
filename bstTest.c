@@ -9,6 +9,8 @@
 #include "real.h"
 
 static void displayTree(BST *);
+static void insertValue(BST *, int);
+static void printStatistics(BST *);
 
 int main(void) {
     BST *tree = newBST(displayREAL, compareREAL, NULL);
@@ -16,50 +18,27 @@ int main(void) {
 
     displayTree(tree);
 
-    insertBST(tree, newREAL(4));
-    printf("4 insert successful\n");
-
-    insertBST(tree, newREAL(5));
-    printf("5 inserts successful\n");
-
-    insertBST(tree, newREAL(7));
-    printf("7 inserts successful\n");
-
-    insertBST(tree, newREAL(3));
-    printf("3 inserts successful\n");
-
-    insertBST(tree, newREAL(2));
-    printf("2 inserts successful\n");
-
-    insertBST(tree, newREAL(8));
-    printf("8 inserts successful\n");
-
-    insertBST(tree, newREAL(6));
-    printf("6 inserts successful\n");
-
-    insertBST(tree, newREAL(9));
-    printf("9 inserts successful\n");
-
-    insertBST(tree, newREAL(1));
-    printf("1 inserts successful\n");
-
-    insertBST(tree, newREAL(0));
-    printf("0 inserts successful\n");
+    insertValue(tree, 4);
+    insertValue(tree, 5);
+    insertValue(tree, 7);
+    insertValue(tree, 3);
+    insertValue(tree, 2);
+    insertValue(tree, 8);
+    insertValue(tree, 6);
+    insertValue(tree, 9);
+    insertValue(tree, 1);
+    insertValue(tree, 0);
 
     displayTree(tree);
 
-    printf("print statistics...\n");
-    statisticsBST(stdout, tree);
-    printf("\n");
+    printStatistics(tree);
 
     printf("deleting the root via getBSTroot method...\n");
     deleteBST(tree, getBSTNODE(getBSTroot(tree)));
 
     displayTree(tree);
 
-    printf("printing statistics...\n");
-    statisticsBST(stdout, tree);
-    printf("\n");
+    printStatistics(tree);
 
     printf("attempting to find value 2...\n");
     BSTNODE *foundNode = findBST(tree, newREAL(2));
@@ -96,4 +75,16 @@ static void displayTree(BST *tree) {
   printf("tree is:\n");
   displayBST(stdout, tree);
   printf("\n\n");
+}
+
+static void insertValue(BST *tree, int a) {
+  printf("Inserting %d...\n", a);
+  insertBST(tree, newREAL(a));
+  printf("Insert of %d successful.\n", a);
+}
+
+static void printStatistics(BST *tree) {
+  printf("printing statistics...\n");
+  statisticsBST(stdout, tree);
+  printf("\n");
 }
