@@ -451,7 +451,7 @@ static void insertionFixUp(BST *t, BSTNODE *x) {
     if (getColor(uncle) == 'R') {
       setColor(parent, 'B');
       setColor(uncle, 'B');
-      setColor(grandParent, 'B');
+      setColor(grandParent, 'R');
       x = grandParent;
     }
     else {
