@@ -51,7 +51,7 @@ real.o: real.c real.h
 	gcc $(OPTS) -c real.c -lm
 
 clean:
-	rm -rf *.o $(TESTEXES) ./a.out trees bstTest
+	rm -rf *.o $(TEST_EXES) ./a.out trees
 
 #******************************************************************************#
 # *** TEST OBJECTS *** #
