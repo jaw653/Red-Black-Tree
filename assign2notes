@@ -1,6 +1,7 @@
 ---------------
 Condensed to-do
 ---------------
+-test findRBT()
 -IMPORTANT: in insertRBT, when the pseudocode says something like x = grandparent, I'm currently setting everyint in x = to its colleague in grandparent except for value; this may cause some major issues...
 -IMPORTANT: fix the displayBST function weird edge case (possibly using 2 queues)
 -finish trees.c
@@ -16,6 +17,7 @@ Condensed to-do
 ------------
 Action List:
 ------------
+-edge case --> deletionfixup() the root and makesure insertionfixup on the root is working
 -test right rotates for inserting in rbt
 -look into which nodes are changing color for rbt insertion fixup.
 	--looks like i just have to do insertionfixup, deletionfixup, and then testing
