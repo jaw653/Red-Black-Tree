@@ -78,19 +78,27 @@ int main(int argc, char *argv[]) {
   if (strcmp(argv[argc - (argc-1)], "-g") == 0) {
     GT *wordsTree = newGT(displaySTRING, compareSTRING);
     populateGT(corpus, wordsTree);
-    if (outputFile == NULL)
+    if (outputFile == NULL) {
       executeCommandsGT(commands, stdout, wordsTree);
-    else
+      fprintf(stdout, "\n");
+    }
+    else {
       executeCommandsGT(commands, outputFile, wordsTree);
+      fprintf(outputFile, "\n");
+    }
   }
   else {
     RBT *wordsTree = newRBT(displaySTRING, compareSTRING);
     populateRBT(corpus, wordsTree);
 
-    if (outputFile == NULL)
+    if (outputFile == NULL) {
       executeCommandsRBT(commands, stdout, wordsTree);
-    else
+      fprintf(stdout, "\n");
+    }
+    else {
       executeCommandsRBT(commands, outputFile, wordsTree);
+      fprintf(outputFile, "\n");
+    }
   }
 
   if (corpus) fclose(corpus);
