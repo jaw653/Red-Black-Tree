@@ -238,7 +238,6 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
         if (!stringIsEmpty(str)) {
           str = getEntirePhrase(fp, str);
           str = cleanString(str);
-          printf("command string is: %s\n", str);
           insertGT(tree, newSTRING(str));
         }
       }
