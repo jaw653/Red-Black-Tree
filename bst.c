@@ -31,7 +31,7 @@ static BSTNODE *insertHelper(BST *, BSTNODE *, BSTNODE *, void *, bool);
 static BSTNODE *findHelper(BSTNODE *, int (*)(void *, void *), void *);
 //static BSTNODE *traverseRight(BST *, BSTNODE *, bool);
 //static BSTNODE *traverseLeft(BST *, BSTNODE *, bool);
-//static bool isLeaf(BSTNODE *);
+static bool isLeaf(BSTNODE *);
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t);
 static BSTNODE *copyNODE(BSTNODE *giver);
 static int findMinDepthBST(BSTNODE *root);
@@ -61,6 +61,8 @@ void *getBSTNODE(BSTNODE *n) {
 }
 
 void setBSTNODE(BSTNODE *n, void *value) {
+  if (n == NULL)
+    return;
   n->value = value;
 }
 
@@ -71,6 +73,8 @@ BSTNODE *getBSTNODEleft(BSTNODE *n) {
 }
 
 void setBSTNODEleft(BSTNODE *n, BSTNODE *replacement) {
+  if (n == NULL)
+    return;
   n->left = replacement;
 /*
   if (n) printf("n is good\n");
@@ -94,6 +98,9 @@ BSTNODE *getBSTNODEright(BSTNODE *n) {
 }
 
 void setBSTNODEright(BSTNODE *n, BSTNODE *replacement) {
+  //if (n == NULL) printf("n is null\n");
+  if (n == NULL)
+    return;
   n->right = replacement;
 /*
   if (replacement != NULL) {
@@ -115,6 +122,8 @@ BSTNODE *getBSTNODEparent(BSTNODE *n) {
 }
 
 void setBSTNODEparent(BSTNODE *n, BSTNODE *replacement) {
+  if (n == NULL)
+    return;
   n->parent = replacement;
 /*
   n->parent->value = replacement->value;
@@ -155,10 +164,13 @@ BST *newBST(
 }
 
 void setBSTroot(BST *t, BSTNODE *replacement) {
+  t->root = replacement;
+/*
   t->root->value = replacement->value;
   t->root->parent = replacement->parent;
   t->root->left = replacement->left;
   t->root->right = replacement->right;
+*/
 }
 
 BSTNODE *getBSTroot(BST *t) {
@@ -417,14 +429,14 @@ static BSTNODE *traverseLeft(BST *t, BSTNODE *node, bool useSwapper) {
 
   return node;
 }
-
+*/
 static bool isLeaf(BSTNODE *node) {
+  if (node == NULL) return false;
   if (!node->left && !node->right) return true;
   else return false;
 }
-*/
-static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
 
+static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   //if t->size == 0...
   if (root == NULL) {
     fprintf(fp, "EMPTY\n");
@@ -451,13 +463,20 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
 //        printf("FLAG\n");
 
         if (isRoot) {
-          fprintf(fp, "%d: ", 0);
+          fprintf(fp, "%d:", 0);
+          fprintf(fp, " ");
+          if (isLeaf(currNode))
+            fprintf(fp, "=");
           displayNODE(t, fp, currNode, true);
           isRoot = false;
         }
         else {
+          fprintf(fp, " ");
+          if (isLeaf(currNode))
+            fprintf(fp, "=");
           displayNODE(t, fp, currNode, false);
-          if (nodesInCurrLevel != 0) fprintf(fp, " ");
+          //printf("nodesInCurrLevel is: %d\n", nodesInCurrLevel);
+          //if (nodesInCurrLevel != 0) fprintf(fp, " ");
         }
       }
       enqueue(nodesQueue, getBSTNODEleft(currNode));
@@ -467,7 +486,7 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
         i += 1;
         if (i == height) break;
         fprintf(fp, "\n");
-        fprintf(fp, "%d: ", printLevel);
+        fprintf(fp, "%d:", printLevel);
 
         nodesInCurrLevel = nodesInNextLevel;
         nodesInNextLevel = 0;
@@ -517,13 +536,13 @@ static int findMinDepthBST(BSTNODE *root) {
 
 static int findMaxDepthBST(BSTNODE *root) {
   if (root == NULL) return 0;
-  else {
-    int L_depth, R_depth;
-    L_depth = findMaxDepthBST(getBSTNODEleft(root));
-    R_depth = findMaxDepthBST(getBSTNODEright(root));
+  //  printf("flag\n");
 
-    return (L_depth>R_depth?L_depth:R_depth) + 1;
-  }
+  int L_depth, R_depth;
+  L_depth = findMaxDepthBST(getBSTNODEleft(root));
+  R_depth = findMaxDepthBST(getBSTNODEright(root));
+
+  return (L_depth>R_depth?L_depth:R_depth) + 1;
 }
 
 /*

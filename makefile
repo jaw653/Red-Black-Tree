@@ -6,7 +6,7 @@ OPTS = -Wall -Wextra -std=c99
 TYPE_OBJS = real.o string.o
 UTIL_OBJS = scanner.o trees.o
 STRUCT_OBJS = cda.o queue.o bst.o rbt.o gt.o
-TEST_OBJS = test-bst.o test-rbt.o
+#TEST_OBJS = test-bst.o test-rbt.o
 TEST_EXES = bstTest rbtTest
 OBJECT_BUNDLE = $(TYPE_OBJS) $(STRUCT_OBJS) $(UTIL_OBJS)
 # other objs Below
@@ -15,10 +15,12 @@ OBJECT_BUNDLE = $(TYPE_OBJS) $(STRUCT_OBJS) $(UTIL_OBJS)
 trees: $(OBJECT_BUNDLE)
 	gcc $(OPTS) $(OBJECT_BUNDLE) -o trees -lm
 
-test: trees $(TEST_OBJS)
-	./bstTest
-	./rbtTest
+test: trees
+	#./bstTest
+	#./rbtTest
 	#./trees
+	#trees -g assign2Tests/trees.0 assign2Tests/trees.1
+	trees -r assign2Tests/trees.0 assign2Tests/trees.1
 
 trees.o: trees.c
 	gcc $(OPTS) trees.c -c -lm
@@ -56,8 +58,10 @@ clean:
 #******************************************************************************#
 # *** TEST OBJECTS *** #
 #******************************************************************************#
-test-bst.o: $(OBJECT_BUNDLE)
-	gcc $(OPTS) bst.o real.o queue.o cda.o bstTest.c -lm -o bstTest
+#test-bst.o: $(OBJECT_BUNDLE)
+#	gcc $(OPTS) bst.o real.o queue.o cda.o bstTest.c -lm -o bstTest
 
-test-rbt.o: $(OBJECT_BUNDLE)
-	gcc $(OPTS) rbtTest.c rbt.o bst.o real.o cda.o queue.o -lm -o rbtTest
+#test-rbt.o: $(OBJECT_BUNDLE)
+#	gcc $(OPTS) rbtTest.c rbt.o bst.o real.o cda.o queue.o -lm -o rbtTest
+
+test-0.o: $(OBJECT_BUNDLE)

@@ -193,8 +193,14 @@ static RBTNODE *newRBTNODE(void *value, void (*d)(FILE *, void *), int (*c)(void
 static void displayRBTNODE(FILE *fp, void *value) {
   RBTNODE *node = value;
   node->display(fp, node->value);
+
+  if (node->frequency > 1) {
+    fprintf(fp, "-%d", node->frequency);
+  }
   fprintf(fp, "-");
   fprintf(fp, "%c", node->color);
+  //if (getBSTNODEleft(node)) printf(" has left child");
+  //if (getBSTNODEright(node)) printf(" has right child");
 }
 
 static void swapRBTNODE(BSTNODE *n1, BSTNODE *n2) {
@@ -332,6 +338,35 @@ static bool nodesAreLinear(BSTNODE *x, BSTNODE *parent) {
 
 static void leftRotate(BST *tree, BSTNODE *x) {
   BSTNODE *y = getBSTNODEright(x);
+  BSTNODE *root = getBSTroot(tree);
+
+  if (nodesAreEqual(x, root)) {
+    //printf("root rotate\n");
+    setBSTNODEparent(y, y);
+    setBSTNODEparent(getBSTNODEleft(y), x);
+    setBSTNODEright(x, getBSTNODEleft(y));
+    setBSTNODEleft(y, x);
+    setBSTNODEparent(x, y);
+    setBSTroot(tree, y);
+  }
+  else if (nodesAreEqual(x, getBSTNODEright(getBSTNODEparent(x)))) {
+    setBSTNODEright(getBSTNODEparent(x), y);
+    setBSTNODEparent(y, getBSTNODEparent(x));
+    setBSTNODEright(x, getBSTNODEleft(y));
+    setBSTNODEparent(getBSTNODEleft(y), x);
+    setBSTNODEleft(y, x);
+    setBSTNODEparent(x, y);
+  }
+  else {
+    setBSTNODEleft(getBSTNODEparent(x), y);
+    setBSTNODEparent(y, getBSTNODEparent(x));
+    setBSTNODEright(x, getBSTNODEleft(y));
+    setBSTNODEparent(getBSTNODEleft(y), x);
+    setBSTNODEleft(y, x);
+    setBSTNODEparent(x, y);
+  }
+/*
+  BSTNODE *y = getBSTNODEright(x);
   setBSTNODEright(x, getBSTNODEleft(y));
 
   if (getBSTNODEleft(y) != NULL) {
@@ -359,9 +394,38 @@ static void leftRotate(BST *tree, BSTNODE *x) {
 
 
   setBSTNODEparent(x, y);
+*/
 }
 
 static void rightRotate(BST *tree, BSTNODE *x) {
+  BSTNODE *y = getBSTNODEleft(x);
+  BSTNODE *root = getBSTroot(tree);
+
+  if (nodesAreEqual(x, root)) {
+    setBSTNODEparent(y, y);
+    setBSTNODEparent(getBSTNODEright(y), x);
+    setBSTNODEleft(x, getBSTNODEright(y));
+    setBSTNODEright(y, x);
+    setBSTNODEparent(x, y);
+    setBSTroot(tree, y);
+  }
+  else if (nodesAreEqual(x, getBSTNODEleft(getBSTNODEparent(x)))) {
+    setBSTNODEleft(getBSTNODEparent(x), y);
+    setBSTNODEparent(y, getBSTNODEparent(x));
+    setBSTNODEleft(x, getBSTNODEright(y));
+    setBSTNODEparent(getBSTNODEright(y), x);
+    setBSTNODEright(y, x);
+    setBSTNODEparent(x, y);
+  }
+  else {
+    setBSTNODEright(getBSTNODEparent(x), y);
+    setBSTNODEparent(y, getBSTNODEparent(x));
+    setBSTNODEleft(x, getBSTNODEright(y));
+    setBSTNODEparent(getBSTNODEright(y), x);
+    setBSTNODEright(y, x);
+    setBSTNODEparent(x, y);
+  }
+/*
   BSTNODE *y = getBSTNODEleft(x);
   setBSTNODEleft(x, getBSTNODEright(y));
 
@@ -371,7 +435,7 @@ static void rightRotate(BST *tree, BSTNODE *x) {
 
   setBSTNODEparent(y, getBSTNODEparent(x));
 
-  if (getBSTNODEparent(x) == NULL) {
+  if (nodesAreEqual(x, getBSTNODEparent(x))) {
     setBSTroot(tree, y);
   }
   else if (nodesAreEqual(x, getBSTNODEright(getBSTNODEparent(x)))) {
@@ -384,6 +448,7 @@ static void rightRotate(BST *tree, BSTNODE *x) {
   setBSTNODEright(y, x);
 
   setBSTNODEparent(x, y);
+*/
 }
 
 
@@ -489,16 +554,24 @@ static void insertionFixUp(BST *t, BSTNODE *x) {
       setColor(parent, 'B');
       setColor(uncle, 'B');
       setColor(grandParent, 'R');
+
       x = grandParent;
+      //setBSTNODE(x, getBSTNODE(grandParent));
     }
     else {
+
       //if x and parent are not linear
       if (!nodesAreLinear(x, parent)) {
         BSTNODE *oldparent = parent;
+        //BSTNODE *oldparent;
+        //setBSTNODE(oldparent, getBSTNODE(parent));
         BSTNODE *oldx = x;
+        //setBSTNODE(oldx, getBSTNODE(x));
 
-        rotate(t, x, parent);
+        rotate(t, x, parent);           //FIXME: this rotate is where it's segfaulting
 
+        //setBSTNODE(x, getBSTNODE(oldparent));
+        //setBSTNODE(parent, getBSTNODE(oldx));
         x = oldparent;
         parent = oldx;
       }

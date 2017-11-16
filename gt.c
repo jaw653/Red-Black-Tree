@@ -58,7 +58,7 @@ void insertGT(GT *t, void *value) {
   }
 
   t->totalWords += 1;
-  printf("totalWords is: %d\n", t->totalWords);
+//  printf("totalWords is: %d\n", t->totalWords);
 }
 
 int findGT(GT *t, void *value) {
@@ -124,8 +124,10 @@ static GTNODE *newGTNODE(void *value, void (*d)(FILE *, void *), int (*c)(void *
 static void displayGTNODE(FILE *fp, void *value) {
   GTNODE *node = value;
   node->display(fp, node->value);
-  fprintf(fp, "-");
-  fprintf(fp, "%d", node->frequency);
+  if (node->frequency > 1) {
+    fprintf(fp, "-");
+    fprintf(fp, "%d", node->frequency);
+  }
 }
 
 static void swapGTNODE(BSTNODE *n1, BSTNODE *n2) {
@@ -159,33 +161,23 @@ static int compareGTNODE(void *n1, void *n2) {
 }
 
 static int findMinDepthGT(BSTNODE *root) {
-  if (root == NULL) {
+  if (root == NULL)
     return 0;
-  }
-  if (getBSTNODEleft(root) == NULL && getBSTNODEright(root) == NULL) {
-    return 1;
-  }
-  if (!getBSTNODEleft(root)) {
-    return findMinDepthGT(getBSTNODEright(root)) + 1;
-  }
-  if (!getBSTNODEright(root)) {
-    return findMinDepthGT(getBSTNODEleft(root)) + 1;
-  }
 
-  return min(findMinDepthGT(getBSTNODEleft(root)), findMinDepthGT(getBSTNODEright(root))) + 1;
+  int Lmin = findMinDepthGT(getBSTNODEleft(root));
+  int Rmin = findMinDepthGT(getBSTNODEright(root));
+
+  return (Lmin<Rmin?Lmin:Rmin) + 1;
 }
 
 static int findMaxDepthGT(BSTNODE *root) {
-  if (root == NULL) return 0;
-  else {
-    int L_depth = findMaxDepthGT(getBSTNODEleft(root));
-    int R_depth = findMaxDepthGT(getBSTNODEright(root));
+  if (root == NULL)
+    return 0;
 
-    if (L_depth > R_depth) {
-      return L_depth + 1;
-    }
-    else return R_depth + 1;
-  }
+  int Ldepth = findMaxDepthGT(getBSTNODEleft(root));
+  int Rdepth = findMaxDepthGT(getBSTNODEright(root));
+
+  return (Ldepth>Rdepth?Ldepth:Rdepth) + 1;
 }
 
 static int min(int a, int b) {
