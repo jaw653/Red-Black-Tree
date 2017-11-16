@@ -14,6 +14,30 @@ int main(void) {
   RBT *tree = newRBT(displayREAL, compareREAL);
   printf("rbt tree successfully initiailized\n\n");
 
+  insertValue(tree, 11);  //the
+  insertValue(tree, 10);  //quickity quick
+  insertValue(tree, 2);   //brown
+
+  printf("size of tree is: %d\n", sizeRBT(tree));
+  displayTree(tree);
+
+  insertValue(tree, 4);   //fox
+  insertValue(tree, 7);   //jumped
+  insertValue(tree, 9);   //over
+  insertValue(tree, 11);  //the
+  insertValue(tree, 5);   //girl
+  insertValue(tree, 1);   //and
+  insertValue(tree, 6);   //her
+  insertValue(tree, 8);   //lazy
+  insertValue(tree, 8);   //lazy
+  insertValue(tree, 3);   //dog
+
+  displayTree(tree);
+
+
+
+
+/*
   insertValue(tree, 6);
   insertValue(tree, 8);
   insertValue(tree, 3);
@@ -33,7 +57,7 @@ int main(void) {
   findValue(tree, 8);
 
   printf("Size is: %d\n", sizeRBT(tree));
-
+*/
   return 0;
 }
 
