@@ -261,31 +261,21 @@ static int min(int a, int b) {
 static int findMinDepthRBT(BSTNODE *root) {
   if (root == NULL) {
     return 0;
-  }
-  if (getBSTNODEleft(root) == NULL && getBSTNODEright(root) == NULL) {
-    return 1;
-  }
-  if (!getBSTNODEleft(root)) {
-    return findMinDepthRBT(getBSTNODEright(root)) + 1;
-  }
-  if (!getBSTNODEright(root)) {
-    return findMinDepthRBT(getBSTNODEleft(root)) + 1;
-  }
 
-  return min(findMinDepthRBT(getBSTNODEleft(root)), findMinDepthRBT(getBSTNODEright(root))) + 1;
+  int Lmin = findMinDepthRBT(getBSTNODEleft(root));
+  int Rmin = findMinDepthRBT(getBSTNODEright(root));
+
+  return (Lmin<Rmin?Lmin:Rmin) + 1;
 }
 
 static int findMaxDepthRBT(BSTNODE *root) {
-  if (root == NULL) return 0;
-  else {
-    int L_depth = findMaxDepthRBT(getBSTNODEleft(root));
-    int R_depth = findMaxDepthRBT(getBSTNODEright(root));
+  if (root == NULL)
+    return 0;
 
-    if (L_depth > R_depth) {
-      return L_depth + 1;
-    }
-    else return R_depth + 1;
-  }
+  int Ldepth = findMaxDepthRBT(getBSTNODEleft(root));
+  int Rdepth = findMaxDepthRBT(getBSTNODEright(root));
+
+  return (Ldepth>Rdepth?Ldepth:Rdepth) + 1;
 }
 
 
