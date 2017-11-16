@@ -526,6 +526,8 @@ static int findMinDepthBST(BSTNODE *root) {
 static int findMaxDepthBST(BSTNODE *root) {
   if (root == NULL) return 0;
   else {
+  //  printf("flag\n");
+
     int L_depth, R_depth;
     L_depth = findMaxDepthBST(getBSTNODEleft(root));
     R_depth = findMaxDepthBST(getBSTNODEright(root));
