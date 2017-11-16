@@ -20,7 +20,8 @@ test: trees
 	#./rbtTest
 	#./trees
 	#trees -g assign2Tests/trees.0 assign2Tests/trees.1
-	trees -r assign2Tests/trees.0 assign2Tests/trees.1
+	#trees -r assign2Tests/trees.0 assign2Tests/trees.1
+	trees -g assign2Tests/test-0-0.corpus assign2Tests/test-0-0.go
 
 trees.o: trees.c
 	gcc $(OPTS) trees.c -c -lm
