@@ -193,6 +193,10 @@ static RBTNODE *newRBTNODE(void *value, void (*d)(FILE *, void *), int (*c)(void
 static void displayRBTNODE(FILE *fp, void *value) {
   RBTNODE *node = value;
   node->display(fp, node->value);
+
+  if (node->frequency > 1) {
+    fprintf(fp, "-%d", node->frequency);
+  }
   fprintf(fp, "-");
   fprintf(fp, "%c", node->color);
   //if (getBSTNODEleft(node)) printf(" has left child");
@@ -335,10 +339,6 @@ static bool nodesAreLinear(BSTNODE *x, BSTNODE *parent) {
 static void leftRotate(BST *tree, BSTNODE *x) {
   BSTNODE *y = getBSTNODEright(x);
   BSTNODE *root = getBSTroot(tree);
-  RBTNODE *xval = getBSTNODE(x);
-  RBTNODE *yval = getBSTNODE(y);
-  RBTNODE *xparent = getBSTNODE(getBSTNODEparent(x));
-  printf("x is: %lf, y is: %lf, and xparent is: %lf\n", getREAL(xval->value), getREAL(yval->value), getREAL(xparent->value));
 
   if (nodesAreEqual(x, root)) {
     //printf("root rotate\n");
@@ -350,7 +350,6 @@ static void leftRotate(BST *tree, BSTNODE *x) {
     setBSTroot(tree, y);
   }
   else if (nodesAreEqual(x, getBSTNODEright(getBSTNODEparent(x)))) {
-    printf("middle\n");
     setBSTNODEright(getBSTNODEparent(x), y);
     setBSTNODEparent(y, getBSTNODEparent(x));
     setBSTNODEright(x, getBSTNODEleft(y));
@@ -359,7 +358,6 @@ static void leftRotate(BST *tree, BSTNODE *x) {
     setBSTNODEparent(x, y);
   }
   else {
-    printf("other else\n");
     setBSTNODEleft(getBSTNODEparent(x), y);
     setBSTNODEparent(y, getBSTNODEparent(x));
     setBSTNODEright(x, getBSTNODEleft(y));
@@ -542,8 +540,6 @@ static BSTNODE *getNiece(BSTNODE *node) {
 /******************************************************************************/
 static void insertionFixUp(BST *t, BSTNODE *x) {
   while (1) {
-    RBTNODE *xval = getBSTNODE(x);
-    printf("insertionFixUp x is: %lf\n", getREAL(xval->value));
     BSTNODE *parent = getBSTNODEparent(x);
     BSTNODE *uncle = getUncle(x);
     BSTNODE *grandParent = getGrandParent(x);
@@ -582,10 +578,7 @@ static void insertionFixUp(BST *t, BSTNODE *x) {
 
       setColor(parent, 'B');
       setColor(grandParent, 'R');
-      RBTNODE *parentv = getBSTNODE(parent);
-      RBTNODE *grandparentv = getBSTNODE(grandParent);
 
-      printf("parent/gp value passed to rotate are: %lf/%lf\n", getREAL(parentv->value), getREAL(grandparentv->value));
       rotate(t, parent, grandParent);
 
       break;
