@@ -167,15 +167,17 @@ static char *cleanString(char *str) {
 
 static char *getEntirePhrase(FILE *fp, char *str) {
   if (str[0] == '"') {
+    strcat(str, readToken(fp));
     while (str[strlen(str)-1] != '"') {
       strcat(str, " ");
       strcat(str, readToken(fp));
     }
-    str = removeQuotes(str);
+    //str = removeQuotes(str);
   }
 
   return str;
 }
+
 static char *removeQuotes(char *str) {
   int len = strlen(str);
   int i;
@@ -211,8 +213,14 @@ static void populateGT(FILE *fp, GT *tree) {
     char *str = readToken(fp);
 
     while (str) {
-      str = cleanString(str);
-      insertGT(tree, newSTRING(str));
+      //printf("str is: %s\n", str);
+      //if (!stringIsEmpty(str)) {
+        str = getEntirePhrase(fp, str);
+        str = cleanString(str);
+        printf("string to be inserted is: %s\n", str);
+        insertGT(tree, newSTRING(str));
+      //}
+      //printf("string to be inserted is: %s\n", str);
       str = readToken(fp);
     }
 //  }
@@ -223,6 +231,7 @@ static void populateRBT(FILE *fp, RBT *tree) {
     char *str = readToken(fp);
 
     while (str) {
+      str = getEntirePhrase(fp, str);
       str = cleanString(str);
       insertRBT(tree, newSTRING(str));
 
@@ -243,6 +252,7 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
         if (!stringIsEmpty(str)) {
           str = getEntirePhrase(fp, str);
           str = cleanString(str);
+          printf("command string is: %s\n", str);
           insertGT(tree, newSTRING(str));
         }
       }
