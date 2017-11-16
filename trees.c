@@ -19,7 +19,6 @@ static bool stringIsEmpty(char *);
 static int getFirstCharIndex(char *);
 static int getLastCharIndex(char *);
 static char *cleanString(char *);
-static char *removeQuotes(char *);
 //static bool fileIsEmpty(FILE *fp);
 static void populateGT(FILE *fp, GT *tree);
 static void populateRBT(FILE *fp, RBT *tree);
@@ -172,22 +171,9 @@ static char *getEntirePhrase(FILE *fp, char *str) {
       strcat(str, " ");
       strcat(str, readToken(fp));
     }
-    //str = removeQuotes(str);
   }
 
   return str;
-}
-
-static char *removeQuotes(char *str) {
-  int len = strlen(str);
-  int i;
-  char *newStr = malloc(sizeof(char) * 1000);
-
-  for (i = 1; i < len-1; i++) {
-    newStr[i-1] = str[i];
-  }
-
-  return newStr;
 }
 
 /*
@@ -217,7 +203,7 @@ static void populateGT(FILE *fp, GT *tree) {
       //if (!stringIsEmpty(str)) {
         str = getEntirePhrase(fp, str);
         str = cleanString(str);
-        printf("string to be inserted is: %s\n", str);
+  //      printf("string to be inserted is: %s\n", str);
         insertGT(tree, newSTRING(str));
       //}
       //printf("string to be inserted is: %s\n", str);
