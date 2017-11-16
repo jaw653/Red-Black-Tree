@@ -452,17 +452,20 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
 //        printf("FLAG\n");
 
         if (isRoot) {
-          fprintf(fp, "%d: ", 0);
+          fprintf(fp, "%d:", 0);
+          fprintf(fp, " ");
           if (isLeaf(currNode))
             fprintf(fp, "=");
           displayNODE(t, fp, currNode, true);
           isRoot = false;
         }
         else {
+          fprintf(fp, " ");
           if (isLeaf(currNode))
             fprintf(fp, "=");
           displayNODE(t, fp, currNode, false);
-          if (nodesInCurrLevel != 0) fprintf(fp, " ");
+          //printf("nodesInCurrLevel is: %d\n", nodesInCurrLevel);
+          //if (nodesInCurrLevel != 0) fprintf(fp, " ");
         }
       }
       enqueue(nodesQueue, getBSTNODEleft(currNode));
@@ -472,7 +475,7 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
         i += 1;
         if (i == height) break;
         fprintf(fp, "\n");
-        fprintf(fp, "%d: ", printLevel);
+        fprintf(fp, "%d:", printLevel);
 
         nodesInCurrLevel = nodesInNextLevel;
         nodesInNextLevel = 0;
