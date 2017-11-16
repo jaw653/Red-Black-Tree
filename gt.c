@@ -124,8 +124,10 @@ static GTNODE *newGTNODE(void *value, void (*d)(FILE *, void *), int (*c)(void *
 static void displayGTNODE(FILE *fp, void *value) {
   GTNODE *node = value;
   node->display(fp, node->value);
-  fprintf(fp, "-");
-  fprintf(fp, "%d", node->frequency);
+  if (node->frequency > 1) {
+    fprintf(fp, "-");
+    fprintf(fp, "%d", node->frequency);  
+  }
 }
 
 static void swapGTNODE(BSTNODE *n1, BSTNODE *n2) {
