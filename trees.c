@@ -200,12 +200,12 @@ static void populateGT(FILE *fp, GT *tree) {
 
     while (str) {
       //printf("str is: %s\n", str);
-      //if (!stringIsEmpty(str)) {
+      if (!stringIsEmpty(str)) {
         str = getEntirePhrase(fp, str);
         str = cleanString(str);
   //      printf("string to be inserted is: %s\n", str);
         insertGT(tree, newSTRING(str));
-      //}
+      }
       //printf("string to be inserted is: %s\n", str);
       str = readToken(fp);
     }
@@ -217,9 +217,11 @@ static void populateRBT(FILE *fp, RBT *tree) {
     char *str = readToken(fp);
 
     while (str) {
-      str = getEntirePhrase(fp, str);
-      str = cleanString(str);
-      insertRBT(tree, newSTRING(str));
+      if (!stringIsEmpty(str)) {
+        str = getEntirePhrase(fp, str);
+        str = cleanString(str);
+        insertRBT(tree, newSTRING(str));
+      }
 
       str = readToken(fp);
     }
