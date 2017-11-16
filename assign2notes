@@ -1,6 +1,9 @@
 ---------------
 Condensed to-do
 ---------------
+-need to be sure that empty strings are not being inserted
+-when cleaning hello5world, does it turn into hello world or helloworld?
+-remove include of math.h and remove -lm linking as long as it's not needed
 -minimum depth is incorrect for trees -g corpus commands
 -finish trees.c
 -make sure that you are cleaning "hello_1234_world" correctly
