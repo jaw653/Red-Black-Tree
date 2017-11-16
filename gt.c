@@ -100,8 +100,8 @@ int wordsGT(GT *t) {
 void statisticsGT(FILE *fp, GT *t) {
   fprintf(fp, "Words/Phrases: %d\n", t->totalWords);
   fprintf(fp, "Nodes: %d\n", sizeBST(t->tree));
-  fprintf(fp, "Minimum Depth: %d\n", findMinDepthGT(getBSTroot(t->tree)));
-  fprintf(fp, "Maximum Depth: %d\n", findMaxDepthGT(getBSTroot(t->tree)));
+  fprintf(fp, "Minimum depth: %d\n", findMinDepthGT(getBSTroot(t->tree)));
+  fprintf(fp, "Maximum depth: %d", findMaxDepthGT(getBSTroot(t->tree)));
 }
 
 void displayGT(FILE *fp, GT *t) {
