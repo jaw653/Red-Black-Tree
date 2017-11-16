@@ -256,7 +256,7 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
         str = getEntirePhrase(fp, str);
         str = cleanString(str);
         int freq = findGT(tree, newSTRING(str));
-        fprintf(outputFile, "Frequency of %s is: %d\n", str, freq);
+        fprintf(outputFile, "Frequency of %s: %d\n", str, freq);
       }
       /* Show the tree */
       else if (strcmp(str, "s") == 0) {
@@ -301,7 +301,7 @@ static void executeCommandsRBT(FILE *fp, FILE *outputFile, RBT *tree) {
         str = getEntirePhrase(fp, str);
         str = cleanString(str);
         int freq = findRBT(tree, newSTRING(str));
-        fprintf(outputFile, "Frequency of %s is: %d\n", str, freq);
+        fprintf(outputFile, "Frequency of %s: %d\n", str, freq);
       }
       /* Show the tree */
       else if (strcmp(str, "s") == 0) {
