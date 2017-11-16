@@ -31,7 +31,7 @@ static BSTNODE *insertHelper(BST *, BSTNODE *, BSTNODE *, void *, bool);
 static BSTNODE *findHelper(BSTNODE *, int (*)(void *, void *), void *);
 //static BSTNODE *traverseRight(BST *, BSTNODE *, bool);
 //static BSTNODE *traverseLeft(BST *, BSTNODE *, bool);
-//static bool isLeaf(BSTNODE *);
+static bool isLeaf(BSTNODE *);
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t);
 static BSTNODE *copyNODE(BSTNODE *giver);
 static int findMinDepthBST(BSTNODE *root);
@@ -417,12 +417,13 @@ static BSTNODE *traverseLeft(BST *t, BSTNODE *node, bool useSwapper) {
 
   return node;
 }
-
+*/
 static bool isLeaf(BSTNODE *node) {
+  if (node == NULL) return false;
   if (!node->left && !node->right) return true;
   else return false;
 }
-*/
+
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
 
   //if t->size == 0...
@@ -452,10 +453,14 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
 
         if (isRoot) {
           fprintf(fp, "%d: ", 0);
+          if (isLeaf(currNode))
+            fprintf(fp, "=");
           displayNODE(t, fp, currNode, true);
           isRoot = false;
         }
         else {
+          if (isLeaf(currNode))
+            fprintf(fp, "=");
           displayNODE(t, fp, currNode, false);
           if (nodesInCurrLevel != 0) fprintf(fp, " ");
         }
