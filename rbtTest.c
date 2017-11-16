@@ -22,15 +22,34 @@ int main(void) {
   displayTree(tree);
 
   insertValue(tree, 4);   //fox
+  displayTree(tree);
   insertValue(tree, 7);   //jumped
+  displayTree(tree);
+
   insertValue(tree, 9);   //over
+  displayTree(tree);
+
   insertValue(tree, 11);  //the
+  displayTree(tree);
+
   insertValue(tree, 5);   //girl
+  displayTree(tree);
+
   insertValue(tree, 1);   //and
+  displayTree(tree);
+
   insertValue(tree, 6);   //her
+  displayTree(tree);
+
   insertValue(tree, 8);   //lazy
+  displayTree(tree);
+
   insertValue(tree, 8);   //lazy
+  displayTree(tree);
+
   insertValue(tree, 3);   //dog
+  displayTree(tree);
+
 
   displayTree(tree);
 
