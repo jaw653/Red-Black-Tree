@@ -75,6 +75,8 @@ int findGT(GT *t, void *value) {
 void deleteGT(GT *t, void *value) {
   GTNODE *valueNode = newGTNODE(value, t->display, t->comparator);
   //printf("value node to find is: %s\n", getSTRING(valueNode->value));
+//  printf("delete value is: %s\n", getSTRING(valueNode->value));
+
 
   BSTNODE *valueToDelete = findBST(t->tree, valueNode);
   //if (valueToDelete == NULL) printf("value is null\n");
