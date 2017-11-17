@@ -28,7 +28,9 @@ test: trees
 	#trees -g assign2Tests/test-0-2.corpus assign2Tests/test-0-2.go
 	#trees -r assign2Tests/test-0-2.corpus assign2Tests/test-0-2.go
 	#trees -g assign2Tests/test-0-3.corpus assign2Tests/test-0-3.go
-	trees -r assign2Tests/test-0-3.corpus assign2Tests/test-0-3.go
+	#trees -r assign2Tests/test-0-3.corpus assign2Tests/test-0-3.go
+	trees -g assign2Tests/test-0-4.corpus assign2Tests/test-0-4.go
+
 
 trees.o: trees.c
 	gcc $(OPTS) trees.c -c -lm
