@@ -140,17 +140,18 @@ static char *cleanString(char *str) {
   int j = 0;
   int len = strlen(str);
 
-  char *newStr = malloc(sizeof(char) * strlen(str));
+  char *newStr = malloc(sizeof(char) * (strlen(str) + 1));
   int firstCharIndex = getFirstCharIndex(str);
   int lastCharIndex = getLastCharIndex(str);
 
+  //write null character at the end of the string if the string is not empty
   for (i = 0; i < len; i++) {
     if (isalpha(str[i])) {
       newStr[j] = str[i];
+      //tolowercase
       j += 1;
     }
     if (isspace(str[i]) && !isspace(str[j-1])) {
-      printf("flag\n");
       if (i <= lastCharIndex && i >= firstCharIndex) {
         newStr[j] = str[i];
         j += 1;
@@ -161,14 +162,12 @@ static char *cleanString(char *str) {
   //newStr[j-1] = '\0';
 
   int len2 = strlen(newStr);
-  printf("len2 is: %d\n", len2);
   for (i = 0; i < len2; i++) {
     newStr[i] = tolower(newStr[i]);
   }
 
 
-  //newStr[j-1] = '\0';
-
+  newStr[j] = '\0';
 
   return newStr;
 }
@@ -255,10 +254,10 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
       /* Delete from tree */
       else if (strcmp(str, "d") == 0) {
         str = readToken(fp);
-printf("readToken is: %s\n", str);
+//printf("readToken is: %s\n", str);
         str = getEntirePhrase(fp, str);
         str = cleanString(str);
-printf("clean of readToken is: %s\n", str);
+//printf("clean of readToken is: %s\n", str);
         deleteGT(tree, newSTRING(str));
       }
       /* Report frequency */
