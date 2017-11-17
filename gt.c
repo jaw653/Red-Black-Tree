@@ -74,14 +74,17 @@ int findGT(GT *t, void *value) {
 
 void deleteGT(GT *t, void *value) {
   GTNODE *valueNode = newGTNODE(value, t->display, t->comparator);
+  //printf("value node to find is: %s\n", getSTRING(valueNode->value));
 
   BSTNODE *valueToDelete = findBST(t->tree, valueNode);
+  //if (valueToDelete == NULL) printf("value is null\n");
 
   if (valueToDelete != NULL) {
     GTNODE *gtToDelete = getBSTNODE(valueToDelete);
     gtToDelete->frequency -= 1;
-
+//printf("%s decremented to: %d\n", getSTRING(gtToDelete->value), gtToDelete->frequency);
     if (gtToDelete->frequency <= 0) {
+//printf("deleteBST(%s)\n", getSTRING(gtToDelete->value));
       deleteBST(t->tree, valueNode);
     }
 
