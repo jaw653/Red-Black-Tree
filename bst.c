@@ -27,6 +27,9 @@ struct bstnode {
 
 /******************* Helper function signatures *******************************/
 static void displayNODE(BST *, FILE *, BSTNODE *, bool);
+static void personalSwapper(BSTNODE *, BSTNODE *);
+static BSTNODE *findPredecessor(BSTNODE *);
+static BSTNODE *findSuccessor(BSTNODE *);
 static BSTNODE *insertHelper(BST *, BSTNODE *, BSTNODE *, void *, bool);
 static BSTNODE *findHelper(BSTNODE *, int (*)(void *, void *), void *);
 //static BSTNODE *traverseRight(BST *, BSTNODE *, bool);
@@ -224,6 +227,7 @@ BSTNODE *deleteBST(BST *t, void *value) {
     printf("Value ");
     t->display(stdout, value);
     printf(" not found.\n");
+    return NULL;
   }
 
   node = swapToLeafBST(t, node);
@@ -235,56 +239,23 @@ BSTNODE *deleteBST(BST *t, void *value) {
   return returnNODE;
 }
 
-static void personalSwapper(BSTNODE *n1, BSTNODE *n2) {
-  void *tmpval = n1->value;
-  n1->value = n2->value;
-  n2->value = tmpval;
-}
-
 BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
-  if (isLeaf(node)) {
+  if (isLeaf(node))
     return node;
+
+  BSTNODE *next = findPredecessor(node);
+  if (next == NULL) {
+    next = findSuccessor(node);
   }
-  else if (node->left) {
-    if (t->swapper) {
-      t->swapper(node, node->left);
-      node = node->left;
-      while (node->right) {
-        t->swapper(node, node->right);
-        node = node->right;
-      }
-      node = swapToLeafBST(t, node);
-    }
-    else {
-      personalSwapper(node, node->left);
-      node = node->left;
-      while (node->right) {
-        personalSwapper(node, node->right);
-        node = node->right;
-      }
-      node = swapToLeafBST(t, node);
-    }
+
+  if (t->swapper) {
+    t->swapper(node, next);
   }
   else {
-    if (t->swapper) {
-      t->swapper(node, node->right);
-      node = node->right;
-      while (node->left) {
-        t->swapper(node, node->left);
-        node = node->left;
-      }
-      node = swapToLeafBST(t, node);
-    }
-    else {
-      personalSwapper(node, node->right);
-      node = node->right;
-      while (node->left) {
-        personalSwapper(node, node->left);
-        node = node->left;
-      }
-      node = swapToLeafBST(t, node);
-    }
+    personalSwapper(node, next);
   }
+
+  return swapToLeafBST(t, next);
 /*
   if (node == NULL)
     return NULL;
@@ -408,6 +379,43 @@ static void displayNODE(BST *t, FILE *fp, BSTNODE *node, bool isRoot) {
   }
 }
 
+static void personalSwapper(BSTNODE *n1, BSTNODE *n2) {
+  void *tmpval = n1->value;
+  n1->value = n2->value;
+  n2->value = tmpval;
+}
+
+static BSTNODE *findPredecessor(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+  if (node->left == NULL)
+    return NULL;
+
+  node = node->left;
+
+  BSTNODE *predecessor = node;
+  while (predecessor->right) {
+    predecessor = predecessor->right;
+  }
+
+  return predecessor;
+}
+
+static BSTNODE *findSuccessor(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+  if (node->right == NULL)
+    return NULL;
+
+  node = node->right;
+  BSTNODE *successor = node;
+  while (successor->left) {
+    successor = successor->left;
+  }
+
+  return successor;
+}
+
 static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value, bool isLeftChild) {
   if (root == NULL) {
     root = newBSTNODE(value, parent);
@@ -439,16 +447,10 @@ static BSTNODE *findHelper(BSTNODE *root, int (*comparator)(void *, void *), voi
     return root;
   }
   else if (comparator(value, root->value) < 0) {
-    if (getBSTNODEleft(root))
-      return findHelper(getBSTNODEleft(root), comparator, value);
-    else
-      return NULL;
+    return findHelper(getBSTNODEleft(root), comparator, value);
   }
   else {
-    if (getBSTNODEright(root))
-      return findHelper(getBSTNODEright(root), comparator, value);
-    else
-      return NULL;
+    return findHelper(getBSTNODEright(root), comparator, value);
   }
 }
 
