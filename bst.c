@@ -235,17 +235,75 @@ BSTNODE *deleteBST(BST *t, void *value) {
   return returnNODE;
 }
 
+static void personalSwapper(BSTNODE *n1, BSTNODE *n2) {
+  void *tmpval = n1->value;
+  n1->value = n2->value;
+  n2->value = tmpval;
+}
+
 BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
+  if (isLeaf(node)) {
+    return node;
+  }
+  else if (node->left) {
+    if (t->swapper) {
+      t->swapper(node, node->left);
+      node = node->left;
+      while (node->right) {
+        t->swapper(node, node->right);
+        node = node->right;
+      }
+      node = swapToLeafBST(t, node);
+    }
+    else {
+      personalSwapper(node, node->left);
+      node = node->left;
+      while (node->right) {
+        personalSwapper(node, node->right);
+        node = node->right;
+      }
+      node = swapToLeafBST(t, node);
+    }
+  }
+  else {
+    if (t->swapper) {
+      t->swapper(node, node->right);
+      node = node->right;
+      while (node->left) {
+        t->swapper(node, node->left);
+        node = node->left;
+      }
+      node = swapToLeafBST(t, node);
+    }
+    else {
+      personalSwapper(node, node->right);
+      node = node->right;
+      while (node->left) {
+        personalSwapper(node, node->left);
+        node = node->left;
+      }
+      node = swapToLeafBST(t, node);
+    }
+  }
+/*
   if (node == NULL)
     return NULL;
 
   if (t->swapper) {
     if (node->left) {
       t->swapper(node, node->left);
+      while (node->right) {
+        t->swapper(node, node->right);
+        node = node->right;
+      }
       node = swapToLeafBST(t, node->left);
     }
     else if (node->right) {
       t->swapper(node, node->right);
+      while (node->left) {
+        t->swapper(node, node->left);
+        node = node
+      }
       node = swapToLeafBST(t, node->right);
     }
   }
@@ -265,6 +323,7 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
   }
 
   return node;
+*/
 }
 
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
@@ -438,7 +497,7 @@ static bool isLeaf(BSTNODE *node) {
 
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   //if t->size == 0...
-  if (root == NULL) {
+  if (t->size == 0) {
     fprintf(fp, "EMPTY");
     return;
   }
