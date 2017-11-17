@@ -439,7 +439,7 @@ static bool isLeaf(BSTNODE *node) {
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   //if t->size == 0...
   if (root == NULL) {
-    fprintf(fp, "EMPTY\n");
+    fprintf(fp, "EMPTY");
     return;
   }
   else {
