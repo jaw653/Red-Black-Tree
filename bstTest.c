@@ -11,11 +11,30 @@
 static void displayTree(BST *);
 static void insertValue(BST *, int);
 static void printStatistics(BST *);
+static void deleteValue(BST *, int);
 
 int main(void) {
     BST *tree = newBST(displayREAL, compareREAL, NULL);
     printf("\nTree successfully initiailized\n");
 
+    insertValue(tree, 1);
+    insertValue(tree, 2);
+    insertValue(tree, 50);
+    insertValue(tree, 10);
+    insertValue(tree, 20);
+    insertValue(tree, 59);
+
+    displayTree(tree);
+
+    deleteValue(tree, 2);
+
+    displayTree(tree);
+
+    BSTNODE *found = findBST(tree, newREAL(0));
+    if (found) printf("found\n");
+
+    deleteValue(tree, 15);
+/*
     displayTree(tree);
 
     insertValue(tree, 4);
@@ -31,6 +50,11 @@ int main(void) {
 
     displayTree(tree);
 
+    deleteValue(tree, 3);
+    deleteValue(tree, 7);
+    displayTree(tree);
+*/
+/*
     printStatistics(tree);
 
     printf("deleting the root via getBSTroot method...\n");
@@ -51,12 +75,12 @@ int main(void) {
 
     printf("Attempting to delete all values in tree, then make it display EMPTY\n");
     printf("original size is: %d\n", sizeBST(tree));
-/*
+
     printf("deleting: %lf\n", getREAL(getBSTNODE(getBSTroot(tree))));
     deleteBST(tree, getBSTNODE(getBSTroot(tree)));
     printf("size is: %d\n", sizeBST(tree));
     displayTree(tree);
-*/
+
 
     while (sizeBST(tree) > 0) {
       printf("deleting: %lf\n", getREAL(getBSTNODE(getBSTroot(tree))));
@@ -73,7 +97,7 @@ int main(void) {
     printf("insert successful.\n");
 
     displayTree(tree);
-
+*/
 
     return 0;
 }
@@ -94,4 +118,10 @@ static void printStatistics(BST *tree) {
   printf("printing statistics...\n");
   statisticsBST(stdout, tree);
   printf("\n");
+}
+
+static void deleteValue(BST *tree, int a) {
+  printf("Attempting to delete %d...\n", a);
+  deleteBST(tree, newREAL(a));
+  printf("%d successfully deleted.\n", a);
 }
