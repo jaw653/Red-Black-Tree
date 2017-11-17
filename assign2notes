@@ -1,6 +1,8 @@
 ---------------
 Condensed to-do
 ---------------
+-need to fix swaptoleaf()
+-need to fix cleanstring
 -need to be sure that empty strings are not being inserted
 -when cleaning hello5world, does it turn into hello world or helloworld?
 -remove include of math.h and remove -lm linking as long as it's not needed
