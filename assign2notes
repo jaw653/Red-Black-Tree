@@ -1,18 +1,10 @@
 ---------------
 Condensed to-do
 ---------------
--test 43 wrong depths
--fix makefile to run on lusth's system
--test 43, 44, 45, whatever the last one with shakespeare is, it's correct
--right before test 44, there is text talking about displaying the beowolf gt to a file. test this
+-test "very large text file right before test #44, there are also a couple after that, including
+	tests #48 & 49
 -ask/do something about test-0-6.corpus. Final hello world is not in quotes but output looks like it's expected to be...
 -when cleaning hello5world, does it turn into hello world or helloworld?
--remove include of math.h and remove -lm linking as long as it's not needed
--for trees.c, is there supposed to be a newline printed at the end???
--it says something in the rubric about running trees w/ or w/o "./". figure this out.
--when you remove real.h (if you have to?) make sure the make test still works...
--finalize makefile
--remove #include of real.h or any other unneccesary/illegal files from rbt/gt/bst/trees(?)
 -all tests from submit1
 -test2 dropbox, do the above on test2 dropbox
 -submit
