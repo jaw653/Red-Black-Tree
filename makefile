@@ -56,13 +56,14 @@ test: trees
 	#trees -g assign2Tests/test-0-14.corpus assign2Tests/test-0-14.go
 	#trees -r assign2Tests/test-0-14.corpus assign2Tests/test-0-14.go
 
-	#./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go1
+	#trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go1
 	#trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go1
 
 	#trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go2
 	#trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go2
 
-	trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
+	#trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
+	./trees -r assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
 
 trees.o: trees.c
 	gcc $(OPTS) trees.c -c
