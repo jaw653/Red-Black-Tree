@@ -31,7 +31,6 @@ static void swapGTNODE(BSTNODE *, BSTNODE *);
 static int compareGTNODE(void *, void *);
 static int findMinDepthGT(BSTNODE *);
 static int findMaxDepthGT(BSTNODE *);
-static int min(int, int);
 
 GT *newGT(void (*d)(FILE *, void *), int (*c)(void *, void *)) {
   GT *t = malloc(sizeof(struct gt));
@@ -183,12 +182,4 @@ static int findMaxDepthGT(BSTNODE *root) {
   int Rdepth = findMaxDepthGT(getBSTNODEright(root));
 
   return (Ldepth>Rdepth?Ldepth:Rdepth) + 1;
-}
-
-static int min(int a, int b) {
-    if (a < b) return a;
-    else if (a > b) return b;
-    else {
-      return a;
-    }
 }

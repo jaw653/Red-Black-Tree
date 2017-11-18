@@ -13,7 +13,7 @@ int main(void) {
   printf("Attempting to Initialize rbt tree...\n");
   RBT *tree = newRBT(displayREAL, compareREAL);
   printf("rbt tree successfully initiailized\n\n");
-
+/*
   insertValue(tree, 11);  //the
   insertValue(tree, 10);  //quickity quick
   insertValue(tree, 2);   //brown
@@ -52,9 +52,12 @@ int main(void) {
 
 
   displayTree(tree);
-
-
-
+*/
+  insertValue(tree, 5);
+  insertValue(tree, 10);
+  displayTree(tree);
+  deleteValue(tree, 10);
+  displayTree(tree);
 
 /*
   insertValue(tree, 6);
