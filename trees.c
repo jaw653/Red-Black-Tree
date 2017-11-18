@@ -205,12 +205,10 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
       /* Show the tree */
       else if (strcmp(str, "s") == 0) {
         displayGT(outputFile, tree);
-        fprintf(outputFile, "\n");
       }
       /* Report statistics */
       else if (strcmp(str, "r") == 0) {
         statisticsGT(outputFile, tree);
-        fprintf(outputFile, "\n");
       }
 
       str = read(fp);
@@ -244,12 +242,10 @@ static void executeCommandsRBT(FILE *fp, FILE *outputFile, RBT *tree) {
       /* Show the tree */
       else if (strcmp(str, "s") == 0) {
         displayRBT(outputFile, tree);
-        fprintf(outputFile, "\n");
       }
       /* Report statistics */
       else if (strcmp(str, "r") == 0) {
         statisticsRBT(outputFile, tree);
-        fprintf(outputFile, "\n");
       }
 
       str = read(fp);

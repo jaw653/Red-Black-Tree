@@ -161,6 +161,7 @@ void statisticsRBT(FILE *fp, RBT *t) {
 
 void displayRBT(FILE *fp, RBT *t) {
   displayBST(fp, t->tree);
+  printf("\n");
 }
 /******************************************************************************/
 /***                          End Public Chunk                              ***/

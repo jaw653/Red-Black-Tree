@@ -109,6 +109,7 @@ void statisticsGT(FILE *fp, GT *t) {
 
 void displayGT(FILE *fp, GT *t) {
   displayBST(fp, t->tree);
+  fprintf(fp, "\n");
 }
 
 /******************************************************************************/
