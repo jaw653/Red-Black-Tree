@@ -39,7 +39,7 @@ test: trees
 	@#./trees -g assign2Tests/test-0-7.corpus assign2Tests/test-0-7.go
 	@#./trees -r assign2Tests/test-0-7.corpus assign2Tests/test-0-7.go
 	@#./trees -g assign2Tests/test-0-8.corpus assign2Tests/test-0-8.go
-	./trees -r assign2Tests/test-0-8.corpus assign2Tests/test-0-8.go
+	@#./trees -r assign2Tests/test-0-8.corpus assign2Tests/test-0-8.go
 	@#./trees -g assign2Tests/test-0-9.corpus assign2Tests/test-0-9.go
 	@#./trees -r assign2Tests/test-0-9.corpus assign2Tests/test-0-9.go
 	@#./trees -g assign2Tests/test-0-10.corpus assign2Tests/test-0-10.go
@@ -56,7 +56,7 @@ test: trees
 	@#./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go1
 	@#./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go1
 
-	@#./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go2
+	@./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go2
 	@#./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go2
 
 	@#./trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1

@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
   }
   corpus = fopen(corpusName, "r");
   commands = fopen(commandsName, "r");
-  if (outputFileName != NULL) outputFile = fopen(outputFileName, "r");
+  if (outputFileName != NULL) outputFile = fopen(outputFileName, "w");
   else outputFile = NULL;
 
   /* Determing if rbt or gt, populating BST, and executing commands file */
