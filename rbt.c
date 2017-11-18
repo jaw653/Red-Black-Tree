@@ -155,7 +155,7 @@ void statisticsRBT(FILE *fp, RBT *t) {
   fprintf(fp, "Words/Phrases: %d\n", t->totalWords);
   fprintf(fp, "Nodes: %d\n", sizeBST(t->tree));
   fprintf(fp, "Minimum depth: %d\n", findMinDepthRBT(getBSTroot(t->tree)));    //FIXME: figure it out
-  fprintf(fp, "Maximum depth: %d", findMaxDepthRBT(getBSTroot(t->tree)));    //FIXME: figure it out
+  fprintf(fp, "Maximum depth: %d\n", findMaxDepthRBT(getBSTroot(t->tree)));    //FIXME: figure it out
 
 }
 
