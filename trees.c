@@ -15,10 +15,8 @@
 #include "gt.h"
 #include "scanner.h"
 
-//static bool stringIsEmpty(char *);
 static char *read(FILE *);
 static char *cleanString(char *);
-//static bool fileIsEmpty(FILE *fp);
 static void populateGT(FILE *fp, GT *tree);
 static void populateRBT(FILE *fp, RBT *tree);
 static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree);
@@ -167,42 +165,20 @@ static char *getEntirePhrase(FILE *fp, char *str) {
   return str;
 }
 
-/*
-static bool fileIsEmpty(FILE *fp) {
-  int size;
-  if (fp != NULL) {
-    fseek(fp, 0, SEEK_END);
-    size = ftell(fp);
-
-    if (size == 0)
-      return true;
-    else
-      return false;
-  }
-
-  //rewind(fp);
-  return true;
-}
-*/
-
 static void populateGT(FILE *fp, GT *tree) {
-//  if (!fileIsEmpty(fp)) {
     char *str = read(fp);
 
     while (str) {
-//printf("pre-clean str is: %s\n", str);
       str = cleanString(str);
-//printf("string to be inerted is: %s\n", str);
+
       if (str != NULL)
         insertGT(tree, newSTRING(str));
 
       str = read(fp);
     }
-//  }
 }
 
 static void populateRBT(FILE *fp, RBT *tree) {
-  //if (!fileIsEmpty(fp)) {
     char *str = read(fp);
 
     while (str) {
@@ -212,12 +188,10 @@ static void populateRBT(FILE *fp, RBT *tree) {
 
       str = read(fp);
     }
-  //}
 }
 
 /***************************** Execute Commands *******************************/
 static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
-  //if (!fileIsEmpty(fp)) {
     char *str = read(fp);
 
     while (str) {
@@ -254,11 +228,9 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
 
       str = read(fp);
     }
-  //}
 }
 
 static void executeCommandsRBT(FILE *fp, FILE *outputFile, RBT *tree) {
-  //if (!fileIsEmpty(fp)) {
     char *str = read(fp);
 
     while (str) {
@@ -295,5 +267,4 @@ static void executeCommandsRBT(FILE *fp, FILE *outputFile, RBT *tree) {
 
       str = read(fp);
     }
-//  }
 }
