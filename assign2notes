@@ -1,16 +1,14 @@
 ---------------
 Condensed to-do
 ---------------
--need to fix swaptoleaf()
--need to fix cleanstring
--need to be sure that empty strings are not being inserted
+-test 44(or maybe 45 I forget) takes WAY too long
+-right before test 44, there is text talking about displaying the beowolf gt to a file. test this
+-failed test 35
+-failed test 34
+-ask/do something about test-0-6.corpus. Final hello world is not in quotes but output looks like it's expected to be...
 -when cleaning hello5world, does it turn into hello world or helloworld?
 -remove include of math.h and remove -lm linking as long as it's not needed
--minimum depth is incorrect for trees -g corpus commands
--finish trees.c
--make sure that you are cleaning "hello_1234_world" correctly
 -for trees.c, is there supposed to be a newline printed at the end???
--conduct larger testing on rbt.c
 -it says something in the rubric about running trees w/ or w/o "./". figure this out.
 -when you remove real.h (if you have to?) make sure the make test still works...
 -finalize makefile
