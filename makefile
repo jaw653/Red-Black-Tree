@@ -32,10 +32,12 @@ test: trees
 	#trees -g assign2Tests/test-0-4.corpus assign2Tests/test-0-4.go
 	#trees -r assign2Tests/test-0-4.corpus assign2Tests/test-0-4.go
 
-	trees -g assign2Tests/test-0-5.corpus assign2Tests/test-0-5.go
+	#trees -g assign2Tests/test-0-5.corpus assign2Tests/test-0-5.go
 	#trees -r assign2Tests/test-0-5.corpus assign2Tests/test-0-5.go
+
 	#trees -g assign2Tests/test-0-6.corpus assign2Tests/test-0-6.go
-	#trees -r assign2Tests/test-0-6.corpus assign2Tests/test-0-6.go
+	#trees -r assign2Tests/test-0-6.corpus assign2Tests/test-0-6.go problem files
+
 	#trees -g assign2Tests/test-0-7.corpus assign2Tests/test-0-7.go
 	#trees -r assign2Tests/test-0-7.corpus assign2Tests/test-0-7.go
 	#trees -g assign2Tests/test-0-8.corpus assign2Tests/test-0-8.go
@@ -53,6 +55,11 @@ test: trees
 	#trees -g assign2Tests/test-0-14.corpus assign2Tests/test-0-14.go
 	#trees -r assign2Tests/test-0-14.corpus assign2Tests/test-0-14.go
 
+	#trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go1
+	#trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go1
+
+	trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go2
+	#trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go2
 
 
 trees.o: trees.c
