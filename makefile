@@ -13,10 +13,10 @@ OBJECT_BUNDLE = $(TYPE_OBJS) $(STRUCT_OBJS) $(UTIL_OBJS)
 # other objs Below
 # TESTOBJS = tests...
 
-./trees: $(OBJECT_BUNDLE)
-	gcc $(OPTS) $(OBJECT_BUNDLE) -o trees
+trees: $(OBJECT_BUNDLE)
+	gcc $(OPTS) $(OBJECT_BUNDLE) -o ./trees
 
-test: ./trees
+test: trees
 	#./bstTest
 	#./rbtTest
 	#./trees
@@ -62,7 +62,7 @@ test: ./trees
 	#trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go2
 	#trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go2
 
-	./trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
+	trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
 
 trees.o: trees.c
 	gcc $(OPTS) trees.c -c
