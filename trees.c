@@ -152,19 +152,6 @@ static char *cleanString(char *str) {
   return str;
 }
 
-static char *getEntirePhrase(FILE *fp, char *str) {
-  if (str[0] == '\"') {
-    strcat(str, " ");
-    strcat(str, readToken(fp));
-    while (str[strlen(str)-1] != '\"') {
-      strcat(str, " ");
-      strcat(str, readToken(fp));
-    }
-  }
-
-  return str;
-}
-
 static void populateGT(FILE *fp, GT *tree) {
     char *str = read(fp);
 
