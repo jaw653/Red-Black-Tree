@@ -31,7 +31,6 @@ static char getColor(BSTNODE *);
 static void setColor(BSTNODE *, char);
 
 /*** Min/Max Functions ***/
-static int min(int, int);
 static int findMinDepthRBT(BSTNODE *);
 static int findMaxDepthRBT(BSTNODE *);
 
@@ -258,14 +257,6 @@ static void setColor(BSTNODE *node, char color) {
 /******************************************************************************/
 /***                          Min/Max Functions                             ***/
 /******************************************************************************/
-static int min(int a, int b) {
-    if (a < b) return a;
-    else if (a > b) return b;
-    else {
-      return a;
-    }
-}
-
 static int findMinDepthRBT(BSTNODE *root) {
   if (root == NULL)
     return 0;
