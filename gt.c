@@ -90,6 +90,11 @@ void deleteGT(GT *t, void *value) {
 
     t->totalWords -= 1;
   }
+  else {
+    printf("Value ");
+    t->display(stdout, value);
+    printf(" not found.\n");
+  }
 }
 
 int sizeGT(GT *t) {

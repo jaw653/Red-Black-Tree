@@ -141,6 +141,11 @@ void deleteRBT(RBT *t, void *value) {
     }
     t->totalWords -= 1;
   }
+  else {
+    printf("Value ");
+    t->display(stdout, value);
+    printf("not found.\n");
+  }
 }
 
 int sizeRBT(RBT *t) {
