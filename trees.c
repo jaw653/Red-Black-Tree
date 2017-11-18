@@ -15,9 +15,9 @@
 #include "gt.h"
 #include "scanner.h"
 
-static bool stringIsEmpty(char *);
-static int getFirstCharIndex(char *);
-static int getLastCharIndex(char *);
+//static bool stringIsEmpty(char *);
+static int getFirstCharIndex(char *, int);
+static int getLastCharIndex(char *, int);
 static char *cleanString(char *);
 //static bool fileIsEmpty(FILE *fp);
 static void populateGT(FILE *fp, GT *tree);
@@ -110,6 +110,7 @@ int main(int argc, char *argv[]) {
 /******************************************************************************/
 /***                          Helper Functions                              ***/
 /******************************************************************************/
+/*
 static bool stringIsEmpty(char *str) {
   int i;
   int len = strlen(str);
@@ -118,17 +119,16 @@ static bool stringIsEmpty(char *str) {
   }
   return true;
 }
-static int getFirstCharIndex(char *str) {
+*/
+static int getFirstCharIndex(char *str, int len) {
   int index = 0;
-  int len = strlen(str);
   while (!isalpha(str[index]) && index < len) {
     index += 1;
   }
   return index;
 }
 
-static int getLastCharIndex(char *str) {
-  int index = strlen(str) - 1;
+static int getLastCharIndex(char *str, int index) {
   while (!isalpha(str[index]) && index > -1) {
     index -= 1;
   }
@@ -141,16 +141,18 @@ static char *cleanString(char *str) {
   int len = strlen(str);
 
   char *newStr = malloc(sizeof(char) * (strlen(str) + 1));
-  int firstCharIndex = getFirstCharIndex(str);
-  int lastCharIndex = getLastCharIndex(str);
+  int firstCharIndex = getFirstCharIndex(str, len);
+  int lastCharIndex = getLastCharIndex(str, len-1);
+
+  bool isEmpty = true;
 
   //write null character at the end of the string if the string is not empty
   for (i = firstCharIndex; i <= lastCharIndex; i++) {
     if (isalpha(str[i])) {
       newStr[j] = str[i];
-      //tolowercase
       newStr[j] = tolower(newStr[j]);
       j += 1;
+      isEmpty = false;
     }
     //if (!isspace(str[j-1])) printf("prev of is not space\n", str[j]);
     if (isspace(str[i]) && !isspace(newStr[j-1])) {
@@ -166,6 +168,8 @@ static char *cleanString(char *str) {
     newStr[i] = tolower(newStr[i]);
   }
 */
+  if (isEmpty)
+    return NULL;
 
   newStr[j] = '\0';
 
@@ -208,14 +212,11 @@ static void populateGT(FILE *fp, GT *tree) {
     char *str = readToken(fp);
 
     while (str) {
-      //printf("str is: %s\n", str);
-      if (!stringIsEmpty(str)) {
-        str = getEntirePhrase(fp, str);
-        str = cleanString(str);
-  //      printf("string to be inserted is: %s\n", str);
+      str = getEntirePhrase(fp, str);
+      str = cleanString(str);
+      if (str != NULL)
         insertGT(tree, newSTRING(str));
-      }
-      //printf("string to be inserted is: %s\n", str);
+
       str = readToken(fp);
     }
 //  }
@@ -226,11 +227,10 @@ static void populateRBT(FILE *fp, RBT *tree) {
     char *str = readToken(fp);
 
     while (str) {
-      if (!stringIsEmpty(str)) {
-        str = getEntirePhrase(fp, str);
-        str = cleanString(str);
+      str = getEntirePhrase(fp, str);
+      str = cleanString(str);
+      if (str != NULL)
         insertRBT(tree, newSTRING(str));
-      }
 
       str = readToken(fp);
     }
@@ -246,19 +246,16 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
       /* Insert to tree */
       if (strcmp(str, "i") == 0) {
         str = readToken(fp);
-        if (!stringIsEmpty(str)) {
-          str = getEntirePhrase(fp, str);
-          str = cleanString(str);
+        str = getEntirePhrase(fp, str);
+        str = cleanString(str);
+        if (str != NULL)
           insertGT(tree, newSTRING(str));
-        }
       }
       /* Delete from tree */
       else if (strcmp(str, "d") == 0) {
         str = readToken(fp);
-//printf("readToken is: %s\n", str);
         str = getEntirePhrase(fp, str);
         str = cleanString(str);
-//printf("clean of readToken is: %s\n", str);
         deleteGT(tree, newSTRING(str));
       }
       /* Report frequency */
@@ -293,11 +290,10 @@ static void executeCommandsRBT(FILE *fp, FILE *outputFile, RBT *tree) {
       /* Insert to tree */
       if (strcmp(str, "i") == 0) {
         str = readToken(fp);
-        if (!stringIsEmpty(str)) {
-          str = getEntirePhrase(fp, str);
-          str = cleanString(str);
+        str = getEntirePhrase(fp, str);
+        str = cleanString(str);
+        if (str != NULL)
           insertRBT(tree, newSTRING(str));
-        }
       }
       /* Delete from tree */
       else if (strcmp(str, "d") == 0) {
