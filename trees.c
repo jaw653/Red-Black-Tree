@@ -149,6 +149,7 @@ static char *cleanString(char *str) {
     if (isalpha(str[i])) {
       newStr[j] = str[i];
       //tolowercase
+      newStr[j] = tolower(newStr[j]);
       j += 1;
     }
     if (isspace(str[i]) && !isspace(str[j-1])) {

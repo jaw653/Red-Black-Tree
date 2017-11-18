@@ -133,6 +133,8 @@ void deleteRBT(RBT *t, void *value) {
   /* As long as it's in the tree, delete value */
   if (find != NULL) {
     RBTNODE *decrementNode = getBSTNODE(find);
+
+//printf("found node is: %s\n", getSTRING(nodeToDelete->value));
     decrementNode->frequency -= 1;
 
     if (decrementNode->frequency <= 0) {

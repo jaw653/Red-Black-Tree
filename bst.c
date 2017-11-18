@@ -301,8 +301,12 @@ void pruneLeafBST(BST *t, BSTNODE *leaf) {
   if (sizeBST(t) == 1) {
     t->root = NULL;
   }
+
+  BSTNODE *parent = getBSTNODEparent(leaf);
+
+//  if (getBSTNODEleft(parent))
   /* If left child */
-  if (leaf->isLeftChild) {
+  if (t->comparator(getBSTNODE(leaf), getBSTNODE(getBSTNODEleft(parent))   ) == 0) {
     leaf->parent->left = NULL;
   }
   /* If right child */
@@ -311,7 +315,7 @@ void pruneLeafBST(BST *t, BSTNODE *leaf) {
   }
   //setBSTNODE(leaf, NULL);
   //setBSTroot(t, newBSTNODE(NULL, NULL));
-
+  //leaf = NULL;
   t->size -= 1;
 }
 
@@ -328,6 +332,11 @@ void statisticsBST(FILE *fp, BST *t) {
 void displayBST(FILE *fp, BST *t) {
   displayHelper(fp, t->root, t);
 }
+
+
+
+
+
 
 
 /******************************************************************************/
