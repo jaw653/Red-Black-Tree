@@ -144,7 +144,7 @@ void deleteRBT(RBT *t, void *value) {
   else {
     printf("Value ");
     t->display(stdout, value);
-    printf("not found.\n");
+    printf(" not found.\n");
   }
 }
 
