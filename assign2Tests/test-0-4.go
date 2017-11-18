@@ -46,7 +46,7 @@ f n
 f z
 f b
 f jabberwock
-f " beware   the
+f " beware   the  
  jabberwock   "
 s
 r
