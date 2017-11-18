@@ -110,16 +110,7 @@ int main(int argc, char *argv[]) {
 /******************************************************************************/
 /***                          Helper Functions                              ***/
 /******************************************************************************/
-/*
-static bool stringIsEmpty(char *str) {
-  int i;
-  int len = strlen(str);
-  for (i = 0; i < len; i++) {
-    if (isalpha(str[i]) || str[i] == '"') return false;
-  }
-  return true;
-}
-*/
+
 static int getFirstCharIndex(char *str, int len) {
   int index = 0;
   while (!isalpha(str[index]) && index < len) {
@@ -140,7 +131,7 @@ static char *cleanString(char *str) {
   int j = 0;
   int len = strlen(str);
 
-  char *newStr = malloc(sizeof(char) * (strlen(str) + 1));
+  //char *newStr = malloc(sizeof(char) * (strlen(str) + 1));
   int firstCharIndex = getFirstCharIndex(str, len);
   int lastCharIndex = getLastCharIndex(str, len-1);
 
@@ -149,38 +140,31 @@ static char *cleanString(char *str) {
   //write null character at the end of the string if the string is not empty
   for (i = firstCharIndex; i <= lastCharIndex; i++) {
     if (isalpha(str[i])) {
-      newStr[j] = str[i];
-      newStr[j] = tolower(newStr[j]);
+      str[j] = str[i];
+      str[j] = tolower(str[j]);
       j += 1;
       isEmpty = false;
     }
     //if (!isspace(str[j-1])) printf("prev of is not space\n", str[j]);
-    if (isspace(str[i]) && !isspace(newStr[j-1])) {
-        newStr[j] = str[i];
+    if (isspace(str[i]) && !isspace(str[j-1])) {
+        str[j] = str[i];
         j += 1;
     }
   }
 
-  //newStr[j-1] = '\0';
-/*
-  int len2 = strlen(newStr);
-  for (i = 0; i < len2; i++) {
-    newStr[i] = tolower(newStr[i]);
-  }
-*/
   if (isEmpty)
     return NULL;
 
-  newStr[j] = '\0';
+  str[j] = '\0';
 
-  return newStr;
+  return str;
 }
 
 static char *getEntirePhrase(FILE *fp, char *str) {
-  if (str[0] == '"') {
+  if (str[0] == '\"') {
     strcat(str, " ");
     strcat(str, readToken(fp));
-    while (str[strlen(str)-1] != '"') {
+    while (str[strlen(str)-1] != '\"') {
       strcat(str, " ");
       strcat(str, readToken(fp));
     }
