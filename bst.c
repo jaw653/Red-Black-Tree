@@ -27,6 +27,9 @@ struct bstnode {
 
 /******************* Helper function signatures *******************************/
 static void displayNODE(BST *, FILE *, BSTNODE *, bool);
+static void personalSwapper(BSTNODE *, BSTNODE *);
+static BSTNODE *findPredecessor(BSTNODE *);
+static BSTNODE *findSuccessor(BSTNODE *);
 static BSTNODE *insertHelper(BST *, BSTNODE *, BSTNODE *, void *, bool);
 static BSTNODE *findHelper(BSTNODE *, int (*)(void *, void *), void *);
 //static BSTNODE *traverseRight(BST *, BSTNODE *, bool);
@@ -224,6 +227,7 @@ BSTNODE *deleteBST(BST *t, void *value) {
     printf("Value ");
     t->display(stdout, value);
     printf(" not found.\n");
+    return NULL;
   }
 
   node = swapToLeafBST(t, node);
@@ -236,16 +240,41 @@ BSTNODE *deleteBST(BST *t, void *value) {
 }
 
 BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
+  if (isLeaf(node))
+    return node;
+
+  BSTNODE *next = findPredecessor(node);
+  if (next == NULL) {
+    next = findSuccessor(node);
+  }
+
+  if (t->swapper) {
+    t->swapper(node, next);
+  }
+  else {
+    personalSwapper(node, next);
+  }
+
+  return swapToLeafBST(t, next);
+/*
   if (node == NULL)
     return NULL;
 
   if (t->swapper) {
     if (node->left) {
       t->swapper(node, node->left);
+      while (node->right) {
+        t->swapper(node, node->right);
+        node = node->right;
+      }
       node = swapToLeafBST(t, node->left);
     }
     else if (node->right) {
       t->swapper(node, node->right);
+      while (node->left) {
+        t->swapper(node, node->left);
+        node = node
+      }
       node = swapToLeafBST(t, node->right);
     }
   }
@@ -265,14 +294,19 @@ BSTNODE *swapToLeafBST(BST *t, BSTNODE *node) {
   }
 
   return node;
+*/
 }
 
 void pruneLeafBST(BST *t, BSTNODE *leaf) {
   if (sizeBST(t) == 1) {
     t->root = NULL;
   }
+
+  BSTNODE *parent = getBSTNODEparent(leaf);
+
+//  if (getBSTNODEleft(parent))
   /* If left child */
-  if (leaf->isLeftChild) {
+  if (t->comparator(getBSTNODE(leaf), getBSTNODE(getBSTNODEleft(parent))   ) == 0) {
     leaf->parent->left = NULL;
   }
   /* If right child */
@@ -281,7 +315,7 @@ void pruneLeafBST(BST *t, BSTNODE *leaf) {
   }
   //setBSTNODE(leaf, NULL);
   //setBSTroot(t, newBSTNODE(NULL, NULL));
-
+  //leaf = NULL;
   t->size -= 1;
 }
 
@@ -298,6 +332,11 @@ void statisticsBST(FILE *fp, BST *t) {
 void displayBST(FILE *fp, BST *t) {
   displayHelper(fp, t->root, t);
 }
+
+
+
+
+
 
 
 /******************************************************************************/
@@ -349,6 +388,43 @@ static void displayNODE(BST *t, FILE *fp, BSTNODE *node, bool isRoot) {
   }
 }
 
+static void personalSwapper(BSTNODE *n1, BSTNODE *n2) {
+  void *tmpval = n1->value;
+  n1->value = n2->value;
+  n2->value = tmpval;
+}
+
+static BSTNODE *findPredecessor(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+  if (node->left == NULL)
+    return NULL;
+
+  node = node->left;
+
+  BSTNODE *predecessor = node;
+  while (predecessor->right) {
+    predecessor = predecessor->right;
+  }
+
+  return predecessor;
+}
+
+static BSTNODE *findSuccessor(BSTNODE *node) {
+  if (node == NULL)
+    return NULL;
+  if (node->right == NULL)
+    return NULL;
+
+  node = node->right;
+  BSTNODE *successor = node;
+  while (successor->left) {
+    successor = successor->left;
+  }
+
+  return successor;
+}
+
 static BSTNODE *insertHelper(BST *t, BSTNODE* root, BSTNODE *parent, void *value, bool isLeftChild) {
   if (root == NULL) {
     root = newBSTNODE(value, parent);
@@ -380,16 +456,10 @@ static BSTNODE *findHelper(BSTNODE *root, int (*comparator)(void *, void *), voi
     return root;
   }
   else if (comparator(value, root->value) < 0) {
-    if (getBSTNODEleft(root))
-      return findHelper(getBSTNODEleft(root), comparator, value);
-    else
-      return NULL;
+    return findHelper(getBSTNODEleft(root), comparator, value);
   }
   else {
-    if (getBSTNODEright(root))
-      return findHelper(getBSTNODEright(root), comparator, value);
-    else
-      return NULL;
+    return findHelper(getBSTNODEright(root), comparator, value);
   }
 }
 
@@ -438,8 +508,8 @@ static bool isLeaf(BSTNODE *node) {
 
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
   //if t->size == 0...
-  if (root == NULL) {
-    fprintf(fp, "EMPTY\n");
+  if (t->size == 0) {
+    fprintf(fp, "EMPTY");
     return;
   }
   else {

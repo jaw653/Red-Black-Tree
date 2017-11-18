@@ -31,7 +31,6 @@ static void swapGTNODE(BSTNODE *, BSTNODE *);
 static int compareGTNODE(void *, void *);
 static int findMinDepthGT(BSTNODE *);
 static int findMaxDepthGT(BSTNODE *);
-static int min(int, int);
 
 GT *newGT(void (*d)(FILE *, void *), int (*c)(void *, void *)) {
   GT *t = malloc(sizeof(struct gt));
@@ -74,14 +73,19 @@ int findGT(GT *t, void *value) {
 
 void deleteGT(GT *t, void *value) {
   GTNODE *valueNode = newGTNODE(value, t->display, t->comparator);
+  //printf("value node to find is: %s\n", getSTRING(valueNode->value));
+//  printf("delete value is: %s\n", getSTRING(valueNode->value));
+
 
   BSTNODE *valueToDelete = findBST(t->tree, valueNode);
+  //if (valueToDelete == NULL) printf("value is null\n");
 
   if (valueToDelete != NULL) {
     GTNODE *gtToDelete = getBSTNODE(valueToDelete);
     gtToDelete->frequency -= 1;
-
+//printf("%s decremented to: %d\n", getSTRING(gtToDelete->value), gtToDelete->frequency);
     if (gtToDelete->frequency <= 0) {
+//printf("deleteBST(%s)\n", getSTRING(gtToDelete->value));
       deleteBST(t->tree, valueNode);
     }
 
@@ -178,12 +182,4 @@ static int findMaxDepthGT(BSTNODE *root) {
   int Rdepth = findMaxDepthGT(getBSTNODEright(root));
 
   return (Ldepth>Rdepth?Ldepth:Rdepth) + 1;
-}
-
-static int min(int a, int b) {
-    if (a < b) return a;
-    else if (a > b) return b;
-    else {
-      return a;
-    }
 }
