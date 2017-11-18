@@ -110,6 +110,14 @@ int main(int argc, char *argv[]) {
 /******************************************************************************/
 /***                          Helper Functions                              ***/
 /******************************************************************************/
+static char *read(FILE *fp) {
+  char *str;
+  if (stringPending(fp))
+    str = readString(fp);
+  else str = readToken(fp);
+
+  return str;
+}
 
 static int getFirstCharIndex(char *str, int len) {
   int index = 0;
@@ -127,18 +135,21 @@ static int getLastCharIndex(char *str, int index) {
 }
 
 static char *cleanString(char *str) {
+//printf("string to be cleaned is: %s\n", str);
   int i;
   int j = 0;
   int len = strlen(str);
 
   //char *newStr = malloc(sizeof(char) * (strlen(str) + 1));
-  int firstCharIndex = getFirstCharIndex(str, len);
-  int lastCharIndex = getLastCharIndex(str, len-1);
+  //int firstCharIndex = getFirstCharIndex(str, len);
+  //int lastCharIndex = getLastCharIndex(str, len-1);
 
   bool isEmpty = true;
 
   //write null character at the end of the string if the string is not empty
-  for (i = firstCharIndex; i <= lastCharIndex; i++) {
+  for (i = 0; i < len; i++) {
+//printf("char is: %c\n", str[i]);
+//if (isspace(str[i])) printf("space\n");
     if (isalpha(str[i])) {
       str[j] = str[i];
       str[j] = tolower(str[j]);
@@ -146,16 +157,24 @@ static char *cleanString(char *str) {
       isEmpty = false;
     }
     //if (!isspace(str[j-1])) printf("prev of is not space\n", str[j]);
-    if (isspace(str[i]) && !isspace(str[j-1])) {
-        str[j] = str[i];
-        j += 1;
+    if (isspace(str[i])) {
+      if (isEmpty == false) {
+//printf("str[%d] is a space and str is not empty\n", i);
+        if (str[j-1] != ' ') {
+            str[j] = ' ';
+            j += 1;
+        }
+      }
     }
   }
 
   if (isEmpty)
     return NULL;
 
-  str[j] = '\0';
+  if (str[j-1] == ' ')
+    str[j-1] = '\0';
+  else
+    str[j] = '\0';
 
   return str;
 }
@@ -193,15 +212,17 @@ static bool fileIsEmpty(FILE *fp) {
 
 static void populateGT(FILE *fp, GT *tree) {
 //  if (!fileIsEmpty(fp)) {
-    char *str = readToken(fp);
+    char *str;
+    str = read(fp);
 
     while (str) {
-      str = getEntirePhrase(fp, str);
+//printf("pre-clean str is: %s\n", str);
       str = cleanString(str);
+//printf("string to be inerted is: %s\n", str);
       if (str != NULL)
         insertGT(tree, newSTRING(str));
 
-      str = readToken(fp);
+      str = read(fp);
     }
 //  }
 }
@@ -224,28 +245,25 @@ static void populateRBT(FILE *fp, RBT *tree) {
 /***************************** Execute Commands *******************************/
 static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
   //if (!fileIsEmpty(fp)) {
-    char *str = readToken(fp);
+    char *str = read(fp);
 
     while (str) {
       /* Insert to tree */
       if (strcmp(str, "i") == 0) {
-        str = readToken(fp);
-        str = getEntirePhrase(fp, str);
+        str = read(fp);
         str = cleanString(str);
         if (str != NULL)
           insertGT(tree, newSTRING(str));
       }
       /* Delete from tree */
       else if (strcmp(str, "d") == 0) {
-        str = readToken(fp);
-        str = getEntirePhrase(fp, str);
+        str = read(fp);
         str = cleanString(str);
         deleteGT(tree, newSTRING(str));
       }
       /* Report frequency */
       else if (strcmp(str, "f") == 0) {
-        str = readToken(fp);
-        str = getEntirePhrase(fp, str);
+        str = read(fp);
         str = cleanString(str);
         int freq = findGT(tree, newSTRING(str));
         fprintf(outputFile, "Frequency of %s: %d\n", str, freq);
@@ -261,7 +279,7 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
         fprintf(outputFile, "\n");
       }
 
-      str = readToken(fp);
+      str = read(fp);
     }
   //}
 }
