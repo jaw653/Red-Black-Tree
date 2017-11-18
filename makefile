@@ -30,7 +30,29 @@ test: trees
 	#trees -g assign2Tests/test-0-3.corpus assign2Tests/test-0-3.go
 	#trees -r assign2Tests/test-0-3.corpus assign2Tests/test-0-3.go
 	#trees -g assign2Tests/test-0-4.corpus assign2Tests/test-0-4.go
-	trees -r assign2Tests/test-0-4.corpus assign2Tests/test-0-4.go
+	#trees -r assign2Tests/test-0-4.corpus assign2Tests/test-0-4.go
+
+	trees -g assign2Tests/test-0-5.corpus assign2Tests/test-0-5.go
+	#trees -r assign2Tests/test-0-5.corpus assign2Tests/test-0-5.go
+	#trees -g assign2Tests/test-0-6.corpus assign2Tests/test-0-6.go
+	#trees -r assign2Tests/test-0-6.corpus assign2Tests/test-0-6.go
+	#trees -g assign2Tests/test-0-7.corpus assign2Tests/test-0-7.go
+	#trees -r assign2Tests/test-0-7.corpus assign2Tests/test-0-7.go
+	#trees -g assign2Tests/test-0-8.corpus assign2Tests/test-0-8.go
+	#trees -r assign2Tests/test-0-8.corpus assign2Tests/test-0-8.go
+	#trees -g assign2Tests/test-0-9.corpus assign2Tests/test-0-9.go
+	#trees -r assign2Tests/test-0-9.corpus assign2Tests/test-0-9.go
+	#trees -g assign2Tests/test-0-10.corpus assign2Tests/test-0-10.go
+	#trees -r assign2Tests/test-0-10.corpus assign2Tests/test-0-10.go
+	#trees -g assign2Tests/test-0-11.corpus assign2Tests/test-0-11.go
+	#trees -r assign2Tests/test-0-11.corpus assign2Tests/test-0-11.go
+	#trees -g assign2Tests/test-0-12.corpus assign2Tests/test-0-12.go
+	#trees -r assign2Tests/test-0-12.corpus assign2Tests/test-0-12.go
+	#trees -g assign2Tests/test-0-13.corpus assign2Tests/test-0-13.go
+	#trees -r assign2Tests/test-0-13.corpus assign2Tests/test-0-13.go
+	#trees -g assign2Tests/test-0-14.corpus assign2Tests/test-0-14.go
+	#trees -r assign2Tests/test-0-14.corpus assign2Tests/test-0-14.go
+
 
 
 trees.o: trees.c
