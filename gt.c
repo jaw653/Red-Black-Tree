@@ -8,7 +8,6 @@
 
 #include "bst.h"
 #include "gt.h"
-#include "real.h"
 
 struct gt {
   struct bst *tree;
