@@ -4,7 +4,7 @@
 # The University of Alabama
 
 OPTS = -Wall -Wextra -std=c99
-TYPE_OBJS = string.o
+TYPE_OBJS = string.o real.o
 UTIL_OBJS = scanner.o trees.o
 STRUCT_OBJS = cda.o queue.o bst.o rbt.o gt.o
 #TEST_OBJS = test-bst.o test-rbt.o
@@ -56,17 +56,21 @@ test: trees
 	@#./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go1
 	@#./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go1
 
-	@./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go2
-	@#./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go2
+	@./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go2 outputs/g-beowulf
+	@#./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go2 outputs/r-beowul
 
 	@#./trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
 	@#./trees -r assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
+
+	@#./trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go2
+	@#./trees -r assign2Tests/shakespeare.txt assign2Tests/shakespeare.go2 outputs/r-shake2
+
 
 trees.o: trees.c
 	gcc $(OPTS) trees.c -c
 
 bst.o: bst.c bst.h
-	gcc $(OPTS) -c bst.c
+	gcc $(OPTS) bst.c -c
 
 rbt.o: rbt.c rbt.h
 	gcc $(OPTS) rbt.c -c
@@ -85,6 +89,9 @@ cda.o: cda.c cda.h
 
 string.o: string.c string.h
 	gcc $(OPTS) -c string.c
+
+real.o: real.c real.h
+	gcc $(OPTS) -c real.c
 
 clean:
 	rm -rf *.o $(TEST_EXES) ./a.out trees
