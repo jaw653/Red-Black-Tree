@@ -57,7 +57,7 @@ test: trees
 	@#./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go1
 
 	@./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go2 outputs/g-beowulf
-	@#./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go2 outputs/r-beowul
+	@#./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go2 outputs/r-beowulf
 
 	@#./trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
 	@#./trees -r assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
