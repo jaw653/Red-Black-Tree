@@ -189,7 +189,6 @@ static void executeCommandsGT(FILE *fp, FILE *outputFile, GT *tree) {
       }
       /* Delete from tree */
       else if (strcmp(str, "d") == 0) {
-        printf("flag\n");
         str = read(fp);
         str = cleanString(str);
         deleteGT(tree, newSTRING(str));
