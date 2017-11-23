@@ -3,6 +3,7 @@ Condensed to-do
 ---------------
 -test "very large text file right before test #44, there are also a couple after that, including
 	tests #48 & 49
+-seg fault on test #44, similar tests are #48 and #49
 -ask/do something about test-0-6.corpus. Final hello world is not in quotes but output looks like it's expected to be...
 -when cleaning hello5world, does it turn into hello world or helloworld?
 -all tests from submit1
