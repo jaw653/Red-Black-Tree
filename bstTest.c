@@ -25,7 +25,7 @@ int main(void) {
     insertValue(tree, 59);
 
     displayTree(tree);
-
+/*
     deleteValue(tree, 2);
 
     displayTree(tree);
@@ -34,6 +34,7 @@ int main(void) {
     if (found) printf("found\n");
 
     deleteValue(tree, 15);
+*/
 /*
     displayTree(tree);
 
