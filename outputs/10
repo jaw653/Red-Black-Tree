@@ -1,0 +1,18 @@
+0: m-4-B(m-4-B)-
+1: h-4-B(m-4-B)-l s-2-B(m-4-B)-r
+2: d-2-B(h-4-B)-l =j-2-B(h-4-B)-r p-2-B(s-2-B)-l y-6-R(s-2-B)-r
+3: =a-4-R(d-2-B)-l =n-2-R(p-2-B)-l =q-2-R(p-2-B)-r v-2-B(y-6-R)-l =z-2-B(y-6-R)-r
+4: =t-2-R(v-2-B)-l =w-2-R(v-2-B)-r
+Words/Phrases: 38
+Nodes: 14
+Minimum depth: 3
+Maximum depth: 5
+0: m-2-B(m-2-B)-
+1: h-2-B(m-2-B)-l s-B(m-2-B)-r
+2: d-B(h-2-B)-l =j-B(h-2-B)-r p-B(s-B)-l y-3-R(s-B)-r
+3: =a-2-R(d-B)-l =n-R(p-B)-l =q-R(p-B)-r v-B(y-3-R)-l =z-B(y-3-R)-r
+4: =t-R(v-B)-l =w-R(v-B)-r
+Words/Phrases: 19
+Nodes: 14
+Minimum depth: 3
+Maximum depth: 5

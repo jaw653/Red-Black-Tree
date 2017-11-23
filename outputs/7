@@ -1,0 +1,10 @@
+0: j-2(j-2)-
+1: i-2(j-2)-l w-4(j-2)-r
+2: b-2(i-2)-l q-2(w-4)-l =x-2(w-4)-r
+3: f-2(b-2)-r n-2(q-2)-l r-6(q-2)-r
+4: =e-2(f-2)-l =h-2(f-2)-r =m-2(n-2)-l v-2(r-6)-r
+5: =s-2(v-2)-l
+Words/Phrases: 34
+Nodes: 14
+Minimum depth: 2
+Maximum depth: 6
