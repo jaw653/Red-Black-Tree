@@ -42,21 +42,19 @@ GT *newGT(void (*d)(FILE *, void *), int (*c)(void *, void *)) {
 }
 
 void insertGT(GT *t, void *value) {
-  GTNODE *valueNode = newGTNODE(value, t->display, t->comparator);
+  GTNODE *nodeToInsert = newGTNODE(value, t->display, t->comparator);
 
-  BSTNODE *valueToFind = findBST(t->tree, valueNode);
+  BSTNODE *find = findBST(t->tree, nodeToInsert);
 
   /* If value is in the tree, just increment it */
-  if (valueToFind != NULL) {
-    GTNODE *nodeToIncrement = getBSTNODE(valueToFind);
-    nodeToIncrement->frequency += 1;
+  if (find) {
+    GTNODE *foundNode = getBSTNODE(find);
+    foundNode->frequency += 1;
   }
   else {
-    insertBST(t->tree, valueNode);
+    insertBST(t->tree, nodeToInsert);
   }
-
   t->totalWords += 1;
-//  printf("totalWords is: %d\n", t->totalWords);
 }
 
 int findGT(GT *t, void *value) {
