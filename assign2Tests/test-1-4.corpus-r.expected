@@ -1,0 +1,26 @@
+0: n-2-B(n-2-B)-
+1: l-2-R(n-2-B)-l u-4-R(n-2-B)-r
+2: c-2-B(l-2-R)-l =m-2-B(l-2-R)-r =t-2-B(u-4-R)-l w-4-B(u-4-R)-r
+3: =k-2-R(c-2-B)-r =z-2-R(w-4-B)-r
+Words/Phrases: 22
+Nodes: 9
+Minimum depth: 3
+Maximum depth: 4
+Frequency of w: 0
+Frequency of u: 0
+Frequency of t: 0
+Frequency of l: 0
+Frequency of u: 0
+Frequency of w: 0
+Frequency of z: 0
+Frequency of n: 0
+Frequency of c: 0
+Frequency of m: 0
+Frequency of k: 0
+Frequency of jabberwock: 0
+Frequency of beware the jabberwock: 0
+EMPTY
+Words/Phrases: 0
+Nodes: 0
+Minimum depth: 0
+Maximum depth: 0

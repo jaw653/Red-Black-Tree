@@ -1,0 +1,36 @@
+0: rydg-2(rydg-2)-
+1: hipj-2(rydg-2)-l symv-2(rydg-2)-r
+2: emhu-2(hipj-2)-l prsg-2(hipj-2)-r svai-2(symv-2)-l zxzt-2(symv-2)-r
+3: cjjn-2(emhu-2)-l fnlz-2(emhu-2)-r poko-2(prsg-2)-l qwmk-2(prsg-2)-r sceo-2(svai-2)-l =svav-2(svai-2)-r yzoi-2(zxzt-2)-l =zzfq-2(zxzt-2)-r
+4: bufl-2(cjjn-2)-l edmu-2(cjjn-2)-r eshq-2(fnlz-2)-l gkvx-2(fnlz-2)-r jkra-4(poko-2)-l =prkq-2(poko-2)-r qlcc-2(qwmk-2)-l raiv-2(qwmk-2)-r =ryzd-2(sceo-2)-l =senj-2(sceo-2)-r xlpe-2(yzoi-2)-l zqyz-2(yzoi-2)-r
+5: avum-2(bufl-2)-l cgqc-2(bufl-2)-r damu-2(edmu-2)-l fbgt-2(eshq-2)-r fvge-2(gkvx-2)-l hioc-2(gkvx-2)-r hnjg-2(jkra-4)-l kveg-2(jkra-4)-r =pugy-2(qlcc-2)-l rlyf-2(raiv-2)-r wyfv-2(xlpe-2)-l yeqq-2(xlpe-2)-r zbtg-2(zqyz-2)-l
+6: =amvg-2(avum-2)-l bdfx-2(avum-2)-r =bxlw-2(cgqc-2)-l cnez-2(damu-2)-l =dqnn-2(damu-2)-r eyza-2(fbgt-2)-l =ggta-2(fvge-2)-r grry-2(hioc-2)-l jglp-2(hnjg-2)-r jpjw-2(kveg-2)-l oxwy-2(kveg-2)-r =rkfy-2(rlyf-2)-l rryw-2(rlyf-2)-r wlbu-2(wyfv-2)-l =xacv-2(wyfv-2)-r xtcx-2(yeqq-2)-l yuwh-2(yeqq-2)-r zbqa-2(zbtg-2)-l
+7: blpy-2(bdfx-2)-r =damc-2(cnez-2)-r =fapa-2(eyza-2)-r =glbh-2(grry-2)-l =gzga-2(grry-2)-r jdmy-2(jglp-2)-l ksoh-2(jpjw-2)-r nhie-2(oxwy-2)-l oyhx-2(oxwy-2)-r =rnhm-2(rryw-2)-l wcoa-2(wlbu-2)-l =woeu-2(wlbu-2)-r xsxr-2(xtcx-2)-l yhjs-2(yuwh-2)-l =zatm-2(zbqa-2)-l
+8: =bqbf-2(blpy-2)-r =ihph-2(jdmy-2)-l =jevs-2(jdmy-2)-r jrve-2(ksoh-2)-l =ktjo-2(ksoh-2)-r lrlj-2(nhie-2)-l oqdh-2(nhie-2)-r poft-2(oyhx-2)-r ubji-2(wcoa-2)-l =wkhn-2(wcoa-2)-r =xsks-2(xsxr-2)-l yrhb-2(yhjs-2)-r
+9: =jpnk-2(jrve-2)-l kihd-2(jrve-2)-r =lreb-2(lrlj-2)-l mwsy-2(lrlj-2)-r nybg-2(oqdh-2)-l =oxjo-2(oqdh-2)-r pfih-2(poft-2)-l tlqa-2(ubji-2)-l vnxg-2(ubji-2)-r ynub-2(yrhb-2)-l
+10: =jued-2(kihd-2)-l mamq-2(mwsy-2)-l =nikx-2(nybg-2)-l oast-2(nybg-2)-r pbue-2(pfih-2)-l =tbcw-2(tlqa-2)-l ttye-2(tlqa-2)-r ukvv-2(vnxg-2)-l =ynqf-2(ynub-2)-l
+11: =lrzm-2(mamq-2)-l =mgab-2(mamq-2)-r ofti-2(oast-2)-r =pbea-2(pbue-2)-l tshh-2(ttye-2)-l uboh-2(ukvv-2)-l viea-2(ukvv-2)-r
+12: =omez-2(ofti-2)-r tpvc-2(tshh-2)-l =ueat-2(uboh-2)-r uyeg-2(viea-2)-l =vjdt-2(viea-2)-r
+13: =tlrt-2(tpvc-2)-l =trui-2(tpvc-2)-r =uptd-2(uyeg-2)-l =vbxy-2(uyeg-2)-r
+Words/Phrases: 242
+Nodes: 120
+Minimum depth: 4
+Maximum depth: 14
+0: rydg(rydg)-
+1: hipj(rydg)-l symv(rydg)-r
+2: emhu(hipj)-l prsg(hipj)-r svai(symv)-l zxzt(symv)-r
+3: cjjn(emhu)-l fnlz(emhu)-r poko(prsg)-l qwmk(prsg)-r sceo(svai)-l =svav(svai)-r yzoi(zxzt)-l =zzfq(zxzt)-r
+4: bufl(cjjn)-l edmu(cjjn)-r eshq(fnlz)-l gkvx(fnlz)-r jkra-2(poko)-l =prkq(poko)-r qlcc(qwmk)-l raiv(qwmk)-r =ryzd(sceo)-l =senj(sceo)-r xlpe(yzoi)-l zqyz(yzoi)-r
+5: avum(bufl)-l cgqc(bufl)-r damu(edmu)-l fbgt(eshq)-r fvge(gkvx)-l hioc(gkvx)-r hnjg(jkra-2)-l kveg(jkra-2)-r =pugy(qlcc)-l rlyf(raiv)-r wyfv(xlpe)-l yeqq(xlpe)-r zbtg(zqyz)-l
+6: =amvg(avum)-l bdfx(avum)-r =bxlw(cgqc)-l cnez(damu)-l =dqnn(damu)-r eyza(fbgt)-l =ggta(fvge)-r grry(hioc)-l jglp(hnjg)-r jpjw(kveg)-l oxwy(kveg)-r =rkfy(rlyf)-l rryw(rlyf)-r wlbu(wyfv)-l =xacv(wyfv)-r xtcx(yeqq)-l yuwh(yeqq)-r zbqa(zbtg)-l
+7: blpy(bdfx)-r =damc(cnez)-r =fapa(eyza)-r =glbh(grry)-l =gzga(grry)-r jdmy(jglp)-l ksoh(jpjw)-r nhie(oxwy)-l oyhx(oxwy)-r =rnhm(rryw)-l wcoa(wlbu)-l =woeu(wlbu)-r xsxr(xtcx)-l yhjs(yuwh)-l =zatm(zbqa)-l
+8: =bqbf(blpy)-r =ihph(jdmy)-l =jevs(jdmy)-r jrve(ksoh)-l =ktjo(ksoh)-r lrlj(nhie)-l oqdh(nhie)-r poft(oyhx)-r ubji(wcoa)-l =wkhn(wcoa)-r =xsks(xsxr)-l yrhb(yhjs)-r
+9: =jpnk(jrve)-l kihd(jrve)-r =lreb(lrlj)-l mwsy(lrlj)-r nybg(oqdh)-l =oxjo(oqdh)-r pfih(poft)-l tlqa(ubji)-l vnxg(ubji)-r ynub(yrhb)-l
+10: =jued(kihd)-l mamq(mwsy)-l =nikx(nybg)-l oast(nybg)-r pbue(pfih)-l =tbcw(tlqa)-l ttye(tlqa)-r ukvv(vnxg)-l =ynqf(ynub)-l
+11: =lrzm(mamq)-l =mgab(mamq)-r ofti(oast)-r =pbea(pbue)-l tshh(ttye)-l uboh(ukvv)-l viea(ukvv)-r
+12: =omez(ofti)-r tpvc(tshh)-l =ueat(uboh)-r uyeg(viea)-l =vjdt(viea)-r
+13: =tlrt(tpvc)-l =trui(tpvc)-r =uptd(uyeg)-l =vbxy(uyeg)-r
+Words/Phrases: 121
+Nodes: 120
+Minimum depth: 4
+Maximum depth: 14
