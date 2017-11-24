@@ -1,0 +1,27 @@
+Frequency of l: 4
+Frequency of r: 2
+Frequency of b: 2
+Frequency of z: 4
+Frequency of k: 2
+Frequency of v: 2
+Frequency of u: 2
+Frequency of f: 2
+Frequency of p: 2
+Frequency of l: 4
+Frequency of y: 2
+Frequency of z: 4
+Frequency of n: 2
+Frequency of h: 2
+Frequency of s: 2
+Frequency of g: 2
+Frequency of i: 2
+Frequency of d: 2
+0: r-2-B(r-2-B)-
+1: h-2-B(r-2-B)-l v-2-B(r-2-B)-r
+2: f-2-R(h-2-B)-l l-4-R(h-2-B)-r u-2-B(v-2-B)-l z-4-B(v-2-B)-r
+3: b-2-B(f-2-R)-l =g-2-B(f-2-R)-r k-2-B(l-4-R)-l p-2-B(l-4-R)-r =s-2-R(u-2-B)-l =y-2-R(z-4-B)-l
+4: =d-2-R(b-2-B)-r =i-2-R(k-2-B)-l =n-2-R(p-2-B)-l
+Words/Phrases: 36
+Nodes: 16
+Minimum depth: 3
+Maximum depth: 5

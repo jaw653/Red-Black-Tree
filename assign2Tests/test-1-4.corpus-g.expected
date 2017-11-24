@@ -1,0 +1,28 @@
+0: w-4(w-4)-
+1: u-4(w-4)-l =z-2(w-4)-r
+2: t-2(u-4)-l
+3: l-2(t-2)-l
+4: c-2(l-2)-l n-2(l-2)-r
+5: =k-2(c-2)-r =m-2(n-2)-l
+Words/Phrases: 22
+Nodes: 9
+Minimum depth: 2
+Maximum depth: 6
+Frequency of w: 0
+Frequency of u: 0
+Frequency of t: 0
+Frequency of l: 0
+Frequency of u: 0
+Frequency of w: 0
+Frequency of z: 0
+Frequency of n: 0
+Frequency of c: 0
+Frequency of m: 0
+Frequency of k: 0
+Frequency of jabberwock: 0
+Frequency of beware the jabberwock: 0
+EMPTY
+Words/Phrases: 0
+Nodes: 0
+Minimum depth: 0
+Maximum depth: 0

@@ -8,7 +8,6 @@
 
 #include "bst.h"
 #include "gt.h"
-#include "real.h"
 
 struct gt {
   struct bst *tree;
@@ -43,21 +42,19 @@ GT *newGT(void (*d)(FILE *, void *), int (*c)(void *, void *)) {
 }
 
 void insertGT(GT *t, void *value) {
-  GTNODE *valueNode = newGTNODE(value, t->display, t->comparator);
+  GTNODE *nodeToInsert = newGTNODE(value, t->display, t->comparator);
 
-  BSTNODE *valueToFind = findBST(t->tree, valueNode);
+  BSTNODE *find = findBST(t->tree, nodeToInsert);
 
   /* If value is in the tree, just increment it */
-  if (valueToFind != NULL) {
-    GTNODE *nodeToIncrement = getBSTNODE(valueToFind);
-    nodeToIncrement->frequency += 1;
+  if (find) {
+    GTNODE *foundNode = getBSTNODE(find);
+    foundNode->frequency += 1;
   }
   else {
-    insertBST(t->tree, valueNode);
+    insertBST(t->tree, nodeToInsert);
   }
-
   t->totalWords += 1;
-//  printf("totalWords is: %d\n", t->totalWords);
 }
 
 int findGT(GT *t, void *value) {
@@ -91,6 +88,11 @@ void deleteGT(GT *t, void *value) {
 
     t->totalWords -= 1;
   }
+  else {
+    printf("Value ");
+    t->display(stdout, value);
+    printf(" not found.\n");
+  }
 }
 
 int sizeGT(GT *t) {
@@ -105,11 +107,12 @@ void statisticsGT(FILE *fp, GT *t) {
   fprintf(fp, "Words/Phrases: %d\n", t->totalWords);
   fprintf(fp, "Nodes: %d\n", sizeBST(t->tree));
   fprintf(fp, "Minimum depth: %d\n", findMinDepthGT(getBSTroot(t->tree)));
-  fprintf(fp, "Maximum depth: %d", findMaxDepthGT(getBSTroot(t->tree)));
+  fprintf(fp, "Maximum depth: %d\n", findMaxDepthGT(getBSTroot(t->tree)));
 }
 
 void displayGT(FILE *fp, GT *t) {
   displayBST(fp, t->tree);
+  fprintf(fp, "\n");
 }
 
 /******************************************************************************/

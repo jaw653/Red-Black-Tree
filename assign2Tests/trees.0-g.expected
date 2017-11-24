@@ -1,0 +1,7 @@
+0: the-2(the-2)-
+1: quickity quick(the-2)-l
+2: brown(quickity quick)-l
+3: =and(brown)-l fox(brown)-r
+4: =dog(fox)-l jumped(fox)-r
+5: girl(jumped)-l over(jumped)-r
+6: =her(girl)-r =lazy-2(over)-l

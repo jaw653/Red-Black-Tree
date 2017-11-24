@@ -10,9 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <math.h>
 
-#include "real.h"
 #include "string.h"
 #include "bst.h"
 #include "queue.h"
@@ -343,6 +341,11 @@ void displayBST(FILE *fp, BST *t) {
 /***                           Helper Functions                             ***/
 /******************************************************************************/
 static void displayNODE(BST *t, FILE *fp, BSTNODE *node, bool isRoot) {
+  fprintf(fp, " ");
+
+  if (isLeaf(node))
+    fprintf(fp, "=");
+
   t->display(fp, node->value);
   fprintf(fp, "(");
   t->display(fp, getBSTNODEparent(node)->value);
@@ -507,7 +510,57 @@ static bool isLeaf(BSTNODE *node) {
 }
 
 static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
-  //if t->size == 0...
+  if (t->size == 0) {
+    fprintf(fp, "EMPTY");
+    return;
+  }
+
+  QUEUE *currQueue = newQUEUE(NULL);
+  QUEUE *nextQueue = newQUEUE(NULL);
+
+  enqueue(currQueue, root);
+
+  int height = findMaxDepthBST(root);
+  int level = 0;
+  bool isRoot = true;
+
+  while (level < height) {
+    fprintf(fp, "%d:", level);
+
+    while (sizeQUEUE(currQueue) > 0) {
+      if (getBSTNODEleft(peekQUEUE(currQueue)))
+        enqueue(nextQueue, getBSTNODEleft(peekQUEUE(currQueue)));
+      if (getBSTNODEright(peekQUEUE(currQueue)))
+        enqueue(nextQueue, getBSTNODEright(peekQUEUE(currQueue)));
+
+      if (isRoot) {
+        displayNODE(t, fp, dequeue(currQueue), true);
+        isRoot = false;
+      }
+      else {
+        displayNODE(t, fp, dequeue(currQueue), false);
+      }
+    }
+    level += 1;
+    if (sizeQUEUE(nextQueue) > 0)
+      fprintf(fp, "\n%d:", level);
+//printf("size of next queue is: %d\n", sizeQUEUE(nextQueue));
+
+    while (sizeQUEUE(nextQueue) > 0) {
+      if (getBSTNODEleft(peekQUEUE(nextQueue)))
+        enqueue(currQueue, getBSTNODEleft(peekQUEUE(nextQueue)));
+      if (getBSTNODEright(peekQUEUE(nextQueue)))
+        enqueue(currQueue, getBSTNODEright(peekQUEUE(nextQueue)));
+
+      displayNODE(t, fp, dequeue(nextQueue), false);
+    }
+
+    level += 1;
+    if (sizeQUEUE(currQueue) > 0)
+      fprintf(fp, "\n");
+  }
+/******************************************************************************/
+/*
   if (t->size == 0) {
     fprintf(fp, "EMPTY");
     return;
@@ -524,34 +577,33 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
     int height = findMaxDepthBST(root);
 
     int i = 0;
-    while (i <= height) {
+    while (sizeQUEUE(nodesQueue) > 0) {
       BSTNODE *currNode = dequeue(nodesQueue);
       nodesInCurrLevel -= 1;
 
-//      if (currNode) printf("CURR NODE!!!\n");
       if (currNode && i <= height) {
-//        printf("FLAG\n");
-
         if (isRoot) {
           fprintf(fp, "%d:", 0);
           fprintf(fp, " ");
-          if (isLeaf(currNode))
-            fprintf(fp, "=");
           displayNODE(t, fp, currNode, true);
           isRoot = false;
         }
         else {
           fprintf(fp, " ");
-          if (isLeaf(currNode))
-            fprintf(fp, "=");
           displayNODE(t, fp, currNode, false);
-          //printf("nodesInCurrLevel is: %d\n", nodesInCurrLevel);
-          //if (nodesInCurrLevel != 0) fprintf(fp, " ");
         }
       }
-      enqueue(nodesQueue, getBSTNODEleft(currNode));
-      enqueue(nodesQueue, getBSTNODEright(currNode));
-      nodesInNextLevel += 2;
+
+      if (getBSTNODEleft(currNode)) {
+        enqueue(nodesQueue, getBSTNODEleft(currNode));
+        nodesInNextLevel += 1;
+      }
+      if (getBSTNODEright(currNode)) {
+        enqueue(nodesQueue, getBSTNODEright(currNode));
+        nodesInNextLevel += 1;
+      }
+      //  nodesInNextLevel += 2;
+
       if (nodesInCurrLevel == 0) {
         i += 1;
         if (i == height) break;
@@ -564,6 +616,8 @@ static void displayHelper(FILE *fp, BSTNODE *root, BST *t) {
       }
     }
   }
+*/
+/******************************************************************************/
 }
 
 static BSTNODE *copyNODE(BSTNODE *giver) {

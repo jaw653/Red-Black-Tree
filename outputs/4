@@ -1,0 +1,9 @@
+0: q-B(q-B)-
+1: h-B(q-B)-l u-2-B(q-B)-r
+2: =d-2-B(h-B)-l k-R(h-B)-r =t-B(u-2-B)-l v-B(u-2-B)-r
+3: i-B(k-R)-l =m-B(k-R)-r =z-R(v-B)-r
+4: =hello world-R(i-B)-l
+Words/Phrases: 13
+Nodes: 11
+Minimum depth: 3
+Maximum depth: 5

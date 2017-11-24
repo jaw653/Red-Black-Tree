@@ -9,9 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <math.h>
 
-#include "real.h"
 #include "rbt.h"
 #include "bst.h"
 #include "queue.h"
@@ -31,7 +29,6 @@ static char getColor(BSTNODE *);
 static void setColor(BSTNODE *, char);
 
 /*** Min/Max Functions ***/
-static int min(int, int);
 static int findMinDepthRBT(BSTNODE *);
 static int findMaxDepthRBT(BSTNODE *);
 
@@ -144,6 +141,11 @@ void deleteRBT(RBT *t, void *value) {
     }
     t->totalWords -= 1;
   }
+  else {
+    printf("Value ");
+    t->display(stdout, value);
+    printf(" not found.\n");
+  }
 }
 
 int sizeRBT(RBT *t) {
@@ -158,12 +160,13 @@ void statisticsRBT(FILE *fp, RBT *t) {
   fprintf(fp, "Words/Phrases: %d\n", t->totalWords);
   fprintf(fp, "Nodes: %d\n", sizeBST(t->tree));
   fprintf(fp, "Minimum depth: %d\n", findMinDepthRBT(getBSTroot(t->tree)));    //FIXME: figure it out
-  fprintf(fp, "Maximum depth: %d", findMaxDepthRBT(getBSTroot(t->tree)));    //FIXME: figure it out
+  fprintf(fp, "Maximum depth: %d\n", findMaxDepthRBT(getBSTroot(t->tree)));    //FIXME: figure it out
 
 }
 
 void displayRBT(FILE *fp, RBT *t) {
   displayBST(fp, t->tree);
+  fprintf(fp, "\n");
 }
 /******************************************************************************/
 /***                          End Public Chunk                              ***/
@@ -258,14 +261,6 @@ static void setColor(BSTNODE *node, char color) {
 /******************************************************************************/
 /***                          Min/Max Functions                             ***/
 /******************************************************************************/
-static int min(int a, int b) {
-    if (a < b) return a;
-    else if (a > b) return b;
-    else {
-      return a;
-    }
-}
-
 static int findMinDepthRBT(BSTNODE *root) {
   if (root == NULL)
     return 0;
