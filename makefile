@@ -103,17 +103,25 @@ test: trees
 
 #---------------------
 
-#	@./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go1
-#	@./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go1
+	@./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go1 outputs/32
+	@diff assign2Tests/beowulf.txt-g.expected outputs/32
+	@./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go1 outputs/33
+	@diff assign2Tests/beowulf.txt-r.expected outputs/33
 
-#	@./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go2 outputs/g-beowulf
-#	@./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go2 outputs/r-beowulf
+	@./trees -g assign2Tests/beowulf.txt assign2Tests/beowulf.go2 outputs/g-beowulf
+	@diff assign2Tests/beowulf-g.expected outputs/g-beowulf
+	@./trees -r assign2Tests/beowulf.txt assign2Tests/beowulf.go2 outputs/r-beowulf
+	@diff assign2Tests/beowulf-r.expected outputs/r-beowulf
 
-#	@./trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
-#	@./trees -r assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1
+	@./trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1 outputs/34
+	@diff assign2Tests/shakespeare.txt-g.expected outputs/34
+	@./trees -r assign2Tests/shakespeare.txt assign2Tests/shakespeare.go1 outputs/35
+	@diff assign2Tests/shakespeare.txt-r.expected outputs/35
 
-#	@./trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go2
-#	@./trees -r assign2Tests/shakespeare.txt assign2Tests/shakespeare.go2 outputs/r-shake2
+	@./trees -g assign2Tests/shakespeare.txt assign2Tests/shakespeare.go2 outputs/g-shakespeare
+	@diff assign2Tests/shakespeare-g.expected outputs/g-shakespeare
+	@./trees -r assign2Tests/shakespeare.txt assign2Tests/shakespeare.go2 outputs/r-shakespeare
+	@diff assign2Tests/shakespeare-r.expected outputs/r-shakespeare
 
 
 trees.o: trees.c
