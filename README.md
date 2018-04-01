@@ -6,7 +6,7 @@ Implemented by essentially turning C into an object oriented language using void
 
 All necessary files are included in the directory. After downloading/cloning the repository, utilize the makefile in order to run the main "trees" file.
 
-Command Line examples:
+Command Line examples:</br>
 ~$ make</br>
 ~$ ./trees -g assign2Tests/trees.0 assign2Tests/trees.1 outputs/1</br>
  </t> (the above will throw items in trees.0 found in trees.1 into a Green Tree Structure, writing the GT into outputs/1)</br>
